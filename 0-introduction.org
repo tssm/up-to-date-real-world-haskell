@@ -398,7 +398,7 @@ research community. Of the thicket of lazy functional languages that
 existed in 1990, only Haskell is still actively used.
 
 Since its publication in 1990, the Haskell language standard has
-seen five revisions, most recently in 1998. A number of Haskell
+seen several revisions, most recently in 2010. A number of Haskell
 implementations have been written, and several are still actively
 developed.
 
@@ -451,8 +451,8 @@ programmers.
   for the standard library that comes with your compiler. This is one of
   the most valuable online assets for Haskell programmers.
 - For questions about language syntax and features, the
-  [[http://haskell.org/onlinereport/][Haskell 98 Report]] describes the
-  Haskell 98 language standard.
+  [[http://haskell.org/onlinereport/haskell2010/][Haskell 2010 Report]] describes the
+  Haskell 2010 language standard.
 - Various extensions to the language have become commonplace
   since the Haskell 98 Report was released. The
   [[http://www.haskell.org/ghc/docs/latest/html/users_guide/index.html][GHC
