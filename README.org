@@ -1,0 +1,16 @@
+[[http://book.realworldhaskell.org/][Real World Haskell]] by Bryan
+O'Sullivan, Don Stewart and John Goerzen seems to contain most of what I need
+to learn to become a productive haskeller but it's old (it was published in 2008)
+so let's update it! After all it is distributed under the terms of the
+[[https://creativecommons.org/licenses/by-nc/3.0/][Creative Commons Attribution-NonCommercial 3.0 License]].
+
+I'm going to focus on the /real world/ stuff because I'm a newbie and I can
+yell at GHC until I get it to compile but I can't do the same with math so
+even when I think Haskell theory is fascinating I'm not ready to tackle that
+part. BTW would you like to help?
+
+I did chose Org mode althoug I'm a [[https://neovim.io][Neovim]] user because amazing and
+[[https://orgmode.org/manual/index.html][well documented]].
+
+English is not my native language so I'm sure this will be full of grammar
+and other errors 😅
