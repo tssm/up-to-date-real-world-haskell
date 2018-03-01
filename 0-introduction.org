@@ -501,11 +501,7 @@ talking about, and simply do some social networking with your peers.
 - There are many local user groups, meetups, academic workshops,
   and the like; here is [[http://haskell.org/haskellwiki/User_groups][a
   list of the known user groups and workshops]].
-- The [[http://sequence.complete.org/][Haskell Weekly News]] is
-  a very-nearly-weekly summary of activities in the Haskell community.
-  You can find pointers to interesting mailing list discussions, new
-  software releases, and the like.
-- The [[http://haskell.org/communities/][Haskell Communities and
+- The [[https://wiki.haskell.org/Haskell_Communities_and_Activities_Report][Haskell Communities and
   Activities Report]] collects information about people that use
   Haskell, and what they are doing with it. It has been running for
   years, so it provides a good way to peer into Haskell's past.
