@@ -8,19 +8,13 @@ foundation in Haskell, we will expand upon these initial explanations.
 
 ** Your Haskell environment
 
-Haskell is a language with many implementations, of which two are
-in wide use. Hugs is an interpreter that is primarily used for teaching.
-For real applications, the Glasgow Haskell Compiler (GHC) is much more
-popular. Compared to Hugs, GHC is more suited to “real work”: it
+The Glasgow Haskell Compiler (GHC) is the most widely used. It
 compiles to native code, supports parallel execution, and provides
-useful performance analysis and debugging tools. For these reasons, GHC
-is the Haskell implementation that we will be using throughout this
-book.
+useful performance analysis and debugging tools.
 
 GHC has three main components.
 
-- ~ghc~ is an optimizing compiler that generates fast native
-  code.
+- ~ghc~ is an optimizing compiler that generates fast native code.
 - ~ghci~ is an interactive interpreter and debugger.
 - ~runghc~ is a program for running Haskell programs as scripts,
   without needing to compile them first.
