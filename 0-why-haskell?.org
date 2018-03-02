@@ -1,4 +1,4 @@
-* Introduction
+* Why Haskell?
 
 ** Have we got a deal for you!
 
