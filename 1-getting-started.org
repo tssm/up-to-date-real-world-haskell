@@ -500,14 +500,9 @@ Where to look for more information
 We've barely scratched the surface of command line editing here.
 Since you can work more effectively if you're more familiar with the
 capabilities of your command line editing system, you might find it
-useful to do some further reading.
-
-On Unix-like systems, ~ghci~ uses the
-[[http://tiswww.case.edu/php/chet/readline/rltop.html#Documentation][GNU
-readline library]], which is powerful and customisable. On Windows,
-~ghci~'s command line editing capabilities are provided by the
-[[http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/doskey.mspx][*doskey*
-command]].
+useful to do some further reading. ~ghci~ uses the Haskeline library
+under the hood, which is [[https://github.com/judah/haskeline/wiki/KeyBindings][powerful]] and
+[[https://github.com/judah/haskeline/wiki/UserPreferences][customisable]].
 #+END_TIP
 
 ** Lists
