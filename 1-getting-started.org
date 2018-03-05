@@ -440,7 +440,7 @@ Using ~ghci~'s ~let~ construct, we can make a temporary
 definition of ~e~ ourselves.
 
 #+BEGIN_SRC screen
-ghci> let e = exp 1
+ghci> e = exp 1
 #+END_SRC
 
 This is an application of the exponential function, ~exp~, and
@@ -686,7 +686,7 @@ characters. Here's a painful way to write a short string, which ~ghci~
 gives back to us in a more familiar form.
 
 #+BEGIN_SRC screen
-ghci> let a = ['l', 'o', 't', 's', ' ', 'o', 'f', ' ', 'w', 'o', 'r', 'k']
+ghci> a = ['l', 'o', 't', 's', ' ', 'o', 'f', ' ', 'w', 'o', 'r', 'k']
 ghci> a
 "lots of work"
 ghci> a == "lots of work"
