@@ -27,13 +27,9 @@ GHC. If we are talking about a specific command, we will mention ~ghc~,
 ~ghci~, or ~runghc~ by name.
 #+END_NOTE
 
-In this book, we assume that you're using at least version 6.8.2
-of GHC, which was released in 2007. Many of our examples will work
-unmodified with older versions. However, we /recommend/ using the newest
-version available for your platform. If you're using Windows or Mac OS
-X, you can get started easily and quickly using a prebuilt installer. To
-obtain a copy of GHC for these platforms, visit
-[[http://www.haskell.org/ghc/download.html][the GHC download page]], and
+In this book, we assume that you're using at least version 8.2.2
+of GHC, which was released in 2017. To
+obtain a copy of GHC visit [[http://www.haskell.org/downloads][the GHC download page]], and
 look for the list of binary packages and installers.
 
 Many Linux distributors, and providers of BSD and other Unix
@@ -75,11 +71,11 @@ you installed using the GHC installer on Windows XP, you should go to
 section called “Windows”]] for a screenshot.)
 
 When we run ~ghci~, it displays a startup banner, followed by a
-~Prelude>~ prompt. Here, we're showing version 6.8.3 on a Linux box.
+~Prelude>~ prompt. Here, we're showing version 8.2.2.
 
 #+BEGIN_SRC screen
 $ ghci
-GHCi, version 6.8.3: http://www.haskell.org/ghc/  :? for help
+GHCi, version 8.2.2: http://www.haskell.org/ghc/  :? for help
 Loading package base ... linking ... done.
 Prelude>
 #+END_SRC
