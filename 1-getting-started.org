@@ -76,7 +76,6 @@ When we run ~ghci~, it displays a startup banner, followed by a
 #+BEGIN_SRC screen
 $ ghci
 GHCi, version 8.2.2: http://www.haskell.org/ghc/  :? for help
-Loading package base ... linking ... done.
 Prelude>
 #+END_SRC
 
@@ -196,9 +195,9 @@ and we cannot mix it with infix operators.
 #+BEGIN_SRC screen
 ghci> 2 + -3
 
-<interactive>:1:0:
-    precedence parsing error
-        cannot mix `(+)' [infixl 6] and prefix `-' [infixl 6] in the same infix expression
+<interactive>:1:1: error:
+    Precedence parsing error
+        cannot mix ‘+’ [infixl 6] and prefix `-' [infixl 6] in the same infix expression
 #+END_SRC
 
 If we want to use the unary minus near an infix operator, we
@@ -233,7 +232,11 @@ number example above, but results in a different error message.
 #+BEGIN_SRC screen
 ghci> 2*-3
 
-<interactive>:1:1: Not in scope: `*-'
+<interactive>:1:1: error:
+    • Variable not in scope: (*-) :: Integer -> Integer -> t
+    • Perhaps you meant one of these:
+        ‘*’ (imported from Prelude), ‘-’ (imported from Prelude),
+        ‘*>’ (imported from Prelude)
 #+END_SRC
 
 Here, the Haskell implementation is reading ~*-~ as a single
@@ -275,13 +278,11 @@ non-zero value to be ~True~.
 #+BEGIN_SRC screen
 ghci> True && 1
 
-<interactive>:1:8:
-    No instance for (Num Bool)
-      arising from the literal `1' at <interactive>:1:8
-    Possible fix: add an instance declaration for (Num Bool)
-    In the second argument of `(&&)', namely `1'
-    In the expression: True && 1
-    In the definition of `it': it = True && 1
+<interactive>:1:9: error:
+    • No instance for (Num Bool) arising from the literal ‘1’
+    • In the second argument of ‘(&&)’, namely ‘1’
+      In the expression: True && 1
+      In an equation for ‘it’: it = True && 1
 #+END_SRC
 
 Once again, we are faced with a substantial-looking error
@@ -423,7 +424,7 @@ as we can quickly see. Let us look for Euler's number, ~e~.
 #+BEGIN_SRC screen
 ghci> e
 
-<interactive>:1:0: Not in scope: `e'
+<interactive>:1:1: error: Variable not in scope: e
 #+END_SRC
 
 Oh well. We have to define it ourselves.
@@ -541,12 +542,11 @@ string.
 #+BEGIN_SRC screen
 ghci> [True, False, "testing"]
 
-<interactive>:1:14:
-    Couldn't match expected type `Bool' against inferred type `[Char]'
-      Expected type: Bool
-      Inferred type: [Char]
-    In the expression: "testing"
-    In the expression: [True, False, "testing"]
+<interactive>:1:15: error:
+    • Couldn't match expected type ‘Bool’ with actual type ‘[Char]’
+    • In the expression: "testing"
+      In the expression: [True, False, "testing"]
+      In an equation for ‘it’: it = [True, False, "testing"]
 #+END_SRC
 
 Once again, ~ghci~'s error message is verbose, but it's simply
@@ -770,13 +770,11 @@ ghci> it
 it :: [Char]
 ghci> it ++ 3
 
-<interactive>:1:6:
-    No instance for (Num [Char])
-      arising from the literal `3' at <interactive>:1:6
-    Possible fix: add an instance declaration for (Num [Char])
-    In the second argument of `(++)', namely `3'
-    In the expression: it ++ 3
-    In the definition of `it': it = it ++ 3
+<interactive>:1:1: error
+    • No instance for (Num [Char]) arising from the literal ‘3’
+    • In the second argument of ‘(++)’, namely ‘3’
+      In the expression: it ++ 3
+      In an equation for ‘it’: it = it ++ 3
 ghci> it
 "foobar"
 it :: [Char]
@@ -828,20 +826,32 @@ denominator are of different types, or of the same non-integral type,
 #+BEGIN_SRC screen
 ghci> 3.14 % 8
 
-<interactive>:1:0:
-    Ambiguous type variable `t' in the constraints:
-      `Integral t' arising from a use of `%' at <interactive>:1:0-7
-      `Fractional t'
-        arising from the literal `3.14' at <interactive>:1:0-3
-    Probable fix: add a type signature that fixes these type variable(s)
+<interactive>:1:1: error:
+    • Ambiguous type variable ‘a0’ arising from a use of ‘print’
+      prevents the constraint ‘(Show a0)’ from being solved.
+      Probable fix: use a type annotation to specify what ‘a0’ should be.
+      These potential instances exist:
+        instance Show a => Show (Ratio a) -- Defined in ‘GHC.Real’
+        instance Show Ordering -- Defined in ‘GHC.Show’
+        instance Show Integer -- Defined in ‘GHC.Show’
+        ...plus 23 others
+        ...plus 11 instances involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In a stmt of an interactive GHCi command: print it
 ghci> 1.2 % 3.4
 
-<interactive>:1:0:
-    Ambiguous type variable `t' in the constraints:
-      `Integral t' arising from a use of `%' at <interactive>:1:0-8
-      `Fractional t'
-        arising from the literal `3.4' at <interactive>:1:6-8
-    Probable fix: add a type signature that fixes these type variable(s)
+<interactive>:1:1: error:
+    • Ambiguous type variable ‘a0’ arising from a use of ‘print’
+      prevents the constraint ‘(Show a0)’ from being solved.
+      Probable fix: use a type annotation to specify what ‘a0’ should be.
+      These potential instances exist:
+        instance Show a => Show (Ratio a) -- Defined in ‘GHC.Real’
+        instance Show Ordering -- Defined in ‘GHC.Show’
+        instance Show Integer -- Defined in ‘GHC.Show’
+        ...plus 23 others
+        ...plus 11 instances involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In a stmt of an interactive GHCi command: print it
 #+END_SRC
 
 Although it is initially useful to have ~:set +t~ giving us
@@ -902,9 +912,8 @@ counts the number of lines in its input. Don't expect to understand this
 yet; it's just fun to get our hands dirty. In a text editor, enter the
 following code into a file, and save it as ~WC.hs~.
 
-
 #+BEGIN_SRC haskell
--- file: ch01/WC.hs
+-- file: wc.hs
 -- lines beginning with "--" are comments.
 
 main = interact wordCount
@@ -927,7 +936,7 @@ Ryazan, Russia
 From a shell or command prompt, run the following command.
 
 #+BEGIN_SRC screen
-$ runghc WC < quux.txt
+$ runghc wc < quux.txt
 7
 #+END_SRC
 
