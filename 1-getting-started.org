@@ -92,7 +92,7 @@ help message.
 #+END_TIP
 
 The ~Prelude~ module is sometimes referred to as “the standard
-prelude”, because its contents are defined by the Haskell 98 standard.
+prelude”, because its contents are defined by the Haskell 2010 standard.
 Usually, it's simply shortened to “the prelude”.
 
 #+BEGIN_NOTE
