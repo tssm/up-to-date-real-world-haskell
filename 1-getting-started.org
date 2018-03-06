@@ -590,7 +590,7 @@ We can omit the end point of an enumeration. If a type doesn't
 have a natural “upper bound”, this will produce values indefinitely. For
 example, if you type ~[1..]~ at the ~ghci~ prompt, you'll have to
 interrupt or kill ~ghci~ to stop it from printing an infinite succession
-of ever-larger numbers. If you are tempted to do this, type *C* to halt
+of ever-larger numbers. If you are tempted to do this, type ~Ctrl-C~ to halt
 the enumeration. We will find later on that infinite lists are often
 useful in Haskell.
 
