@@ -666,8 +666,6 @@ Here's a newline -->
 <-- See?
 #+END_SRC
 
-The ~putStrLn~ function prints a string.
-
 Haskell makes a distinction between single characters and text
 strings. A single character is enclosed in single quotes.
 
