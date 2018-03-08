@@ -116,11 +116,11 @@ error message before we run it.
 #+BEGIN_SRC screen
 ghci> True && "false"
 
-<interactive>:1:8:
-    Couldn't match expected type `Bool' against inferred type `[Char]'
-    In the second argument of `(&&)', namely `"false"'
-    In the expression: True && "false"
-    In the definition of `it': it = True && "false"
+<interactive>:1:9: error:
+    • Couldn't match expected type ‘Bool’ with actual type ‘[Char]’
+    • In the second argument of ‘(&&)’, namely ‘"false"’
+      In the expression: True && "false"
+      In an equation for ‘it’: it = True && "false"
 #+END_SRC
 
 This error message is of a kind we've seen before. The compiler
@@ -255,10 +255,10 @@ ghci> 'a' :: Char
 'a'
 ghci> [1,2,3] :: Int
 
-<interactive>:1:0:
-    Couldn't match expected type `Int' against inferred type `[a]'
-    In the expression: [1, 2, 3] :: Int
-    In the definition of `it': it = [1, 2, 3] :: Int
+<interactive>:1:1: error:
+    • Couldn't match expected type ‘Int’ with actual type ‘[Integer]’
+    • In the expression: [1, 2, 3] :: Int
+      In an equation for ‘it’: it = [1, 2, 3] :: Int
 #+END_SRC
 
 The combination of ~::~ and the type after it is called a /type
@@ -618,7 +618,7 @@ Haskell source files are usually identified with a suffix of
 ~add.hs~, and add these contents to it.
 
 #+BEGIN_SRC haskell
--- file: ch03/add.hs
+-- file: Add.hs
 add a b = a + b
 #+END_SRC
 
@@ -629,9 +629,9 @@ body of the function. With our source file saved, we can load it into
 ~ghci~ displays will change after you load your file.)
 
 #+BEGIN_SRC screen
-ghci> :load add.hs
+ghci> :load Add.hs
 [1 of 1] Compiling Main             ( add.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> add 1 2
 3
 #+END_SRC
@@ -702,7 +702,7 @@ In contrast, trying the equivalent in Haskell results in an
 error.
 
 #+BEGIN_SRC haskell
--- file: ch02/Assign.hs
+-- file: Assign.hs
 x = 10
 x = 11
 #+END_SRC
@@ -713,11 +713,14 @@ We cannot assign a value to ~x~ twice.
 ghci> :load Assign
 [1 of 1] Compiling Main             ( Assign.hs, interpreted )
 
-Assign.hs:4:0:
-    Multiple declarations of `Main.x'
-    Declared at: Assign.hs:3:0
-                 Assign.hs:4:0
-Failed, modules loaded: none.
+Assign.hs:5:1: error:
+    Multiple declarations of ‘x’
+    Declared at: Assign.hs:4:1
+                 Assign.hs:5:1
+  |
+5 | x = 11
+  | ^
+Failed, no modules loaded.
 #+END_SRC
 
 *** Conditional evaluation
@@ -751,7 +754,7 @@ Haskell's ~if~ expression to decide what to do. The ~null~ function
 below checks whether a list is empty.
 
 #+BEGIN_SRC haskell
--- file: ch02/myDrop.hs
+-- file: MyDrop.hs
 myDrop n xs = if n <= 0 || null xs
               then xs
               else myDrop (n - 1) (tail xs)
@@ -768,9 +771,9 @@ Let's save our Haskell function in a file named ~myDrop.hs~,
 then load it into ~ghci~.
 
 #+BEGIN_SRC screen
-ghci> :load myDrop.hs
+ghci> :load MyDrop.hs
 [1 of 1] Compiling Main             ( myDrop.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> myDrop 2 "foobar"
 "obar"
 ghci> myDrop 4 "foobar"
@@ -822,7 +825,7 @@ logical “or” of its Bool-typed arguments.
 
 #+BEGIN_SRC screen
 ghci> :type null
-null :: [a] -> Bool
+null :: Foldable t => t a -> Bool
 ghci> :type (||)
 (||) :: Bool -> Bool -> Bool
 #+END_SRC
@@ -849,7 +852,7 @@ use some indentation, the exact amount is not important. If we wish, we
 can write the entire expression on a single line.
 
 #+BEGIN_SRC haskell
--- file: ch02/myDrop.hs
+-- file: MyDrop.hs
 myDropX n xs = if n <= 0 || null xs then xs else myDropX (n - 1) (tail xs)
 #+END_SRC
 
@@ -890,7 +893,7 @@ We will begin by looking at the definition of a simple,
 nonrecursive function.
 
 #+BEGIN_SRC haskell
--- file: ch02/RoundToEven.hs
+-- file: RoundToEven.hs
 isOdd n = mod n 2 == 1
 #+END_SRC
 
@@ -956,7 +959,7 @@ Substituting that value into the ~(||)~ expression leads to the
 following expression.
 
 #+BEGIN_SRC screen
-ghci> :type  False || null "abcd"
+ghci> :type False || null "abcd"
 False || null "abcd" :: Bool
 #+END_SRC
 
@@ -994,7 +997,7 @@ In Haskell, we can easily define a new function that short
 circuits.
 
 #+BEGIN_SRC haskell
--- file: ch02/shortCircuit.hs
+-- file: ShortCircuit.hs
 newOr a b = if a then a else b
 #+END_SRC
 
@@ -1301,7 +1304,7 @@ right-associative. If we introduce parentheses, we can make it clearer
 how this type signature is interpreted.
 
 #+BEGIN_SRC haskell
--- file: ch02/Take.hs
+-- file: Take.hs
 take :: Int -> ([a] -> [a])
 #+END_SRC
 
@@ -1322,7 +1325,7 @@ We can now write a type signature for the ~myDrop~ function that
 we defined earlier.
 
 #+BEGIN_SRC haskell
--- file: ch02/myDrop.hs
+-- file: MyDrop.hs
 myDrop :: Int -> [a] -> [a]
 #+END_SRC
 
