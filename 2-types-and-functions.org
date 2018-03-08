@@ -227,7 +227,7 @@ several more of the most common base types.
   The exact range of values representable as Int depends on the system's
   longest “native” integer: on a 32-bit machine, an Int is usually 32
   bits wide, while on a 64-bit machine, it is usually 64 bits wide. The
-  Haskell standard only guarantees that an Int is wider than 28 bits.
+  Haskell standard only guarantees a range of -229 to (229 - 1)
   (There exist numeric types that are exactly 8, 16, and so on bits
   wide, in signed and unsigned flavours; we'll get to those later.)
 - An Integer value is a signed integer of unbounded size.
