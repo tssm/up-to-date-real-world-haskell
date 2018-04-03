@@ -1476,15 +1476,15 @@ itemName = "Weighted Companion Cube"
 ** The offside rule and white space in an expression
 
 In our definitions of ~lend~ and ~lend2~, the left margin of our
-text wandered around quite a bit. This was not an accident: in Haskell,
-white space has meaning.
+text wandered around quite a bit. This was not an accident: normally
+in Haskell white space has meaning: it uses the code layout
+[[https://www.haskell.org/onlinereport/haskell2010/haskellch10.html#x17-17800010.3][as defined in the report]]
+as a cue to parse it. This is sometimes called the /offside rule/.
 
-Haskell uses indentation as a cue to parse sections of code.
-This use of layout to convey structure is sometimes called the /offside
-rule/. At the beginning of a source file, the first top level
-declaration or definition can start in any column, and the Haskell
-compiler or interpreter remembers that indentation level. Every
-subsequent top level declaration must have the same indentation.
+At the beginning of a source file, the first top level declaration
+or definition can start in any column, and the Haskell compiler or
+interpreter remembers that indentation level. Every subsequent top
+level declaration must have the same indentation.
 
 Here's an illustration of the top level indentation rule. Our
 first file, ~GoodIndent.hs~, is well behaved.
@@ -1503,7 +1503,7 @@ first file, ~GoodIndent.hs~, is well behaved.
 Our second, ~BadIndent.hs~, doesn't play by the rules.
 
 #+BEGIN_SRC haskell
--- file: ch03/BadIndent.hs
+-- file: BadIndent.hs
 -- This is the leftmost column.
 
     -- Our first declaration is in column 4.
@@ -1585,21 +1585,38 @@ our intentions easy to figure out.
 
 *** A note about tabs versus spaces
 
-If you use a Haskell-aware text editor (e.g. Emacs), it is
-probably already configured to use space characters for all white space
-when you edit Haskell source files. If your editor is /not/
-Haskell-aware, you should configure it to only use space characters.
+The default in Haskell code is to indent using spaces. ~ghc~ and ~ghci~ will
+warn you if you indent with tabs unless you disable it with the
+~-Wno-tabs~ flag. The reason for this is that it is easier to align expressions
+using spaces.
 
-The reason for this is portability. In an editor that uses a
-fixed-width font, tab stops are by convention placed at different
-intervals on Unix-like systems (every eight characters) than on Windows
-(every four characters). This means that no matter what your personal
-beliefs are about where tabs belong, you can't rely on someone else's
-editor honouring your preferences. Any indentation that uses tabs is
-going to look broken under /someone's/ configuration. In fact, this
-could lead to compilation problems, as the Haskell language standard
-requires implementations to use the Unix tab width convention. Using
-space characters avoids this problem entirely.
+If you like tabs you can use them as long as you correctly align expressions.
+For the compiler a tab equals to eight espaces and uses this amount to determine
+if an indented expression is correctly aligned. In the next example you'll
+see the ~b~ aligned with the ~a~ only if the tab width equals eight in
+whichever app you are using to read this text.
+
+#+BEGIN_SRC haskell
+-- file: TabAlign.hs
+x = let a = 1
+	b = 2
+	in a + b
+#+END_SRC
+
+We need the amount of characters before the ~a~ to be equal to
+eight or the ~b~ won't be aligned and won't compile.
+Totally impracticall. It is better to break the expressions as below.
+
+#+BEGIN_SRC haskell
+-- file: TabAlign2.hs
+x = let
+		a = 1
+		b = 2
+	in a + b
+#+END_SRC
+
+As long as you correctly align expressions you can even
+[[http://dmwit.com/tabs/][mix spaces and tabs]].
 
 *** The offside rule is not mandatory
 
