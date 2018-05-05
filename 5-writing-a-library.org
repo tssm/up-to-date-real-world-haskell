@@ -100,22 +100,28 @@ code to work with.
 
 #+BEGIN_SRC haskell
 -- file: SimpleJSON.hs
+getInt :: JValue -> Maybe Int
 getInt (JNumber n) = Just (truncate n)
 getInt _           = Nothing
 
+getDouble :: JValue -> Maybe Double
 getDouble (JNumber n) = Just n
 getDouble _           = Nothing
 
+getBool :: JValue -> Maybe Bool
 getBool (JBool b) = Just b
 getBool _         = Nothing
 
+getObject :: JValue -> Maybe [(String, JValue)]
 getObject (JObject o) = Just o
 getObject _           = Nothing
 
+getArray :: JValue -> Maybe [JValue]
 getArray (JArray a) = Just a
 getArray _          = Nothing
 
-isNull v            = v == JNull
+isNull :: JValue -> Bool
+isNull v = v == JNull
 #+END_SRC
 
 The ~truncate~ function turns a floating point or rational
@@ -228,7 +234,7 @@ text editor, and save it as ~Main.hs~.
 
 #+BEGIN_SRC haskell
 -- file: Main.hs
-module Main () where
+module Main where
 
 import SimpleJSON
 
@@ -249,7 +255,7 @@ that contains a function named ~main~. The ~main~ function is the one
 that will be called when we run the program once we've built it.
 
 #+BEGIN_SRC screen
-ghc -o simple Main.hs SimpleJSON.o
+ghc -o simple Main.hs
 #+END_SRC
 
 This time around, we're omitting the ~-c~ option when we invoke
@@ -264,18 +270,9 @@ create[fn:1]. Here, we've decided to name the
 program ~simple~. On Windows, the program will have the suffix ~.exe~,
 but on Unix variants there will not be a suffix.
 
-Finally, we supply the name of our new source file, ~Main.hs~,
-and the object file we already compiled, ~SimpleJSON.o~. We must
-explicitly list every one of our files that contains code that should
-end up in the executable. If we forget a source or object file, ~ghc~
-will complain about /undefined symbols/, which indicates that some of
-the definitions that it needs are not provided in the files we have
-supplied.
-
-When compiling, we can pass ~ghc~ any mixture of source and
-object files. If ~ghc~ notices that it has already compiled a source
-file into an object file, it will only recompile the source file if
-we've modified it.
+Finally, we supply the name of our new source file, ~Main.hs~. If ~ghc~
+notices that it has already compiled a source file into an object file,
+it will only recompile the source file if we've modified it.
 
 Once ~ghc~ has finished compiling and linking our ~simple~
 program, we can run it from the command line.
@@ -306,9 +303,9 @@ renderJValue (JBool False) = "false"
 renderJValue JNull         = "null"
 
 renderJValue (JObject o) = "{" ++ pairs o ++ "}"
-  where pairs [] = ""
-        pairs ps = intercalate ", " (map renderPair ps)
-        renderPair (k,v)   = show k ++ ": " ++ renderJValue v
+  where pairs []         = ""
+        pairs ps         = intercalate ", " (map renderPair ps)
+        renderPair (k,v) = show k ++ ": " ++ renderJValue v
 
 renderJValue (JArray a) = "[" ++ values a ++ "]"
   where values [] = ""
@@ -364,6 +361,8 @@ returns a ~String~, but we don't write a type signature for it.
 
 #+BEGIN_SRC haskell
 -- file: Trouble.hs
+import Data.Char
+
 upcaseFirst (c:cs) = toUpper c -- forgot ":cs" here
 #+END_SRC
 
@@ -386,14 +385,19 @@ won't necessarily get an obvious error message.
 ghci> :load Trouble
 [1 of 1] Compiling Main             ( Trouble.hs, interpreted )
 
-Trouble.hs:9:27:
-    Couldn't match expected type `[Char]' against inferred type `Char'
-      Expected type: [Char] -> [Char]
-      Inferred type: [Char] -> Char
-    In the first argument of `map', namely `upcaseFirst'
-    In the first argument of `concat', namely
-        `(map upcaseFirst (words xs))'
-Failed, modules loaded: none.
+Trouble.hs:6:24: error:
+    • Couldn't match type ‘Char’ with ‘[Char]’
+      Expected type: [[Char]]
+        Actual type: [Char]
+    • In the first argument of ‘concat’, namely
+        ‘(map upcaseFirst (words xs))’
+      In the expression: concat (map upcaseFirst (words xs))
+      In an equation for ‘camelCase’:
+          camelCase xs = concat (map upcaseFirst (words xs))
+  |
+6 | camelCase xs = concat (map upcaseFirst (words xs))
+  |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+Failed, no modules loaded.
 #+END_SRC
 
 Notice that the error is reported where we /use/ the
@@ -505,11 +509,10 @@ fail, as the compiler won't know anything about those functions. To
 avoid this problem, we write stub code that doesn't do anything.
 
 #+BEGIN_SRC haskell
--- file: PrettyStub.hs
+-- file: Prettify.hs
 import SimpleJSON
 
-data Doc = ToBeDefined
-         deriving (Show)
+data Doc = ToBeDefined deriving (Show)
 
 string :: String -> Doc
 string str = undefined
@@ -529,11 +532,16 @@ will cause our program to crash.
 ghci> :type undefined
 undefined :: a
 ghci> undefined
-*** Exception: Prelude.undefined
+CallStack (from HasCallStack):
+  error, called at libraries/base/GHC/Err.hs:79:14 in base:GHC.Err
+  undefined, called at <interactive>:2:1 in interactive:Ghci1
 ghci> :type double
 double :: Double -> Doc
 ghci> double 3.14
 *** Exception: Prelude.undefined
+CallStack (from HasCallStack):
+  error, called at libraries/base/GHC/Err.hs:79:14 in base:GHC.Err
+  undefined, called at PrettyStub.hs:11:14 in main:Main
 #+END_SRC
 
 Even though we can't yet run our stubbed code, the compiler's
@@ -585,7 +593,7 @@ We provide a ~(<>)~ function in our pretty printing library. It
 appends two ~Doc~ values, so it's the ~Doc~ equivalent of ~(++)~.
 
 #+BEGIN_SRC haskell
--- file: PrettyStub.hs
+-- file: Prettify.hs
 (<>) :: Doc -> Doc -> Doc
 a <> b = undefined
 
@@ -597,7 +605,7 @@ Our pretty printing library also provides ~hcat~, which concatenates
 multiple ~Doc~ values into one: it's the analogue of ~concat~ for lists.
 
 #+BEGIN_SRC haskell
--- file: PrettyStub.hs
+-- file: Prettify.hs
 hcat :: [Doc] -> Doc
 hcat xs = undefined
 #+END_SRC
@@ -701,7 +709,7 @@ definition for ~hexEscape~.
 hexEscape :: Char -> Doc
 hexEscape c | d < 0x10000 = smallHex d
             | otherwise   = astral (d - 0x10000)
-  where d = ord c
+    where d = ord c
 #+END_SRC
 
 ** Arrays and objects, and the module header
@@ -735,7 +743,7 @@ opening and closing characters. The ~fsep~ function will live in our
 wrapping lines if the output will not fit on a single line.
 
 #+BEGIN_SRC haskell
--- file: PrettyStub.hs
+-- file: Prettify.hs
 fsep :: [Doc] -> Doc
 fsep xs = undefined
 #+END_SRC
@@ -751,9 +759,9 @@ already written stubs.
 #+BEGIN_SRC haskell
 -- file: Prettify.hs
 punctuate :: Doc -> [Doc] -> [Doc]
-punctuate p []     = []
-punctuate p [d]    = [d]
-punctuate p (d:ds) = (d <> p) : punctuate p ds
+punctuate _ []       = []
+punctuate _ [d]      = [d]
+punctuate p (d : ds) = (d <> p) : punctuate p ds
 #+END_SRC
 
 With this definition of ~series~, pretty printing an array is
@@ -792,8 +800,16 @@ import Data.Char (ord)
 import Data.Bits (shiftR, (.&.))
 
 import SimpleJSON (JValue(..))
-import Prettify (Doc, (<>), char, double, fsep, hcat, punctuate, text,
-                 compact, pretty)
+import Prettify
+    (Doc
+    , (<>)
+    , char
+    , double
+    , fsep
+    , hcat
+    , punctuate
+    , text
+    , compact)
 #+END_SRC
 
 We export just one name from this module: ~renderJValue~, our
@@ -848,7 +864,7 @@ data Doc = Empty
          | Line
          | Concat Doc Doc
          | Union Doc Doc
-           deriving (Show,Eq)
+           deriving (Show, Eq)
 #+END_SRC
 
 Observe that the ~Doc~ type is actually a tree. The ~Concat~ and
@@ -1260,10 +1276,10 @@ A package description begins with a series of global properties,
 which apply to every library and executable in the package.
 
 #+BEGIN_SRC haskell
-Name:    mypretty
-Version: 0.1
+name:    mypretty
+version: 0.1
 
--- This is a comment.  It stretches to the end of the line.
+-- This is a comment. It stretches to the end of the line.
 #+END_SRC
 
 Package names must be unique. If you create and install a
@@ -1274,21 +1290,21 @@ The global properties include a substantial amount of
 information that is intended for human readers, not Cabal itself.
 
 #+BEGIN_SRC haskell
-Synopsis:    My pretty printing library, with JSON support
-Description: A simple pretty printing library that illustrates how to
+synopsis:    My pretty printing library, with JSON support
+description: A simple pretty printing library that illustrates how to
              develop a Haskell library.
-Author:      Real World Haskell
-Maintainer:  nobody@realworldhaskell.org
+author:      Real World Haskell
+maintainer:  nobody@realworldhaskell.org
 #+END_SRC
 
-As the ~Description~ field indicates, a field can span multiple
+As the ~description~ field indicates, a field can span multiple
 lines, provided they're indented.
 
 Also included in the global properties is license information.
 Most Haskell packages are licensed under the BSD license, which Cabal
 calls ~BSD3~[fn:2]. (Obviously, you're free to
 choose whatever license you think is appropriate.) The optional
-~License-File~ field lets us specify the name of a file that contains
+~license-file~ field lets us specify the name of a file that contains
 the exact text of our package's licensing terms.
 
 The features supported by successive versions of Cabal evolve
@@ -1297,7 +1313,7 @@ be compatible with. The features we are describing are supported by
 versions 1.2 and higher of Cabal.
 
 #+BEGIN_SRC haskell
-Cabal-Version: >= 1.2
+cabal-version: >= 1.2
 #+END_SRC
 
 To describe an individual library within a package, we write a
@@ -1306,18 +1322,18 @@ contents of a section must be indented.
 
 #+BEGIN_SRC haskell
 library
-  Exposed-Modules: Prettify
+  exposed-modules: Prettify
                    PrettyJSON
                    SimpleJSON
-  Build-Depends:   base >= 2.0
+  build-depends:   base >= 2.0
 #+END_SRC
 
-The ~Exposed-Modules~ field contains a list of modules that
+The ~exposed-modules~ field contains a list of modules that
 should be available to users of this package. An optional field,
-~Other-Modules~, contains a list of /internal/ modules. These are
+~other-modules~, contains a list of /internal/ modules. These are
 required for this library to function, but will not be visible to users.
 
-The ~Build-Depends~ field contains a comma-separated list of
+The ~build-depends~ field contains a comma-separated list of
 packages that our library requires to build. For each package, we can
 optionally specify the range of versions with which this library is
 known to work. The ~base~ package contains many of the core Haskell
@@ -1328,7 +1344,7 @@ Figuring out build dependencies
 
 We don't have to guess or do any research to establish which
 packages we depend on. If we try to build our package without a
-~Build-Depends~ field, compilation will fail with a useful error
+~build-depends~ field, compilation will fail with a useful error
 message. Here's an example where we commented out the dependency on the
 ~base~ package.
 
@@ -1376,7 +1392,6 @@ package needs it. The simplest setup file looks like this.
 
 #+BEGIN_SRC haskell
 -- file: Setup.hs
-#!/usr/bin/env runhaskell
 import Distribution.Simple
 main = defaultMain
 #+END_SRC
