@@ -1,8 +1,8 @@
-* Chapter 6. Using Typeclasses
+* Chapter 6. Using Type Classes
 
-Typeclasses are among the most powerful features in Haskell.
+Type classes are among the most powerful features in Haskell.
 They allow you to define generic interfaces that provide a common
-feature set over a wide variety of types. Typeclasses are at the heart
+feature set over a wide variety of types. Type classes are at the heart
 of some basic language features such as equality testing and numeric
 operators. Before we talk about what exactly typeclasses are, though,
 we'd like to explain the need for them.
@@ -74,11 +74,8 @@ Haskell's typeclasses are designed to address all of these things.
 
 ** What are typeclasses?
 
-Typeclasses define a set of functions that can have different
+Type classes define a set of functions that can have different
 implementations depending on the type of data they are given.
-Typeclasses may look like the objects of object-oriented programming,
-but they are truly quite different.
-
 Let's use typeclasses to solve our equality dilemma from
 earlier in the chapter. To begin with, we must define the typeclass
 itself. We want a function that takes two parameters, both the same
@@ -261,7 +258,7 @@ instance. That's because of the default implementation contained in
 compiler automatically uses the default implementation given in the
 ~BasicEq3~ declaration.
 
-** Important Built-In Typeclasses
+** Important Built-In Type classes
 
 Now that we've discussed defining your own typeclasses and
 making your types instances of typeclasses, it's time to introduce you
@@ -635,7 +632,7 @@ others, such as ~asin~, that only apply to floating-point types.
 Numeric Functions and Constants”]] summarizes the different functions
 that operate on numeric types, and
 [[file:using-typeclasses.html#numerictypes.typeclasses][Table 6.3,
-“Typeclass Instances for Numeric Types”]] matches the types with their
+“Type class Instances for Numeric Types”]] matches the types with their
 respective typeclasses. As you read that table, keep in mind that
 Haskell operators are just functions: you can say either ~(+) 2 3~ or
 ~2 + 3~ with the same result. By convention, when referring to an
@@ -681,7 +678,7 @@ table.
 | ~truncate~       | ~(RealFrac a, Integral b) ~> a -> b~        | ~Prelude~    | Truncates number towards zero                                                          |
 | ~xor~            | ~Bits a ~> a -> a -> a~                     | ~Data.Bits~  | Bitwise exclusive or                                                                   |
 
-#+CAPTION: Table 6.3. Typeclass Instances for Numeric Types
+#+CAPTION: Table 6.3. Type class Instances for Numeric Types
 | Type                      | ~Bits~ | ~Bounded~ | ~Floating~ | ~Fractional~ | ~Integral~ | ~Num~ | ~Real~ | ~RealFrac~ |
 |---------------------------+--------+-----------+------------+--------------+------------+-------+--------+------------|
 | ~Double~                  |        |           | X          | X            |            | X     | X      | X          |
@@ -819,7 +816,7 @@ data ThisWorks = ThisWorks OK
                  deriving (Show)
 #+END_SRC
 
-** Typeclasses at work: making JSON easier to use
+** Type classes at work: making JSON easier to use
 
 The ~JValue~ type that we introduced in
 [[file:writing-a-library-working-with-json-data.html#library.jvalue][the
