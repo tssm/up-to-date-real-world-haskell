@@ -1,8 +1,8 @@
-* Chapter 6. Using Type Classes
+* Chapter 6. Using Typeclasses
 
-Type classes are among the most powerful features in Haskell.
+Typeclasses are among the most powerful features in Haskell.
 They allow you to define generic interfaces that provide a common
-feature set over a wide variety of types. Type classes are at the heart
+feature set over a wide variety of types. Typeclasses are at the heart
 of some basic language features such as equality testing and numeric
 operators. Before we talk about what exactly typeclasses are, though,
 we'd like to explain the need for them.
@@ -74,8 +74,11 @@ Haskell's typeclasses are designed to address all of these things.
 
 ** What are typeclasses?
 
-Type classes define a set of functions that can have different
+Typeclasses define a set of functions that can have different
 implementations depending on the type of data they are given.
+Typeclasses may look like the objects of object-oriented programming,
+but they are truly quite different.
+
 Let's use typeclasses to solve our equality dilemma from
 earlier in the chapter. To begin with, we must define the typeclass
 itself. We want a function that takes two parameters, both the same
@@ -145,12 +148,10 @@ True
 False
 *Main> isEqual "Hi" "Hi"
 
-<interactive>:1:0:
-    No instance for (BasicEq [Char])
-      arising from a use of `isEqual' at <interactive>:1:0-16
-    Possible fix: add an instance declaration for (BasicEq [Char])
-    In the expression: isEqual "Hi" "Hi"
-    In the definition of `it': it = isEqual "Hi" "Hi"
+<interactive>:1:1: error:
+    • No instance for (BasicEq [Char]) arising from a use of ‘isEqual’
+    • In the expression: isEqual "Hi" "Hi"
+      In an equation for ‘it’: it = isEqual "Hi" "Hi"
 #+END_SRC
 
 Notice that when we tried to compare two strings, ~ghci~
@@ -205,18 +206,17 @@ always be implemented.
 With ~BasicEq3~, we have provided a class that does very much
 the same thing as Haskell's built-in ~==~ and ~/=~ operators. In fact,
 these operators are defined by a typeclass that looks almost identical
-to ~BasicEq3~. The Haskell 98 Report defines a typeclass that implements
+to ~BasicEq3~. The Haskell 2010 Report defines a typeclass that implements
 equality comparison. Here is the code for the built-in ~Eq~ typeclass.
 Note how similar it is to our ~BasicEq3~ typeclass.
 
 #+BEGIN_SRC haskell
-class  Eq a  where
+class Eq a where
     (==), (/=) :: a -> a -> Bool
-
-       -- Minimal complete definition:
-       --     (==) or (/=)
-    x /= y     =  not (x == y)
-    x == y     =  not (x /= y)
+    -- Minimal complete definition:
+    -- (==) or (/=)
+    x /= y = not (x == y)
+    x == y = not (x /= y)
 #+END_SRC
 
 ** Declaring typeclass instances
@@ -258,7 +258,7 @@ instance. That's because of the default implementation contained in
 compiler automatically uses the default implementation given in the
 ~BasicEq3~ declaration.
 
-** Important Built-In Type classes
+** Important Built-In Typeclasses
 
 Now that we've discussed defining your own typeclasses and
 making your types instances of typeclasses, it's time to introduce you
@@ -413,11 +413,7 @@ well. You'll need to explicitly give types for your ~read~ results in
 
 #+BEGIN_SRC screen
 ghci> read "5"
-
-<interactive>:1:0:
-    Ambiguous type variable `a' in the constraint:
-      `Read a' arising from a use of `read' at <interactive>:1:0-7
-    Probable fix: add a type signature that fixes these type variable(s)
+*** Exception: Prelude.read: no parse
 ghci> :type (read "5")
 (read "5") :: (Read a) => a
 ghci> (read "5") :: Integer
@@ -535,7 +531,7 @@ handling/]].
 Let's try it out in ~ghci~:
 
 #+BEGIN_SRC screen
-ghci> let d1 = [Just 5, Nothing, Nothing, Just 8, Just 9] :: [Maybe Int]
+ghci> d1 = [Just 5, Nothing, Nothing, Just 8, Just 9] :: [Maybe Int]
 ghci> putStrLn (show d1)
 [Just 5,Nothing,Nothing,Just 8,Just 9]
 ghci> writeFile "test" (show d1)
@@ -545,33 +541,32 @@ First, we assign ~d1~ to be a list. Next, we print out the
 result of ~show d1~ so we can see what it generates. Then, we write the
 result of ~show d1~ to a file named ~test~.
 
-Let's try reading it back. /FIXME: xref to explanation of
-variable binding in ghci/
+Let's try reading it back.
 
 #+BEGIN_SRC screen
 ghci> input <- readFile "test"
 "[Just 5,Nothing,Nothing,Just 8,Just 9]"
-ghci> let d2 = read input
+ghci> d2 = read input
+ghci> print d2
+*** Exception: Prelude.read: no parse
+#+END_SRC
 
-<interactive>:1:9:
-    Ambiguous type variable `a' in the constraint:
-      `Read a' arising from a use of `read' at <interactive>:1:9-18
-    Probable fix: add a type signature that fixes these type variable(s)
-ghci> let d2 = (read input)::[Maybe Int]
+First, we ask Haskell to read the file back.[fn:2] Then, we assign the
+result of ~read input~ to ~d2~ and try to print it. That generates an
+error. The reason is that the interpreter doesn't know what type ~d2~ is
+meant to be, so it doesn't know how to parse the input. If we give it an
+explicit type, it works, and we can verify that the two sets of data are
+equal.
+
+#+BEGIN_SRC screen
+ghci> d2 = (read input)::[Maybe Int]
 ghci> print d1
 [Just 5,Nothing,Nothing,Just 8,Just 9]
-ghci> print d2
+ghci> print (d2 :: [Maybe Int]) 
 [Just 5,Nothing,Nothing,Just 8,Just 9]
 ghci> d1 == d2
 True
 #+END_SRC
-
-First, we ask Haskell to read the file
-back.[fn:2] Then, we try to assign the result of
-~read input~ to ~d2~. That generates an error. The reason is that the
-interpreter doesn't know what type ~d2~ is meant to be, so it doesn't
-know how to parse the input. If we give it an explicit type, it works,
-and we can verify that the two sets of data are equal.
 
 Since so many different types are instances of ~Read~ and
 ~Show~ by default (and others can be made instances easily; see
@@ -632,7 +627,7 @@ others, such as ~asin~, that only apply to floating-point types.
 Numeric Functions and Constants”]] summarizes the different functions
 that operate on numeric types, and
 [[file:using-typeclasses.html#numerictypes.typeclasses][Table 6.3,
-“Type class Instances for Numeric Types”]] matches the types with their
+“Typeclass Instances for Numeric Types”]] matches the types with their
 respective typeclasses. As you read that table, keep in mind that
 Haskell operators are just functions: you can say either ~(+) 2 3~ or
 ~2 + 3~ with the same result. By convention, when referring to an
@@ -678,7 +673,7 @@ table.
 | ~truncate~       | ~(RealFrac a, Integral b) ~> a -> b~        | ~Prelude~    | Truncates number towards zero                                                          |
 | ~xor~            | ~Bits a ~> a -> a -> a~                     | ~Data.Bits~  | Bitwise exclusive or                                                                   |
 
-#+CAPTION: Table 6.3. Type class Instances for Numeric Types
+#+CAPTION: Table 6.3. Typeclass Instances for Numeric Types
 | Type                      | ~Bits~ | ~Bounded~ | ~Floating~ | ~Fractional~ | ~Integral~ | ~Num~ | ~Real~ | ~RealFrac~ |
 |---------------------------+--------+-----------+------------+--------------+------------+-------+--------+------------|
 | ~Double~                  |        |           | X          | X            |            | X     | X      | X          |
@@ -816,7 +811,7 @@ data ThisWorks = ThisWorks OK
                  deriving (Show)
 #+END_SRC
 
-** Type classes at work: making JSON easier to use
+** Typeclasses at work: making JSON easier to use
 
 The ~JValue~ type that we introduced in
 [[file:writing-a-library-working-with-json-data.html#library.jvalue][the
@@ -875,6 +870,8 @@ Haskell's typeclasses offer a tempting solution to this problem.
 
 #+BEGIN_SRC haskell
 -- file: JSONClass.hs
+module JSONClass where
+
 type JSONError = String
 
 class JSON a where
@@ -917,7 +914,7 @@ data Either a b = Left a
 #+END_SRC
 
 Quite often, the type we use for the ~a~ parameter value is
-String, so we can provide a useful description if something goes wrong.
+~String~, so we can provide a useful description if something goes wrong.
 To see how we use the ~Either~ type in practice, let's look at a simple
 instance of our typeclass.
 
@@ -931,7 +928,7 @@ instance JSON Bool where
 
 *** Making an instance with a type synonym
 
-The Haskell 98 standard does not allow us to write an instance
+The Haskell 2010 standard does not allow us to write an instance
 of the following form, even though it seems perfectly reasonable.
 
 #+BEGIN_SRC haskell
@@ -945,11 +942,11 @@ instance JSON String where
 
 Recall that ~String~ is a synonym for ~[Char]~, which in turn is the
 type ~[a]~ where ~Char~ is substituted for the type parameter ~a~. According
-to Haskell 98's rules, we are not allowed to supply a type in place of a
+to Haskell 2010's rules, we are not allowed to supply a type in place of a
 type parameter when we write an instance. In other words, it would be
 legal for us to write an instance for ~[a]~, but not for ~[Char]~.
 
-While GHC follows the Haskell 98 standard by default, we can
+While GHC follows the Haskell 2010 standard by default, we can
 relax this particular restriction by placing a specially formatted
 comment at the top of our source file.
 
@@ -1000,6 +997,10 @@ use ~undefined~ as the bodies of the instance's methods.
 
 #+BEGIN_SRC haskell
 -- file: BrokenClass.hs
+{-# LANGUAGE FlexibleInstances #-} -- Add it to the beginning of JSONClass.hs too
+
+import JSONClass
+
 instance (JSON a) => JSON [a] where
     toJValue = undefined
     fromJValue = undefined
@@ -1022,9 +1023,10 @@ into ~ghci~, everything initially seems fine.
 
 #+BEGIN_SRC screen
 ghci> :load BrokenClass
-[1 of 2] Compiling SimpleJSON       ( ../ch05/SimpleJSON.hs, interpreted )
-[2 of 2] Compiling BrokenClass      ( BrokenClass.hs, interpreted )
-Ok, modules loaded: SimpleJSON, BrokenClass.
+[1 of 3] Compiling SimpleJSON       ( SimpleJSON.hs, interpreted )
+[2 of 3] Compiling JSONClass        ( JSONClass.hs, interpreted )
+[3 of 3] Compiling Main             ( BrokenClass.hs, interpreted )
+Ok, three modules loaded.
 #+END_SRC
 
 However, once we try to /use/ the list-of-pairs instance, we
@@ -1033,16 +1035,16 @@ run into trouble.
 #+BEGIN_SRC screen
 ghci> toJValue [("foo","bar")]
 
-<interactive>:1:0:
-    Overlapping instances for JSON [([Char], [Char])]
-      arising from a use of `toJValue' at <interactive>:1:0-23
-    Matching instances:
-      instance (JSON a) => JSON [a]
-        -- Defined at BrokenClass.hs:(44,0)-(46,25)
-      instance (JSON a) => JSON [(String, a)]
-        -- Defined at BrokenClass.hs:(50,0)-(52,25)
-    In the expression: toJValue [("foo", "bar")]
-    In the definition of `it': it = toJValue [("foo", "bar")]
+<interactive>:2:1: error:
+    • Overlapping instances for JSON [([Char], [Char])]
+        arising from a use of ‘toJValue’
+      Matching instances:
+        instance [safe] JSON a => JSON [(String, a)]
+          -- Defined at BrokenClass.hs:9:10
+        instance [safe] JSON a => JSON [a]
+          -- Defined at BrokenClass.hs:5:10
+    • In the expression: toJValue [("foo", "bar")]
+      In an equation for ‘it’: it = toJValue [("foo", "bar")]
 #+END_SRC
 
 This problem of /overlapping instances/ is a consequence of
@@ -1068,7 +1070,7 @@ We have two instances of the typeclass ~Borked~ for pairs: one
 for a pair of ~Int~s and another for a pair of anything else that's
 ~Borked~.
 
-Suppose that we want to ~bork~ a pair of Int values. To do so,
+Suppose that we want to ~bork~ a pair of ~Int~ values. To do so,
 the compiler must choose an instance to use. Because these instances are
 right next to each other, it may seem that it could simply choose the
 more specific instance.
@@ -1160,11 +1162,11 @@ need to enable any special language extensions.
 
 The ~OverlappingInstances~ and ~TypeSynonymInstances~ language
 extensions are specific to GHC, and by definition were not present in
-Haskell 98. However, the familiar Show typeclass from Haskell 98 somehow
-renders a list of ~Char~ differently from a list of ~Int~. It achieves this
-via a clever, but simple, trick.
+Haskell 2010. However, the familiar ~Show~ typeclass from Haskell 210
+somehow renders a list of ~Char~ differently from a list of ~Int~. It
+achieves this via a clever, but simple, trick.
 
-The Show class defines both a ~show~ method, which renders one
+The ~Show~ class defines both a ~show~ method, which renders one
 value, and a ~showList~ method, which renders a list of values. The
 default implementation of ~showList~ renders a list using square
 brackets and commas.
@@ -1238,12 +1240,10 @@ them.
 #+BEGIN_SRC screen
 ghci> N 313 + N 37
 
-<interactive>:1:0:
-    No instance for (Num NewtypeInt)
-      arising from a use of `+' at <interactive>:1:0-11
-    Possible fix: add an instance declaration for (Num NewtypeInt)
-    In the expression: N 313 + N 37
-    In the definition of `it': it = N 313 + N 37
+<interactive>:2:1: error:
+    • No instance for (Num NewtypeInt) arising from a use of ‘+’
+    • In the expression: N 313 + N 37
+      In an equation for ‘it’: it = N 313 + N 37
 #+END_SRC
 
 As with the ~data~ keyword, we can use a ~newtype~'s value
@@ -1293,7 +1293,7 @@ Beyond this, there's another important difference between
 book-keeping cost at runtime, for example to track which constructor a
 value was created with. A ~newtype~ value, on the other hand, can only
 have one constructor, and so does not need this overhead. This makes it
-more space- and time-efficient at runtime.
+more space– and time–efficient at runtime.
 
 Because a ~newtype~'s constructor is used only at compile time
 and does not even exist at runtime, pattern matching on ~undefined~
@@ -1401,8 +1401,8 @@ the list type so that the compiler will not see it as a list.
 
 #+BEGIN_SRC haskell
 -- file: JSONClass.hs
-newtype JAry a = JAry {
-      fromJAry :: [a]
+newtype JAry a = JAry
+    { fromJAry :: [a]
     } deriving (Eq, Ord, Show)
 #+END_SRC
 
@@ -1410,7 +1410,7 @@ When we export this type from our module, we'll export the
 complete details of the type. Our module header will look like this:
 
 #+BEGIN_SRC haskell
--- file: JSONClassExport.hs
+-- file: JSONClass.hs
 module JSONClass
     ( JAry(..)
     ) where
@@ -1436,7 +1436,7 @@ We would then export the type constructor, the deconstructor
 function, and our construction function, but not the data constructor.
 
 #+BEGIN_SRC haskell
--- file: JSONClassExport.hs
+-- file: JSONClass.hs
 module JSONClass
     ( JAry(fromJAry)
     , jary
@@ -1463,8 +1463,8 @@ of a JSON object.
 
 #+BEGIN_SRC haskell
 -- file: JSONClass.hs
-newtype JObj a = JObj {
-      fromJObj :: [(String, a)]
+newtype JObj a = JObj
+    { fromJObj :: [(String, a)]
     } deriving (Eq, Ord, Show)
 #+END_SRC
 
@@ -1535,7 +1535,7 @@ concise one-liner for converting to a ~JValue~.
 jaryToJValue = JArray . JAry . map toJValue . fromJAry
 #+END_SRC
 
-We have more work to do to convert /from/ a ~JValue~ to a ~JAry~ a,
+We have more work to do to convert /from/ a ~JValue~ to a ~JAry a~,
 but we'll break it into reusable parts. The basic function is
 straightforward.
 
@@ -1573,7 +1573,7 @@ mapEithers f (x:xs) = case mapEithers f xs of
 mapEithers _ _ = Right []
 #+END_SRC
 
-Because the elements of the list hidden in the JObj type have a
+Because the elements of the list hidden in the ~JObj~ type have a
 little more structure, the code to convert to and from a ~JValue~ is a bit
 more complex. Fortunately, we can reuse the functions that we just
 defined.
@@ -1597,7 +1597,7 @@ instance (JSON a) => JSON (JObj a) where
 
 ** The dreaded monomorphism restriction
 
-The Haskell 98 standard has a subtle feature that can sometimes
+The Haskell 2010 standard has a subtle feature that can sometimes
 bite us in unexpected circumstances. Here's a simple function definition
 that illustrates the issue.
 
@@ -1613,18 +1613,29 @@ peculiar complaint.
 ghci> :load Monomorphism
 [1 of 1] Compiling Main             ( Monomorphism.hs, interpreted )
 
-Monomorphism.hs:2:9:
-    Ambiguous type variable `a' in the constraint:
-      `Show a' arising from a use of `show' at Monomorphism.hs:2:9-12
-    Possible cause: the monomorphism restriction applied to the following:
-      myShow :: a -> String (bound at Monomorphism.hs:2:0)
-    Probable fix: give these definition(s) an explicit type signature
-                  or use -fno-monomorphism-restriction
-Failed, modules loaded: none.
+Monomorphism.hs:1:10: error:
+    • Ambiguous type variable ‘a0’ arising from a use of ‘show’
+      prevents the constraint ‘(Show a0)’ from being solved.
+      Relevant bindings include
+        myShow :: a0 -> String (bound at Monomorphism.hs:1:1)
+      Probable fix: use a type annotation to specify what ‘a0’ should be.
+      These potential instances exist:
+        instance Show Ordering -- Defined in ‘GHC.Show’
+        instance Show Integer -- Defined in ‘GHC.Show’
+        instance Show a => Show (Maybe a) -- Defined in ‘GHC.Show’
+        ...plus 22 others
+        ...plus 11 instances involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the expression: show
+      In an equation for ‘myShow’: myShow = show
+  |
+1 | myShow = show
+  |          ^^^^
+Failed, no modules loaded.
 #+END_SRC
 
 The “monomorphism restriction” to which the error message
-refers is a part of the Haskell 98 standard. /Monomorphism/ is simply
+refers is a part of the Haskell 2010 standard. /Monomorphism/ is simply
 the opposite of polymorphism: it indicates that an expression has
 exactly one type. The /restriction/ lies in the fact that Haskell
 sometimes forces a declaration to be less polymorphic than we would
