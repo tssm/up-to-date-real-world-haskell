@@ -86,7 +86,7 @@ they may only be performed (executed) from within another I/O action.
 Let's look at this with ~ghci~:
 
 #+BEGIN_SRC screen
-ghci> let writefoo = putStrLn "foo"
+ghci> writefoo = putStrLn "foo"
 ghci> writefoo
 foo
 #+END_SRC
@@ -101,8 +101,6 @@ you on the spot.
 
 #+BEGIN_NOTE
 What Is An I/O Action?
-
-Actions:
 
 - Have the type ~IO t~
 - Are first-class values in Haskell and fit seamlessly with
@@ -186,10 +184,10 @@ Let's examine this with ~ghci~:
 #+BEGIN_SRC screen
 ghci> :load callingpure.hs
 [1 of 1] Compiling Main             ( callingpure.hs, interpreted )
-Ok, modules loaded: Main.
-ghci> name2reply "John"
+Ok, one module loaded.
+*Main> name2reply "John"
 "Pleased to meet you, John.\nYour name contains 4 characters."
-ghci> putStrLn (name2reply "John")
+*Main> putStrLn (name2reply "John")
 Pleased to meet you, John.
 Your name contains 4 characters.
 #+END_SRC
@@ -507,8 +505,8 @@ As an example, we can provide input to ~callingpure.hs~ in
 advance like this:
 
 #+BEGIN_SRC screen
-$ echo John|runghc callingpure.hs
-Greetings once again.  What is your name?
+$ echo John | runghc callingpure.hs
+Greetings once again. What is your name?
 Pleased to meet you, John.
 Your name contains 4 characters.
 #+END_SRC
@@ -584,18 +582,18 @@ does and how it works.
 -- file: tempfile.hs
 import System.IO
 import System.Directory(getTemporaryDirectory, removeFile)
-import System.IO.Error(catch)
+import System.IO.Error(catchIOError)
 import Control.Exception(finally)
 
--- The main entry point.  Work with a temp file in myAction.
+-- The main entry point. Work with a temp file in myAction.
 main :: IO ()
 main = withTempFile "mytemp.txt" myAction
 
-{- The guts of the program.  Called with the path and handle of a temporary
-   file.  When this function exits, that file will be closed and deleted
+{- The guts of the program. Called with the path and handle of a temporary
+   file. When this function exits, that file will be closed and deleted
    because myAction was called from withTempFile. -}
 myAction :: FilePath -> Handle -> IO ()
-myAction tempname temph = 
+myAction tempname temph =
     do -- Start by displaying a greeting on the terminal
        putStrLn "Welcome to tempfile.hs"
        putStrLn $ "I have a temporary file at " ++ tempname
@@ -606,13 +604,13 @@ myAction tempname temph =
 
        -- Now, write some data to the temporary file
        let tempdata = show [1..10]
-       putStrLn $ "Writing one line containing " ++ 
+       putStrLn $ "Writing one line containing " ++
                   show (length tempdata) ++ " bytes: " ++
                   tempdata
        hPutStrLn temph tempdata
 
-       -- Get our new position.  This doesn't actually modify pos
-       -- in memory, but makes the name "pos" correspond to a different 
+       -- Get our new position. This doesn't actually modify pos
+       -- in memory, but makes the name "pos" correspond to a different
        -- value for the remainder of the "do" block.
        pos <- hTell temph
        putStrLn $ "After writing, my new position is " ++ show pos
@@ -632,12 +630,12 @@ myAction tempname temph =
        print c
 
 {- This function takes two parameters: a filename pattern and another
-   function.  It will create a temporary file, and pass the name and Handle
+   function. It will create a temporary file, and pass the name and Handle
    of that file to the given function.
 
-   The temporary file is created with openTempFile.  The directory is the one
+   The temporary file is created with openTempFile. The directory is the one
    indicated by getTemporaryDirectory, or, if the system has no notion of
-   a temporary directory, "." is used.  The given pattern is passed to
+   a temporary directory, "." is used. The given pattern is passed to
    openTempFile.
 
    After the given function terminates, even if it terminates due to an
@@ -646,20 +644,20 @@ withTempFile :: String -> (FilePath -> Handle -> IO a) -> IO a
 withTempFile pattern func =
     do -- The library ref says that getTemporaryDirectory may raise on
        -- exception on systems that have no notion of a temporary directory.
-       -- So, we run getTemporaryDirectory under catch.  catch takes
+       -- So, we run getTemporaryDirectory under catchIOError. catchIOError takes
        -- two functions: one to run, and a different one to run if the
-       -- first raised an exception.  If getTemporaryDirectory raised an
+       -- first raised an exception. If getTemporaryDirectory raised an
        -- exception, just use "." (the current working directory).
-       tempdir <- catch (getTemporaryDirectory) (\_ -> return ".")
-       (tempfile, temph) <- openTempFile tempdir pattern 
+       tempdir <- catchIOError (getTemporaryDirectory) (\_ -> return ".")
+       (tempfile, temph) <- openTempFile tempdir pattern
 
        -- Call (func tempfile temph) to perform the action on the temporary
-       -- file.  finally takes two actions.  The first is the action to run.
+       -- file. finally takes two actions. The first is the action to run.
        -- The second is an action to run after the first, regardless of
-       -- whether the first action raised an exception.  This way, we ensure
-       -- the temporary file is always deleted.  The return value from finally
+       -- whether the first action raised an exception. This way, we ensure
+       -- the temporary file is always deleted. The return value from finally
        -- is the first action's return value.
-       finally (func tempfile temph) 
+       finally (func tempfile temph)
                (do hClose temph
                    removeFile tempfile)
 #+END_SRC
@@ -767,7 +765,7 @@ actually read. Data is only read from the ~Handle~ as the elements
 no longer used, Haskell's garbage collector automatically frees that
 memory. All of this happens completely transparently to you. And since
 you have what looks like–and, really, is–a pure ~String~, you can
-pass it to pure (non-IO) code.
+pass it to pure (non-I/O) code.
 
 Let's take a quick look at an example. Back in
 [[file:io.html#io.files][the section called “Working With Files and
@@ -782,7 +780,7 @@ import System.IO
 import Data.Char(toUpper)
 
 main :: IO ()
-main = do 
+main = do
        inh <- openFile "input.txt" ReadMode
        outh <- openFile "output.txt" WriteMode
        inpStr <- hGetContents inh
@@ -805,14 +803,15 @@ read lazily from a file in this case. It can work perfectly well with a
 You can even verify that with ~ghci~:
 
 #+BEGIN_SRC screen
-ghci> :load toupper-lazy1.hs
+Prelude> :load toupper-lazy1.hs
 [1 of 1] Compiling Main             ( toupper-lazy1.hs, interpreted )
-Ok, modules loaded: Main.
-ghci> processData "Hello, there!  How are you?"
+Ok, one module loaded.
+*Main> processData "Hello, there! How are you?"
+"HELLO, THERE! HOW ARE YOU?"
 "HELLO, THERE!  HOW ARE YOU?"
-ghci> :type processData
+*Main> :type processData
 processData :: String -> String
-ghci> :type processData "Hello!"
+*Main> :type processData "Hello!"
 processData "Hello!" :: String
 #+END_SRC
 
@@ -837,7 +836,7 @@ on in the next examples:
 import System.IO
 import Data.Char(toUpper)
 
-main = do 
+main = do
        inh <- openFile "input.txt" ReadMode
        outh <- openFile "output.txt" WriteMode
        inpStr <- hGetContents inh
@@ -896,7 +895,7 @@ Now, here's an example program that uses ~readFile~ and
 -- file: toupper-lazy3.hs
 import Data.Char(toUpper)
 
-main = do 
+main = do
        inpStr <- readFile "input.txt"
        writeFile "output.txt" (map toUpper inpStr)
 #+END_SRC
