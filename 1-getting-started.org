@@ -910,8 +910,8 @@ counts the number of lines in its input. Don't expect to understand this
 yet; it's just fun to get our hands dirty. In a text editor, enter the
 following code into a file, and save it as ~WC.hs~.
 
+#+CAPTION: wc.hs
 #+BEGIN_SRC haskell
--- file: wc.hs
 -- lines beginning with "--" are comments.
 
 main = interact wordCount

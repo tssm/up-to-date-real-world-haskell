@@ -16,8 +16,8 @@ your own equality tests. Your application consisted of a simple ~Color~
 type, and so your first equality test is for this type. Your first
 attempt might look like this:
 
+#+CAPTION: NaiveEq.hs
 #+BEGIN_SRC haskell
--- file: NaiveEq.hs
 data Color = Red | Green | Blue
 
 colorEq :: Color -> Color -> Bool
@@ -44,8 +44,8 @@ Now, let's say that you want to add an equality test for
 write a simple function to perform that test. For simplicity, we cheat a
 bit and use the ~==~ operator here to illustrate.
 
+#+CAPTION: NaiveEq.hs
 #+BEGIN_SRC haskell
--- file: NaiveEq.hs
 stringEq :: [Char] -> [Char] -> Bool
 
 -- Match if both are empty
@@ -86,8 +86,8 @@ type, and returns a ~Bool~ indicating whether or not they are equal. We
 don't care what that type is, but we just want two items of that type.
 Here's our first definition of a typeclass:
 
+#+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
--- file: EqClasses.hs
 class BasicEq a where
     isEqual :: a -> a -> Bool
 #+END_SRC
@@ -127,8 +127,8 @@ is an instance of ~BasicEq~, ~isEqual~ takes two parameters of type ~a~
 and returns a ~Bool~". Let's take a quick look at defining ~isEqual~ for
 a particular type.
 
+#+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
--- file: EqClasses.hs
 instance BasicEq Bool where
     isEqual True  True  = True
     isEqual False False = True
@@ -167,8 +167,8 @@ at ways to define typeclasses. In this example, a not-equal-to function
 might be useful. Here's what we might say to define a typeclass with two
 functions:
 
+#+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
--- file: EqClasses.hs
 class BasicEq2 a where
     isEqual2    :: a -> a -> Bool
     isNotEqual2 :: a -> a -> Bool
@@ -185,8 +185,8 @@ of the typeclass define both functions for all types, we can provide
 default implementations for them. Then, users will only have to
 implement one function.[fn:1] Here's an example that shows how to do this.
 
+#+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
--- file: EqClasses.hs
 class BasicEq3 a where
     isEqual3 :: a -> a -> Bool
     isEqual3 x y = not (isNotEqual3 x y)
@@ -231,8 +231,8 @@ type back in [[file:using-typeclasses.html#typeclasses.need][the section
 called “The need for typeclasses”]]. Now let's see how we could make
 that same ~Color~ type a member of the ~BasicEq3~ class.
 
+#+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
--- file: EqClasses.hs
 instance BasicEq3 Color where
     isEqual3 Red Red = True
     isEqual3 Green Green = True
@@ -339,8 +339,8 @@ twice. Using ~putStrLn~ can help make this difference clear.
 You can define a ~Show~ instance for your own types easily.
 Here's an example:
 
+#+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
--- file: EqClasses.hs
 instance Show Color where
     show Red   = "Red"
     show Green = "Green"
@@ -376,8 +376,8 @@ read :: (Read a) => String -> a
 
 Here's an example illustrating the use of ~read~ and ~show~:
 
+#+CAPTION: Read.hs
 #+BEGIN_SRC haskell
--- file: Read.hs
 main = do
     putStrLn "Please enter a Double:"
     inpStr <- getLine
@@ -446,8 +446,8 @@ You can define a simple parser by providing an implementation for the
 exactly one tuple on a successful parse, or an empty list on an
 unsuccessful parse. Here's an example implementation:
 
+#+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
--- file: EqClasses.hs
 instance Read Color where
     -- readsPrec is the main function for parsing input
     readsPrec _ value = 
@@ -745,8 +745,8 @@ automatically derive instances of =Read=, =Show=, =Bounded=, =Enum=,
 =Eq=, and =Ord= for us. This saves us the effort of having to manually
 write code to compare or display our own types.
 
+#+CAPTION: ColorDerived.hs
 #+BEGIN_SRC haskell
--- file: ColorDerived.hs
 data Color = Red | Green | Blue
      deriving (Read, Show, Eq, Ord)
 #+END_SRC
@@ -793,8 +793,8 @@ When we automatically derive an instance of some typeclass, the
 types that we refer to in our ~data~ declaration must also be instances
 of that typeclass (manually or automatically).
 
+#+CAPTION: AutomaticDerivation.hs
 #+BEGIN_SRC haskell
--- file: AutomaticDerivation.hs
 data CannotShow = CannotShow
                 deriving (Show)
 
@@ -841,8 +841,8 @@ JSON data, produced by a well known search engine.
 And here's a further slimmed down fragment of that data,
 represented in Haskell.
 
+#+CAPTION: SimpleResult.hs
 #+BEGIN_SRC haskell
--- file: SimpleResult.hs
 import SimpleJSON
 
 result :: JValue
@@ -868,8 +868,8 @@ constructor that we use to wrap it from ~JNumber~ to ~JString~.
 
 Haskell's typeclasses offer a tempting solution to this problem.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 module JSONClass where
 
 type JSONError = String
@@ -902,8 +902,8 @@ information if a failure occurs: we literally have ~Nothing~. The ~Either~
 type has a similar structure, but instead of ~Nothing~, the “something
 bad happened” constructor is named ~Left~, and it takes a parameter.
 
+#+CAPTION: DataEither.hs
 #+BEGIN_SRC haskell
--- file: DataEither.hs
 data Maybe a = Nothing
              | Just a
                deriving (Eq, Ord, Read, Show)
@@ -918,8 +918,8 @@ Quite often, the type we use for the ~a~ parameter value is
 To see how we use the ~Either~ type in practice, let's look at a simple
 instance of our typeclass.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 instance JSON Bool where
     toJValue = JBool
     fromJValue (JBool b) = Right b
@@ -931,8 +931,8 @@ instance JSON Bool where
 The Haskell 2010 standard does not allow us to write an instance
 of the following form, even though it seems perfectly reasonable.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 instance JSON String where
     toJValue               = JString
 
@@ -950,8 +950,8 @@ While GHC follows the Haskell 2010 standard by default, we can
 relax this particular restriction by placing a specially formatted
 comment at the top of our source file.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 {-# LANGUAGE TypeSynonymInstances #-}
 #+END_SRC
 
@@ -966,8 +966,8 @@ handful more later in this book.
 Haskell's typeclasses are intentionally designed to let us
 create new instances of a typeclass whenever we see fit.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 doubleToJValue :: (Double -> a) -> JValue -> Either JSONError a
 doubleToJValue f (JNumber v) = Right (f v)
 doubleToJValue _ _ = Left "not a JSON number"
@@ -995,8 +995,8 @@ We would like to be able to turn a list into what JSON calls an
 array. We won't worry about implementation details just yet, so let's
 use ~undefined~ as the bodies of the instance's methods.
 
+#+CAPTION: BrokenClass.hs
 #+BEGIN_SRC haskell
--- file: BrokenClass.hs
 {-# LANGUAGE FlexibleInstances #-} -- Add it to the beginning of JSONClass.hs too
 
 import JSONClass
@@ -1009,8 +1009,8 @@ instance (JSON a) => JSON [a] where
 It would also be convenient if we could turn a list of
 name/value pairs into a JSON object.
 
+#+CAPTION: BrokenClass.hs
 #+BEGIN_SRC haskell
--- file: BrokenClass.hs
 instance (JSON a) => JSON [(String, a)] where
     toJValue = undefined
     fromJValue = undefined
@@ -1051,8 +1051,8 @@ This problem of /overlapping instances/ is a consequence of
 Haskell's open world assumption. Here's a simpler example that makes it
 clearer what's going on.
 
+#+CAPTION: Overlap.hs
 #+BEGIN_SRC haskell
--- file: Overlap.hs
 class Borked a where
     bork :: a -> String
 
@@ -1109,8 +1109,8 @@ specific one.
 We frequently use this extension together with
 ~TypeSynonymInstances~. Here's an example.
 
+#+CAPTION: SimpleClass.hs
 #+BEGIN_SRC haskell
--- file: SimpleClass.hs
 {-# LANGUAGE TypeSynonymInstances, OverlappingInstances #-}
 
 import Data.List
@@ -1188,8 +1188,8 @@ At least sometimes, then, we can avoid the need for the
 In addition to the familiar ~data~ keyword, Haskell provides us
 with another way to create a new type, using the ~newtype~ keyword.
 
+#+CAPTION: Newtype.hs
 #+BEGIN_SRC haskell
--- file: Newtype.hs
 data DataInt = D Int
     deriving (Eq, Ord, Show)
 
@@ -1212,8 +1212,8 @@ the compiler know that ~[Char]~ and ~String~ names refer to the same type.
 In contrast, the ~newtype~ keyword exists to /hide/ the nature
 of a type. Consider a ~UniqueID~ type.
 
+#+CAPTION: Newtype.hs
 #+BEGIN_SRC haskell
--- file: Newtype.hs
 newtype UniqueID = UniqueID Int
     deriving (Eq)
 #+END_SRC
@@ -1261,8 +1261,8 @@ identity, and it has more restrictions on its uses than the ~data~
 keyword. Specifically, a ~newtype~ can only have one value constructor,
 and that constructor must have exactly one field.
 
+#+CAPTION: NewtypeDiff.hs
 #+BEGIN_SRC haskell
--- file: NewtypeDiff.hs
 -- ok: any number of fields and constructors
 data TwoFields = TwoFields Int Int
 
@@ -1399,8 +1399,8 @@ between ~[a]~, the representation we use for JSON arrays, and
 us problems before we learned about ~OverlappingInstances~. We wrap up
 the list type so that the compiler will not see it as a list.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 newtype JAry a = JAry
     { fromJAry :: [a]
     } deriving (Eq, Ord, Show)
@@ -1409,8 +1409,8 @@ newtype JAry a = JAry
 When we export this type from our module, we'll export the
 complete details of the type. Our module header will look like this:
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 module JSONClass
     ( JAry(..)
     ) where
@@ -1426,8 +1426,8 @@ Usually, when we export a ~newtype~, we will /not/ export its
 data constructor, in order to keep the details of the type abstract.
 Instead, we would define a function to apply the constructor for us.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 jary :: [a] -> JAry a
 jary = JAry
 #+END_SRC
@@ -1435,8 +1435,8 @@ jary = JAry
 We would then export the type constructor, the deconstructor
 function, and our construction function, but not the data constructor.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 module JSONClass
     ( JAry(fromJAry)
     , jary
@@ -1461,8 +1461,8 @@ definition of the type.
 We provide another wrapper type that hides our representation
 of a JSON object.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 newtype JObj a = JObj
     { fromJObj :: [(String, a)]
     } deriving (Eq, Ord, Show)
@@ -1471,8 +1471,8 @@ newtype JObj a = JObj
 With these types defined, we make small changes to the
 definition of our ~JValue~ type.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 data JValue = JString String
             | JNumber Double
             | JBool Bool
@@ -1486,8 +1486,8 @@ This change doesn't affect the instances of the JSON typeclass
 that we've already written, but we will want to write instances for our
 new ~JAry~ and ~JObj~ types.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 jaryFromJValue :: (JSON a) => JValue -> Either JSONError (JAry a)
 
 jaryToJValue :: (JSON a) => JAry a -> JValue
@@ -1502,8 +1502,8 @@ converting a ~JAry~ a to a ~JValue~. Given a list where we know that
 everything inside is a JSON instance, converting it to a list of
 ~JValues~ is easy.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 listToJValues :: (JSON a) => [a] -> [JValue]
 listToJValues = map toJValue
 #+END_SRC
@@ -1511,8 +1511,8 @@ listToJValues = map toJValue
 Taking this and wrapping it to become a ~JAry JValue~ is just a
 matter of applying the ~newtype~'s type constructor.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 jvaluesToJAry :: [JValue] -> JAry JValue
 jvaluesToJAry = JAry
 #+END_SRC
@@ -1521,8 +1521,8 @@ jvaluesToJAry = JAry
 compiler to hide the fact that we're using a list.) To turn this into a
 ~JValue~, we apply another type constructor.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 jaryOfJValuesToJValue :: JAry JValue -> JValue
 jaryOfJValuesToJValue = JArray
 #+END_SRC
@@ -1530,8 +1530,8 @@ jaryOfJValuesToJValue = JArray
 Assemble these pieces using function composition, and we get a
 concise one-liner for converting to a ~JValue~.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 jaryToJValue = JArray . JAry . map toJValue . fromJAry
 #+END_SRC
 
@@ -1539,8 +1539,8 @@ We have more work to do to convert /from/ a ~JValue~ to a ~JAry a~,
 but we'll break it into reusable parts. The basic function is
 straightforward.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 jaryFromJValue (JArray (JAry a)) =
     whenRight JAry (mapEithers fromJValue a)
 jaryFromJValue _ = Left "not a JSON array"
@@ -1550,8 +1550,8 @@ The ~whenRight~ function inspects its argument: calls a
 function on it if it was created with the ~Right~ constructor, and
 leaves a ~Left~ value untouched.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 whenRight :: (b -> c) -> Either a b -> Either a c
 whenRight _ (Left err) = Left err
 whenRight f (Right a) = Right (f a)
@@ -1562,8 +1562,8 @@ More complicated is ~mapEithers~. It acts like the regular
 that immediately, instead of continuing to accumulate a list of ~Right~
 values.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 mapEithers :: (a -> Either b c) -> [a] -> Either b [c]
 mapEithers f (x:xs) = case mapEithers f xs of
                         Left err -> Left err
@@ -1578,8 +1578,8 @@ little more structure, the code to convert to and from a ~JValue~ is a bit
 more complex. Fortunately, we can reuse the functions that we just
 defined.
 
+#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
--- file: JSONClass.hs
 import Control.Arrow (second)
 
 instance (JSON a) => JSON (JObj a) where
@@ -1601,8 +1601,8 @@ The Haskell 2010 standard has a subtle feature that can sometimes
 bite us in unexpected circumstances. Here's a simple function definition
 that illustrates the issue.
 
+#+CAPTION: Monomorphism.hs
 #+BEGIN_SRC haskell
--- file: Monomorphism.hs
 myShow = show
 #+END_SRC
 
@@ -1663,8 +1663,8 @@ provides almost no practical benefit; and so it mostly serves to trip
 people up. For an example of its trickiness, while the definition above
 falls afoul of it, the following two compile without problems.
 
+#+CAPTION: Monomorphism.hs
 #+BEGIN_SRC haskell
--- file: Monomorphism.hs
 myShow2 value = show value
 
 myShow3 :: (Show a) => a -> String

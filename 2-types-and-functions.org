@@ -617,8 +617,8 @@ Haskell source files are usually identified with a suffix of
 ~.hs~. Here's a simple function definition: open up a file named
 ~add.hs~, and add these contents to it.
 
+#+CAPTION: Add.hs
 #+BEGIN_SRC haskell
--- file: Add.hs
 add a b = a + b
 #+END_SRC
 
@@ -701,8 +701,8 @@ print x
 In contrast, trying the equivalent in Haskell results in an
 error.
 
+#+CAPTION: Assign.hs
 #+BEGIN_SRC haskell
--- file: Assign.hs
 x = 10
 x = 11
 #+END_SRC
@@ -753,8 +753,8 @@ Here's a ~myDrop~ function that has the same behaviour, and uses
 Haskell's ~if~ expression to decide what to do. The ~null~ function
 below checks whether a list is empty.
 
+#+CAPTION: MyDrop.hs
 #+BEGIN_SRC haskell
--- file: MyDrop.hs
 myDrop n xs = if n <= 0 || null xs
               then xs
               else myDrop (n - 1) (tail xs)
@@ -851,8 +851,8 @@ Finally, our ~if~ expression spans several lines. We align the
 use some indentation, the exact amount is not important. If we wish, we
 can write the entire expression on a single line.
 
+#+CAPTION: MyDrop.hs
 #+BEGIN_SRC haskell
--- file: MyDrop.hs
 myDropX n xs = if n <= 0 || null xs then xs else myDropX (n - 1) (tail xs)
 #+END_SRC
 
@@ -892,8 +892,8 @@ descriptions by trying them yourself.
 We will begin by looking at the definition of a simple,
 nonrecursive function.
 
+#+CAPTION: RoundToEven.hs
 #+BEGIN_SRC haskell
--- file: RoundToEven.hs
 isOdd n = mod n 2 == 1
 #+END_SRC
 
@@ -996,8 +996,8 @@ this capability into the language.
 In Haskell, we can easily define a new function that short
 circuits.
 
+#+CAPTION: ShortCircuit.hs
 #+BEGIN_SRC haskell
--- file: ShortCircuit.hs
 newOr a b = if a then a else b
 #+END_SRC
 
@@ -1303,8 +1303,8 @@ Haskell groups this chain of arrows from right to left; that is, ~->~ is
 right-associative. If we introduce parentheses, we can make it clearer
 how this type signature is interpreted.
 
+#+CAPTION: Take.hs
 #+BEGIN_SRC haskell
--- file: Take.hs
 take :: Int -> ([a] -> [a])
 #+END_SRC
 
@@ -1324,8 +1324,8 @@ to be those of the function's arguments.
 We can now write a type signature for the ~myDrop~ function that
 we defined earlier.
 
+#+CAPTION: MyDrop.hs
 #+BEGIN_SRC haskell
--- file: MyDrop.hs
 myDrop :: Int -> [a] -> [a]
 #+END_SRC
 

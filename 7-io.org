@@ -23,8 +23,8 @@ Let's get started with I/O in Haskell by looking at a program
 that looks surprisingly similar to I/O in other languages such as C or
 Perl.
 
+#+CAPTION: basicio.hs
 #+BEGIN_SRC haskell
--- file: basicio.hs
 main = do
        putStrLn "Greetings! What is your name?"
        inpStr <- getLine
@@ -143,8 +143,8 @@ blocks”]].
 Let's consider an example of calling pure code from within an
 I/O action:
 
+#+CAPTION: callingpure.hs
 #+BEGIN_SRC haskell
--- file: callingpure.hs
 name2reply :: String -> String
 name2reply name =
     "Pleased to meet you, " ++ name ++ ".\n" ++
@@ -282,8 +282,8 @@ This should seem similar to a ~while~ loop that you may find in other
 languages. This isn't the best way to write it in Haskell; later, you'll
 see examples of more Haskellish approaches.
 
+#+CAPTION: toupper-imp.hs
 #+BEGIN_SRC haskell
--- file: toupper-imp.hs
 import System.IO
 import Data.Char(toUpper)
 
@@ -578,8 +578,8 @@ this chapter, from some earlier chapters, and a few you haven't seen
 yet. Take a look at the program and see if you can figure out what it
 does and how it works.
 
+#+CAPTION: tempfile.hs
 #+BEGIN_SRC haskell
--- file: tempfile.hs
 import System.IO
 import System.Directory(getTemporaryDirectory, removeFile)
 import System.IO.Error(catchIOError)
@@ -774,8 +774,8 @@ content of a file to uppercase. Its imperative algorithm was similar to
 what you'd see in many other languages. Here now is the much simpler
 algorithm that exploits lazy evaluation:
 
+#+CAPTION: toupper-lazy1.hs
 #+BEGIN_SRC haskell
--- file: toupper-lazy1.hs
 import System.IO
 import Data.Char(toUpper)
 
@@ -831,8 +831,8 @@ This program was a bit verbose to make it clear that there was
 pure code in use. Here's a bit more concise version, which we will build
 on in the next examples:
 
+#+CAPTION: toupper-lazy2.hs
 #+BEGIN_SRC haskell
--- file: toupper-lazy2.hs
 import System.IO
 import Data.Char(toUpper)
 
@@ -891,8 +891,8 @@ writeFile :: FilePath -> String -> IO ()
 Now, here's an example program that uses ~readFile~ and
 ~writeFile~:
 
+#+CAPTION: toupper-lazy3.hs
 #+BEGIN_SRC haskell
--- file: toupper-lazy3.hs
 import Data.Char(toUpper)
 
 main = do
@@ -955,8 +955,8 @@ output.
 We can convert our example program to operate on standard input
 and standard output by using ~interact~. Here's one way to do that:
 
+#+CAPTION: toupper-lazy4.hs
 #+BEGIN_SRC haskell
--- file: toupper-lazy4.hs
 import Data.Char(toUpper)
 
 main = interact (map toUpper)
@@ -991,8 +991,8 @@ You can also write simple interactive programs using
 ~interact~. Let's start with a simple example: adding a line of text
 before the uppercase output.
 
+#+CAPTION: toupper-lazy5.hs
 #+BEGIN_SRC haskell
--- file: toupper-lazy5.hs
 import Data.Char(toUpper)
 
 main = interact (map toUpper . (++) "Your data, in uppercase, is:\n\n")
@@ -1012,8 +1012,8 @@ spot the problem, though?
 Since we're calling ~map~ on the /result/ of ~(++)~, that
 header itself will appear in uppercase. We can fix that in this way:
 
+#+CAPTION: toupper-lazy6.hs
 #+BEGIN_SRC haskell
--- file: toupper-lazy6.hs
 import Data.Char(toUpper)
 
 main = interact ((++) "Your data, in uppercase, is:\n\n" . 
@@ -1029,8 +1029,8 @@ you want to write a program that reads a file and prints out every line
 that contains the character "a". Here's how you might do that with
 ~interact~:
 
+#+CAPTION: filter.hs
 #+BEGIN_SRC haskell
--- file: filter.hs
 main = interact (unlines . filter (elem 'a') . lines)
 #+END_SRC
 
@@ -1120,8 +1120,8 @@ action. You can store and pass actions in pure code if you wish, though
 this isn't frequently done. An action doesn't do anything until it is
 invoked. Let's look at an example of this:
 
+#+CAPTION: actions.hs
 #+BEGIN_SRC haskell
--- file: actions.hs
 str2action :: String -> IO ()
 str2action input = putStrLn ("Data: " ++ input)
 
@@ -1193,8 +1193,8 @@ Data: Done!
 We can actually write this in a much more compact way. Consider
 this revision of the example:
 
+#+CAPTION: actions2.hs
 #+BEGIN_SRC haskell
--- file: actions2.hs
 str2message :: String -> String
 str2message input = "Data: " ++ input
 
@@ -1272,8 +1272,8 @@ a line from the keyboard and then display it back out.
 Let's re-write one of our examples to avoid ~do~ blocks.
 Remember this example from the start of the chapter?
 
+#+CAPTION: basicio.hs
 #+BEGIN_SRC haskell
--- file: basicio.hs
 main = do
        putStrLn "Greetings!  What is your name?"
        inpStr <- getLine
@@ -1282,8 +1282,8 @@ main = do
 
 Let's write that without a ~do~ block:
 
+#+CAPTION: basicio-nodo.hs
 #+BEGIN_SRC haskell
--- file: basicio-nodo.hs
 main =
     putStrLn "Greetings!  What is your name?" >>
     getLine >>=
@@ -1318,8 +1318,8 @@ a function that performs I/O, then a pure computation, we will need to
 use ~return~ to make this pure computation the proper return value of
 the function. Otherwise, a type error would occur. Here's an example:
 
+#+CAPTION: return1.hs
 #+BEGIN_SRC haskell
--- file: return1.hs
 import Data.Char(toUpper)
 
 isGreen :: IO Bool
@@ -1339,8 +1339,8 @@ Here's a version of the same program with the pure computation
 broken out into a separate function. This helps keep the pure code
 separate, and can also make the intent more clear.
 
+#+CAPTION: return2.hs
 #+BEGIN_SRC haskell
--- file: return2.hs
 import Data.Char(toUpper)
 
 isYes :: String -> Bool
@@ -1357,8 +1357,8 @@ Finally, here's a contrived example to show that ~return~ truly
 does not have to occur at the end of a ~do~ block. In practice, it
 usually is, but it need not be so.
 
+#+CAPTION: return3.hs
 #+BEGIN_SRC haskell
--- file: return3.hs
 returnTest :: IO ()
 returnTest =
     do one <- return 1

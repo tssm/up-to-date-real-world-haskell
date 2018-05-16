@@ -36,8 +36,8 @@ values in an object or array can be of any type.
 To work with JSON data in Haskell, we use an algebraic data type
 to represent the range of possible JSON types.
 
+#+CAPTION: SimpleJSON.hs
 #+BEGIN_SRC haskell
--- file: SimpleJSON.hs
 data JValue = JString String
             | JNumber Double
             | JBool Bool
@@ -75,8 +75,8 @@ extract a string from a JSON value for us. If the JSON value actually
 contains a string, our function will wrap the string with the ~Just~
 constructor. Otherwise, it will return ~Nothing~.
 
+#+CAPTION: SimpleJSON.hs
 #+BEGIN_SRC haskell
--- file: SimpleJSON.hs
 getString :: JValue -> Maybe String
 getString (JString s) = Just s
 getString _           = Nothing
@@ -98,8 +98,8 @@ Nothing
 A few more accessor functions, and we've got a small body of
 code to work with.
 
+#+CAPTION: SimpleJSON.hs
 #+BEGIN_SRC haskell
--- file: SimpleJSON.hs
 getInt :: JValue -> Maybe Int
 getInt (JNumber n) = Just (truncate n)
 getInt _           = Nothing
@@ -144,8 +144,8 @@ accessible from other modules.
 A source file begins with a /module declaration/. This must
 precede all other definitions in the source file.
 
+#+CAPTION: SimpleJSON.hs
 #+BEGIN_SRC haskell
--- file: SimpleJSON.hs
 module SimpleJSON
     ( JValue(..)
     , getString
@@ -185,16 +185,16 @@ discuss some situations in which we might want to make a type abstract.
 If we omit the exports (and the parentheses that enclose them)
 from a module declaration, every name in the module will be exported.
 
+#+CAPTION: Exporting.hs
 #+BEGIN_SRC haskell
--- file: Exporting.hs
 module ExportEverything where
 #+END_SRC
 
 To export no names at all (which is rarely useful), we write an
 empty export list using a pair of parentheses.
 
+#+CAPTION: Exporting.hs
 #+BEGIN_SRC haskell
--- file: Exporting.hs
 module ExportNothing () where
 #+END_SRC
 
@@ -232,8 +232,8 @@ Now that we've successfully compiled our minimal library, we'll
 write a tiny program to exercise it. Create the following file in your
 text editor, and save it as ~Main.hs~.
 
+#+CAPTION: Main.hs
 #+BEGIN_SRC haskell
--- file: Main.hs
 module Main where
 
 import SimpleJSON
@@ -287,8 +287,8 @@ direct would be to write a rendering function that prints a value in
 JSON form. Once we're done, we'll explore some more interesting
 approaches.
 
+#+CAPTION: PutJSON.hs
 #+BEGIN_SRC haskell
--- file: PutJSON.hs
 module PutJSON where
 
 import Data.List (intercalate)
@@ -316,8 +316,8 @@ Good Haskell style involves separating pure code from code that
 performs I/O. Our ~renderJValue~ function has no interaction with the
 outside world, but we still need to be able to print a ~JValue~.
 
+#+CAPTION: PutJSON.hs
 #+BEGIN_SRC haskell
--- file: PutJSON.hs
 putJValue :: JValue -> IO ()
 putJValue v = putStrLn (renderJValue v)
 #+END_SRC
@@ -359,8 +359,8 @@ longer to find the source of our problem.
 Suppose, for instance, that we write a function that we believe
 returns a ~String~, but we don't write a type signature for it.
 
+#+CAPTION: Trouble.hs
 #+BEGIN_SRC haskell
--- file: Trouble.hs
 import Data.Char
 
 upcaseFirst (c:cs) = toUpper c -- forgot ":cs" here
@@ -372,8 +372,8 @@ our function's type is ~String -> String~, but the compiler will correctly
 infer its type as ~String -> Char~. Let's say we then try to use this
 function somewhere else.
 
+#+CAPTION: Trouble.hs
 #+BEGIN_SRC haskell
--- file: Trouble.hs
 camelCase :: String -> String
 camelCase xs = concat (map upcaseFirst (words xs))
 #+END_SRC
@@ -474,8 +474,8 @@ We will name our new JSON rendering module ~PrettyJSON.hs~, and
 retain the name ~renderJValue~ for the rendering function. Rendering one
 of the basic JSON values is straightforward.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 renderJValue :: JValue -> Doc
 renderJValue (JBool True)  = text "true"
 renderJValue (JBool False) = text "false"
@@ -508,8 +508,8 @@ attempts to “compile early, compile often” with our JSON renderer will
 fail, as the compiler won't know anything about those functions. To
 avoid this problem, we write stub code that doesn't do anything.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 import SimpleJSON
 
 data Doc = ToBeDefined deriving (Show)
@@ -553,8 +553,8 @@ When we must pretty print a string value, JSON has moderately
 involved escaping rules that we must follow. At the highest level, a
 string is just a series of characters wrapped in quotes.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 string :: String -> Doc
 string = enclose '"' '"' . hcat . map oneChar
 #+END_SRC
@@ -573,8 +573,8 @@ Contrast the point-free definition of ~string~ above with this
 “pointy” version, which uses a variable ~s~ to refer to the value on
 which it operates.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 pointyString :: String -> Doc
 pointyString s = enclose '"' '"' (hcat (map oneChar s))
 #+END_SRC
@@ -583,8 +583,8 @@ pointyString s = enclose '"' '"' (hcat (map oneChar s))
 The ~enclose~ function simply wraps a ~Doc~ value with an opening
 and closing character.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 enclose :: Char -> Char -> Doc -> Doc
 enclose left right x = char left <> x <> char right
 #+END_SRC
@@ -592,8 +592,8 @@ enclose left right x = char left <> x <> char right
 We provide a ~(<>)~ function in our pretty printing library. It
 appends two ~Doc~ values, so it's the ~Doc~ equivalent of ~(++)~.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 (<>) :: Doc -> Doc -> Doc
 a <> b = undefined
 
@@ -604,8 +604,8 @@ char c = undefined
 Our pretty printing library also provides ~hcat~, which concatenates
 multiple ~Doc~ values into one: it's the analogue of ~concat~ for lists.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 hcat :: [Doc] -> Doc
 hcat xs = undefined
 #+END_SRC
@@ -615,8 +615,8 @@ character in a string, concatenates the lot, and encloses the result in
 quotes. The ~oneChar~ function escapes or renders an individual
 character.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 oneChar :: Char -> Doc
 oneChar c = case lookup c simpleEscapes of
               Just r -> text r
@@ -649,8 +649,8 @@ The more complicated escaping involves turning a character into
 the string “~\u~” followed by a four-character sequence of hexadecimal
 digits representing the numeric value of the Unicode character.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 smallHex :: Int -> Doc
 smallHex x  = text "\\u"
            <> text (replicate (4 - length h) '0')
@@ -682,8 +682,8 @@ character above ~0xffff~ in a JSON string, we follow some complicated
 rules to split it into two. This gives us an opportunity to perform some
 bit-level manipulation of Haskell numbers.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 astral :: Int -> Doc
 astral n = smallHex (a + 0xd800) <> smallHex (b + 0xdc00)
     where a = (n `shiftR` 10) .&. 0x3ff
@@ -704,8 +704,8 @@ ghci> 7 .&. 2   :: Int
 Now that we've written ~smallHex~ and ~astral~, we can provide a
 definition for ~hexEscape~.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 hexEscape :: Char -> Doc
 hexEscape c | d < 0x10000 = smallHex d
             | otherwise   = astral (d - 0x10000)
@@ -720,8 +720,8 @@ with an opening character, followed by a series of values separated with
 commas, followed by a closing character. Let's write a function that
 captures the common structure of arrays and objects.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 series :: Char -> Char -> (a -> Doc) -> [a] -> Doc
 series open close item = enclose open close
                        . fsep . punctuate (char ',') . map item
@@ -742,8 +742,8 @@ opening and closing characters. The ~fsep~ function will live in our
 ~Prettify~ module. It combines a list of ~Doc~ values into one, possibly
 wrapping lines if the output will not fit on a single line.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 fsep :: [Doc] -> Doc
 fsep xs = undefined
 #+END_SRC
@@ -756,8 +756,8 @@ The ~punctuate~ function will also live in our ~Prettify~
 module, and we can define it in terms of functions for which we've
 already written stubs.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 punctuate :: Doc -> [Doc] -> [Doc]
 punctuate _ []       = []
 punctuate _ [d]      = [d]
@@ -768,16 +768,16 @@ With this definition of ~series~, pretty printing an array is
 entirely straightforward. We add this equation to the end of the block
 we've already written for our ~renderJValue~ function.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 renderJValue (JArray ary) = series '[' ']' renderJValue ary
 #+END_SRC
 
 To pretty print an object, we need to do only a little more
 work: for each element, we have both a name and a value to deal with.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 renderJValue (JObject obj) = series '{' '}' field obj
     where field (name,val) = string name
                           <> text ": "
@@ -789,8 +789,8 @@ renderJValue (JObject obj) = series '{' '}' field obj
 Now that we have written the bulk of our ~PrettyJSON.hs~ file,
 we must go back to the top and add a module declaration.
 
+#+CAPTION: PrettyJSON.hs
 #+BEGIN_SRC haskell
--- file: PrettyJSON.hs
 module PrettyJSON
     ( renderJValue
     ) where
@@ -856,8 +856,8 @@ programmer will probably know which names come from that module.
 In our ~Prettify~ module, we represent our ~Doc~ type as an
 algebraic data type.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 data Doc = Empty
          | Char Char
          | Text String
@@ -880,8 +880,8 @@ call a function that we provide. Here are the simple construction
 functions. As we add real definitions, we must replace any stubbed
 versions already in the ~Prettify.hs~ source file.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 empty :: Doc
 empty = Empty
 
@@ -902,8 +902,8 @@ printer's output. Sometimes we'll want a /soft/ line break, which is
 only used if a line is too wide to fit in a window or page. We'll
 introduce a ~softline~ function shortly.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 line :: Doc
 line = Line
 #+END_SRC
@@ -911,8 +911,8 @@ line = Line
 Almost as simple as the basic constructors is the ~(<>)~
 function, which concatenates two ~Doc~ values.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 (<>) :: Doc -> Doc -> Doc
 Empty <> y = y
 x <> Empty = x
@@ -948,8 +948,8 @@ into one. In [[file:functional-programming.html#fp.fold.exercises][the
 section called “Exercises”]], we mentioned that we could define
 concatenation for lists using ~foldr~.
 
+#+CAPTION: Concat.hs
 #+BEGIN_SRC haskell
--- file: Concat.hs
 concat :: [[a]] -> [a]
 concat = foldr (++) []
 #+END_SRC
@@ -957,8 +957,8 @@ concat = foldr (++) []
 Since ~(<>)~ is analogous to ~(++)~, and ~empty~ to ~[]~, we can
 see how we might write ~hcat~ and ~fsep~ as folds, too.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 hcat :: [Doc] -> Doc
 hcat = fold (<>)
 
@@ -968,8 +968,8 @@ fold f = foldr f empty
 
 The definition of ~fsep~ depends on several other functions.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 fsep :: [Doc] -> Doc
 fsep = fold (</>)
 
@@ -987,8 +987,8 @@ information about rendering? Our answer is that every time we encounter
 a soft newline, we maintain /two/ alternative representations of the
 document, using the ~Union~ constructor.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 group :: Doc -> Doc
 group x = flatten x `Union` x
 #+END_SRC
@@ -996,8 +996,8 @@ group x = flatten x `Union` x
 Our ~flatten~ function replaces a ~Line~ with a space, turning
 two lines into one longer line.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 flatten :: Doc -> Doc
 flatten (x `Concat` y) = flatten x `Concat` flatten y
 flatten Line           = Char ' '
@@ -1022,8 +1022,8 @@ look good would add a lot of overhead.
 For these cases, and because it's a simple piece of code to
 start with, we provide a bare-bones compact rendering function.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 compact :: Doc -> String
 compact x = transform [x]
     where transform [] = ""
@@ -1112,8 +1112,8 @@ output, we'll write another function, ~pretty~. Compared to ~compact~,
 ~pretty~ takes one extra argument: the maximum width of a line, in
 columns. (We're assuming that our typeface is of fixed width.)
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 pretty :: Int -> Doc -> String
 #+END_SRC
 
@@ -1125,8 +1125,8 @@ set out by the person using our pretty printing functions.
 
 Here's the core of our implementation
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 pretty width x = best 0 [x]
     where best col (d:ds) =
               case d of
@@ -1163,8 +1163,8 @@ To do this, we write a small helper that determines whether a
 single line of a rendered ~Doc~ value will fit into a given number of
 columns.
 
+#+CAPTION: Prettify.hs
 #+BEGIN_SRC haskell
--- file: Prettify.hs
 fits :: Int -> String -> Bool
 w `fits` _ | w < 0 = False
 w `fits` ""        = True
@@ -1232,8 +1232,8 @@ improvements we can make.
 
 1. Write a function, ~fill~, with the following type signature.
 
+   #+CAPTION: Prettify.hs
    #+BEGIN_SRC haskell
-   -- file: Prettify.hs
    fill :: Int -> Doc -> Doc
    #+END_SRC
 
@@ -1247,8 +1247,8 @@ improvements we can make.
 
    Add support for nesting, with a controllable amount of indentation.
 
+   #+CAPTION: Prettify.hs
    #+BEGIN_SRC haskell
-   -- file: Prettify.hs
    nest :: Int -> Doc -> Doc
    #+END_SRC
 
@@ -1390,8 +1390,8 @@ In addition to a ~.cabal~ file, a package must contain a /setup/
 file. This allows Cabal's build process to be heavily customised, if a
 package needs it. The simplest setup file looks like this.
 
+#+CAPTION: Setup.hs
 #+BEGIN_SRC haskell
--- file: Setup.hs
 import Distribution.Simple
 main = defaultMain
 #+END_SRC

@@ -31,8 +31,8 @@ code and the outside world. Our framework simply reads the contents of
 one file, applies a function to the file, and writes the result to
 another file.
 
+#+CAPTION: InteractWith.hs
 #+BEGIN_SRC haskell
--- file: InteractWith.hs
 -- Save this in a source file, e.g. Interact.hs
 
 import System.Environment (getArgs)
@@ -134,8 +134,8 @@ Haskell.
 Since we are still early in our career of reading Haskell code,
 we will discuss our Haskell implementation in quite some detail.
 
+#+CAPTION: SplitLines.hs
 #+BEGIN_SRC haskell
--- file: SplitLines.hs
 splitLines :: String -> [String]
 #+END_SRC
 
@@ -144,8 +144,8 @@ single string, the contents of a file with some unknown line ending
 convention. It returns a list of strings, representing each line from
 the file.
 
+#+CAPTION: SplitLines.hs
 #+BEGIN_SRC haskell
--- file: SplitLines.hs
 splitLines [] = []
 splitLines cs =
     let (pre, suf) = break isLineTerminator cs
@@ -276,8 +276,8 @@ must stitch the list of lines back together. The Prelude provides an
 ~unlines~ function that concatenates a list of strings, adding a newline
 to the end of each.
 
+#+CAPTION: SplitLines.hs
 #+BEGIN_SRC haskell
--- file: SplitLines.hs
 fixLines :: String -> String
 fixLines input = unlines (splitLines input)
 #+END_SRC
@@ -330,8 +330,8 @@ To define or apply a function or value constructor using infix
 notation, we enclose its name in backtick characters (sometimes known as
 backquotes). Here are simple infix definitions of a function and a type.
 
+#+CAPTION: Plus.hs
 #+BEGIN_SRC haskell
--- file: Plus.hs
 a `plus` b = a + b
 
 data a `Pair` b = a `Pair` b
@@ -530,8 +530,8 @@ it might blow up on us if we pass in an empty list, the temptation might
 initially be strong to check the length of the list before we call
 ~head~. Let's construct an artificial example to illustrate our point.
 
+#+CAPTION: EfficientList.hs
 #+BEGIN_SRC haskell
--- file: EfficientList.hs
 myDumbExample xs = if length xs > 0
                    then head xs
                    else 'Z'
@@ -561,8 +561,8 @@ which runs in constant time. Better yet, using ~null~ makes our code
 indicate what property of the list we really care about. Here are two
 improved ways of expressing ~myDumbExample~.
 
+#+CAPTION: EfficientList.hs
 #+BEGIN_SRC haskell
--- file: EfficientList.hs
 mySmartExample xs = if not (null xs)
                     then head xs
                     else 'Z'
@@ -867,8 +867,8 @@ ghci> unwords ["jumps", "over", "the", "lazy", "dog"]
    functions, but make sure that yours never fail. As a hint, you might
    want to consider using the following types.
 
+   #+CAPTION: exercises.hs
    #+BEGIN_SRC haskell
-   -- file: ch04.exercises.hs
    safeHead :: [a] -> Maybe a
    safeTail :: [a] -> Maybe [a]
    safeLast :: [a] -> Maybe a
@@ -879,8 +879,8 @@ ghci> unwords ["jumps", "over", "the", "lazy", "dog"]
    a predicate and a list of any type, and splits its input list on every
    element for which the predicate returns ~False~.
 
+   #+CAPTION: exercises.hs
    #+BEGIN_SRC haskell
-   -- file: ch04.exercises.hs
    splitWith :: (a -> Bool) -> [a] -> [[a]]
    #+END_SRC
 
@@ -917,8 +917,8 @@ code like this?
 We don't have to start off by writing a type signature, but it
 helps to remind us of what we're working with.
 
+#+CAPTION: IntParse.hs
 #+BEGIN_SRC haskell
--- file: IntParse.hs
 import Data.Char (digitToInt) -- we'll need ord shortly
 
 asInt :: String -> Int
@@ -929,8 +929,8 @@ string; the Haskell code can do the same. However, in Haskell, we can
 express the equivalent of a loop as a function. We'll call ours ~loop~
 just to keep things nice and explicit.
 
+#+CAPTION: IntParse.hs
 #+BEGIN_SRC haskell
--- file: IntParse.hs
 loop :: Int -> String -> Int
 
 asInt xs = loop 0 xs
@@ -951,8 +951,8 @@ matching on the list type's constructors. It's often handy to think
 about the easy cases first: here, that means we will consider the
 empty-list case.
 
+#+CAPTION: IntParse.hs
 #+BEGIN_SRC haskell
--- file: IntParse.hs
 loop acc [] = acc
 #+END_SRC
 
@@ -966,8 +966,8 @@ The other case we have to consider arises when the input list is
 not empty. We need to do something with the current element of the list,
 and something with the rest of the list.
 
+#+CAPTION: IntParse.hs
 #+BEGIN_SRC haskell
--- file: IntParse.hs
 loop acc (x:xs) = let acc' = acc * 10 + digitToInt x
                   in loop acc' xs
 #+END_SRC
@@ -1077,8 +1077,8 @@ This contains a straightforward and common kind of loop, one
 that does exactly the same thing to every element of its input array.
 How might we write this loop in Haskell?
 
+#+CAPTION: Map.hs
 #+BEGIN_SRC haskell
--- file: Map.hs
 square :: [Double] -> [Double]
 
 square (x:xs) = x*x : square xs
@@ -1118,8 +1118,8 @@ char *uppercase(const char *in)
 
 Let's look at a Haskell equivalent.
 
+#+CAPTION: Map.hs
 #+BEGIN_SRC haskell
--- file: Map.hs
 import Data.Char (toUpper)
 
 upperCase :: String -> String
@@ -1156,8 +1156,8 @@ new list constructed from the results of these applications.
 Here are our ~square~ and ~upperCase~ functions rewritten to use
 ~map~.
 
+#+CAPTION: Map.hs
 #+BEGIN_SRC haskell
--- file: Map.hs
 square2 xs = map squareOne xs
     where squareOne x = x * x
 
@@ -1187,8 +1187,8 @@ Since ~map~ abstracts out the pattern common to our ~square~ and
 can look at what those functions have in common and figure out how to
 implement it ourselves.
 
+#+CAPTION: Map.hs
 #+BEGIN_SRC haskell
--- file: Map.hs
 myMap :: (a -> b) -> [a] -> [b]
 
 myMap f (x:xs) = f x : myMap f xs
@@ -1245,8 +1245,8 @@ has a recursive case that's a bit more complex than our earlier
 functions: it only puts a number in the list it returns if the number is
 odd. Using a guard expresses this nicely.
 
+#+CAPTION: Filter.hs
 #+BEGIN_SRC haskell
--- file: Filter.hs
 oddList :: [Int] -> [Int]
 
 oddList (x:xs) | odd x     = x : oddList xs
@@ -1283,11 +1283,11 @@ predicate evaluates to ~True~. We'll revisit ~filter~ again soon, in
 Another common thing to do with a collection is reduce it to a
 single value. A simple example of this is summing the values of a list.
 
+#+CAPTION: Sum.hs
 #+BEGIN_SRC haskell
-    -- file: ch04/Sum.hs
-    mySum xs = helper 0 xs
-        where helper acc (x:xs) = helper (acc + x) xs
-              helper acc _      = acc
+mySum xs = helper 0 xs
+    where helper acc (x:xs) = helper (acc + x) xs
+          helper acc _      = acc
 #+END_SRC
 
 Our ~helper~ function is tail recursive, and uses an accumulator
@@ -1327,8 +1327,8 @@ Although Adler-32 is a simple checksum, this code isn't
 particularly easy to read on account of the bit-twiddling involved. Can
 we do any better with a Haskell implementation?
 
+#+CAPTION: Adler32.hs
 #+BEGIN_SRC haskell
--- file: Adler32.hs
 import Data.Char (ord)
 import Data.Bits (shiftL, (.&.), (.|.))
 
@@ -1355,8 +1355,8 @@ If we take a step back, we can restructure our Haskell ~adler32~
 to more closely resemble our earlier ~mySum~ function. Instead of two
 accumulator parameters, we can use a pair as the accumulator.
 
+#+CAPTION: Adler32.hs
 #+BEGIN_SRC haskell
--- file: Adler32.hs
 adler32_try2 xs = helper (1,0) xs
     where helper (a,b) (x:xs) =
               let a' = (a + (ord x .&. 0xff)) `mod` base
@@ -1380,8 +1380,8 @@ the left (the start) and ~foldr~ for folding from the right (the end).
 
 Here is the definition of ~foldl~.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 foldl :: (a -> b -> a) -> a -> [b] -> a
 
 foldl step zero (x:xs) = foldl step (step zero x) xs
@@ -1400,8 +1400,8 @@ list from left (the head) to right.
 
 Here's a rewrite of ~mySum~ using ~foldl~.
 
+#+CAPTION: Sum.hs
 #+BEGIN_SRC haskell
--- file: Sum.hs
 foldlSum xs = foldl step 0 xs
     where step acc x = acc + x
 #+END_SRC
@@ -1410,8 +1410,8 @@ That local function ~step~ just adds two numbers, so let's
 simply use the addition operator instead, and eliminate the unnecessary
 ~where~ clause.
 
+#+CAPTION: Sum.hs
 #+BEGIN_SRC haskell
--- file: Sum.hs
 niceSum :: [Integer] -> Integer
 niceSum xs = foldl (+) 0 xs
 #+END_SRC
@@ -1428,8 +1428,8 @@ Let's take a deeper look at what ~foldl~ is doing here, by
 manually writing out each step in its evaluation when we call
 ~niceSum [1,2,3]~.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 foldl (+) 0 (1:2:3:[])
           == foldl (+) (0 + 1)             (2:3:[])
           == foldl (+) ((0 + 1) + 2)       (3:[])
@@ -1440,8 +1440,8 @@ foldl (+) 0 (1:2:3:[])
 We can rewrite ~adler32_try2~ using ~foldl~ to let us focus on
 the details that are important.
 
+#+CAPTION: Adler32.hs
 #+BEGIN_SRC haskell
--- file: Adler32.hs
 adler32_foldl xs = let (a, b) = foldl step (1, 0) xs
                    in (b `shiftL` 16) .|. a
     where step (a, b) x = let a' = a + (ord x .&. 0xff)
@@ -1479,8 +1479,8 @@ higher order functions in mind, we'll produce concise code more quickly.
 The counterpart to ~foldl~ is ~foldr~, which folds from the
 right of a list.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 foldr :: (a -> b -> b) -> b -> [a] -> b
 foldr step zero (x:xs) = step x (foldr step zero xs)
 foldr _    zero []     = zero
@@ -1491,8 +1491,8 @@ Let's follow the same manual evaluation process with
 [[file:functional-programming.html#fp.foldl][the section called “The
 left fold”]].
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 foldr (+) 0 (1:2:3:[])
           == 1 +           foldr (+) 0 (2:3:[])
           == 1 + (2 +      foldr (+) 0 (3:[])
@@ -1510,8 +1510,8 @@ There is a lovely intuitive explanation of how ~foldr~ works: it
 replaces the empty list with the ~zero~ value, and every constructor in
 the list with an application of the step function.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 1 : (2 : (3 : []))
 1 + (2 + (3 + 0 ))
 #+END_SRC
@@ -1523,8 +1523,8 @@ Prelude's ~filter~ function, which we last encountered in
 “Selecting pieces of input”]]. If we write ~filter~ using explicit
 recursion, it will look something like this.
 
+#+CAPTION: Filter.hs
 #+BEGIN_SRC haskell
--- file: Filter.hs
 filter :: (a -> Bool) -> [a] -> [a]
 filter p []   = []
 filter p (x:xs)
@@ -1535,8 +1535,8 @@ filter p (x:xs)
 Perhaps surprisingly, though, we can write ~filter~ as a fold,
 using ~foldr~.
 
+#+CAPTION: Filter.hs
 #+BEGIN_SRC haskell
--- file: Filter.hs
 myFilter p xs = foldr step [] xs
     where step x ys | p x       = x : ys
                     | otherwise = ys
@@ -1561,8 +1561,8 @@ called /primitive recursive/. A surprisingly large number of list
 manipulation functions are primitive recursive. For example, here's
 ~map~ written in terms of ~foldr~.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 myMap :: (a -> b) -> [a] -> [b]
 
 myMap f xs = foldr step [] xs
@@ -1571,8 +1571,8 @@ myMap f xs = foldr step [] xs
 
 In fact, we can even write ~foldl~ using ~foldr~!
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 
 myFoldl f z xs = foldr step id xs z
@@ -1604,8 +1604,8 @@ The “identity” transformation with ~foldr~ thus replaces the
 empty list with itself, and applies the list constructor to each
 head/tail pair:
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 identity :: [a] -> [a]
 identity xs = foldr (:) [] xs
 #+END_SRC
@@ -1629,8 +1629,8 @@ ghci> [1,2,3] ++ [4,5,6]
 All we have to do to append a list onto another is substitute
 that second list for the end of our first list.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 append :: [a] -> [a] -> [a]
 append xs ys = foldr (:) ys xs
 #+END_SRC
@@ -1664,8 +1664,8 @@ we apply ~foldl (+) [1,2,3]~, it evaluates to the expression
 ~(((0 + 1) + 2) + 3)~. We can see this occur if we revisit the way in
 which the function gets expanded.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: ch04/Fold.hs
 foldl (+) 0 (1:2:3:[])
           == foldl (+) (0 + 1)             (2:3:[])
           == foldl (+) ((0 + 1) + 2)       (3:[])
@@ -1735,8 +1735,8 @@ will be unnecessarily inefficient. Instead, import ~Data.List~ and use
    simpler) to rewrite and improve upon the =asInt= function from
    [[file:functional-programming.html#fp.tailrecursion][the section called “Explicit recursion”]].
 
+   #+CAPTION: exercises.hs
    #+BEGIN_SRC haskell
-   -- file: ch04.exercises.hs
    asInt_fold :: String -> Int
    #+END_SRC
 
@@ -1769,8 +1769,8 @@ will be unnecessarily inefficient. Instead, import ~Data.List~ and use
 2. The ~asInt_fold~ function uses ~error~, so its callers cannot handle
    errors. Rewrite it to fix this problem.
 
+   #+CAPTION: exercises.hs
    #+BEGIN_SRC haskell
-   -- file: ch04.exercises.hs
    type ErrorMessage = String
    asInt_either :: String -> Either ErrorMessage Int
    #+END_SRC
@@ -1785,8 +1785,8 @@ will be unnecessarily inefficient. Instead, import ~Data.List~ and use
 3. The Prelude function ~concat~ concatenates a list of lists into a
    single list, and has the following type.
 
+   #+CAPTION: exercises.hs
    #+BEGIN_SRC haskell
-   -- file: ch04.exercises.hs
    concat :: [[a]] -> [a]
    #+END_SRC
 
@@ -1797,8 +1797,8 @@ will be unnecessarily inefficient. Instead, import ~Data.List~ and use
 5. The ~Data.List~ module defines a function, ~groupBy~, which has the
    following type.
 
+   #+CAPTION: exercises.hs
    #+BEGIN_SRC haskell
-   -- file: ch04.exercises.hs
    groupBy :: (a -> a -> Bool) -> [a] -> [[a]]
    #+END_SRC
 
@@ -1827,8 +1827,8 @@ functions that use explicit recursion into folds.
 In many of the function definitions we've seen so far, we've
 written short helper functions.
 
+#+CAPTION: Partial.hs
 #+BEGIN_SRC haskell
--- file: Partial.hs
 isInAny needle haystack = any inSequence haystack
     where inSequence s = needle `isInfixOf` s
 #+END_SRC
@@ -1845,8 +1845,8 @@ the function's body.
 Lambdas are most easily illustrated by example. Here's a rewrite
 of ~isInAny~ using an anonymous function.
 
+#+CAPTION: Partial.hs
 #+BEGIN_SRC haskell
--- file: Partial.hs
 isInAny2 needle haystack = any (\s -> needle `isInfixOf` s) haystack
 #+END_SRC
 
@@ -1865,8 +1865,8 @@ patterns in the definition of a lambda. We'll usually write a normal
 function with several clauses to cover different pattern matching
 possibilities.
 
+#+CAPTION: Lambda.hs
 #+BEGIN_SRC haskell
--- file: Lambda.hs
 safeHead (x:_) = Just x
 safeHead _ = Nothing
 #+END_SRC
@@ -1874,8 +1874,8 @@ safeHead _ = Nothing
 But as we can't write multiple clauses to define a lambda, we
 must be certain that any patterns we use will match.
 
+#+CAPTION: Lambda.hs
 #+BEGIN_SRC haskell
--- file: Lambda.hs
 unsafeHead = \(x:_) -> x
 #+END_SRC
 
@@ -2016,8 +2016,8 @@ anonymous functions we introduced in
 we defined there, here's how we'd use a partially applied function
 instead of a named helper function or a lambda.
 
+#+CAPTION: Partial.hs
 #+BEGIN_SRC haskell
--- file: Partial.hs
 isInAny3 needle haystack = any (isInfixOf needle) haystack
 #+END_SRC
 
@@ -2035,8 +2035,8 @@ list-summing function we wrote in
 [[file:functional-programming.html#fp.foldl][the section called “The
 left fold”]].
 
+#+CAPTION: Sum.hs
 #+BEGIN_SRC haskell
--- file: Sum.hs
 niceSum :: [Integer] -> Integer
 niceSum xs = foldl (+) 0 xs
 #+END_SRC
@@ -2045,8 +2045,8 @@ We don't need to fully apply ~foldl~; we can omit the list ~xs~
 from both the parameter list and the parameters to ~foldl~, and we'll
 end up with a more compact function that has the same type.
 
+#+CAPTION: Sum.hs
 #+BEGIN_SRC haskell
--- file: Sum.hs
 nicerSum :: [Integer] -> Integer
 nicerSum = foldl (+) 0
 #+END_SRC
@@ -2099,8 +2099,8 @@ False
 If we use this style, we can further improve the readability of
 our earlier ~isInAny3~ function.
 
+#+CAPTION: Partial.hs
 #+BEGIN_SRC haskell
--- file: Partial.hs
 isInAny4 needle haystack = any (needle `isInfixOf`) haystack
 #+END_SRC
 
@@ -2134,8 +2134,8 @@ What if we want a function that behaves like ~tails~, but which
 to write our own version by hand. We'll use a new piece of notation, the
 ~@~ symbol.
 
+#+CAPTION: SuffixTree.hs
 #+BEGIN_SRC haskell
--- file: SuffixTree.hs
 suffixes :: [a] -> [[a]]
 suffixes xs@(_:xs') = xs : suffixes xs'
 suffixes _ = []
@@ -2160,8 +2160,8 @@ ghci> suffixes "foo"
 The as-pattern makes our code more readable. To see how it
 helps, let us compare a definition that lacks an as-pattern.
 
+#+CAPTION: SuffixTree.hs
 #+BEGIN_SRC haskell
--- file: SuffixTree.hs
 noAsPattern :: [a] -> [[a]]
 noAsPattern (x:xs) = (x:xs) : noAsPattern xs
 noAsPattern _ = []
@@ -2189,8 +2189,8 @@ Recall the ~init~ function we introduced in
 [[file:functional-programming.html#fp.lists][the section called “Working
 with lists”]]: it returns all but the last element of a list.
 
+#+CAPTION: SuffixTree.hs
 #+BEGIN_SRC haskell
--- file: SuffixTree.hs
 suffixes2 xs = init (tails xs)
 #+END_SRC
 
@@ -2206,8 +2206,8 @@ If we take a step back, we see the glimmer of a pattern here:
 we're applying a function, then applying another function to its result.
 Let's turn that pattern into a function definition.
 
+#+CAPTION: SuffixTree.hs
 #+BEGIN_SRC haskell
--- file: SuffixTree.hs
 compose :: (b -> c) -> (a -> b) -> a -> c
 compose f g x = f (g x)
 #+END_SRC
@@ -2215,16 +2215,16 @@ compose f g x = f (g x)
 We now have a function, ~compose~, that we can use to “glue” two
 other functions together.
 
+#+CAPTION: SuffixTree.hs
 #+BEGIN_SRC haskell
--- file: SuffixTree.hs
 suffixes3 xs = compose init tails xs
 #+END_SRC
 
 Haskell's automatic currying lets us drop the ~xs~ variable, so
 we can make our definition even shorter.
 
+#+CAPTION: SuffixTree.hs
 #+BEGIN_SRC haskell
--- file: SuffixTree.hs
 suffixes4 = compose init tails
 #+END_SRC
 
@@ -2232,8 +2232,8 @@ Fortunately, we don't need to write our own ~compose~ function.
 Plugging functions into each other like this is so common that the
 Prelude provides function composition via the ~(.)~ operator.
 
+#+CAPTION: SuffixTree.hs
 #+BEGIN_SRC haskell
--- file: SuffixTree.hs
 suffixes5 = init . tails
 #+END_SRC
 
@@ -2310,8 +2310,8 @@ contains a large number definitions of the following form.
 Our goal is to extract names such as ~DLT_EN10MB~ and
 ~DLT_AX25~.
 
+#+CAPTION: dlts.hs
 #+BEGIN_SRC haskell
--- file: dlts.hs
 import Data.List (isPrefixOf)
 
 dlts :: String -> [String]
@@ -2323,8 +2323,8 @@ We treat an entire file as a string, split it up with ~lines~,
 then apply ~foldr step []~ to the resulting list of lines. The
 ~step~ helper function operates on a single line.
 
+#+CAPTION: dlts.hs
 #+BEGIN_SRC haskell
--- file: dlts.hs
   where step l ds
           | "#define DLT_" `isPrefixOf` l = secondWord l : ds
           | otherwise                     = ds
@@ -2454,8 +2454,8 @@ We refer to an expression that is not evaluated lazily as
 /strict/, so ~foldl'~ is a strict left fold. It bypasses Haskell's usual
 non-strict evaluation through the use of a special function named ~seq~.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 foldl' _    zero []     = zero
 foldl' step zero (x:xs) =
     let new = step zero x
@@ -2476,15 +2476,15 @@ argument. It doesn't actually do anything with the first argument: ~seq~
 exists solely as a way to force that value to be evaluated. Let's walk
 through a brief application to see what happens.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 foldl' (+) 1 (2:[])
 #+END_SRC
 
 This expands as follows.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 let new = 1 + 2
 in new `seq` foldl' (+) new []
 #+END_SRC
@@ -2492,15 +2492,15 @@ in new `seq` foldl' (+) new []
 The use of ~seq~ forcibly evaluates ~new~ to ~3~, and returns
 its second argument.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 foldl' (+) 3 []
 #+END_SRC
 
 We end up with the following result.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: ch04/Fold.hs
 3
 #+END_SRC
 
@@ -2514,8 +2514,8 @@ Without some direction, there is an element of mystery to using
 To have any effect, a ~seq~ expression must be the first thing
 evaluated in an expression.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 -- incorrect: seq is hidden by the application of someFunc
 -- since someFunc will be evaluated first, seq may occur too late
 hiddenInside x y = someFunc (x `seq` y)
@@ -2531,16 +2531,16 @@ onTheOutside x y = x `seq` someFunc y
 To strictly evaluate several values, chain applications of
 ~seq~ together.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: ch04/Fold.hs
 chained x y z = x `seq` y `seq` someFunc z
 #+END_SRC
 
 A common mistake is to try to use ~seq~ with two unrelated
 expressions.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 badExpression step zero (x:xs) =
     seq (step zero x)
         (badExpression step (step zero x) xs)
@@ -2565,8 +2565,8 @@ pair's constructor.
 If necessary, we can use normal functional programming
 techniques to work around these limitations.
 
+#+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
--- file: Fold.hs
 strictPair (a,b) = a `seq` b `seq` (a,b)
 strictList (x:xs) = x `seq` x : strictList xs
 strictList []     = []

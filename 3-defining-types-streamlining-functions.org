@@ -17,8 +17,8 @@ the real world.
 
 We define a new data type using the ~data~ keyword.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 data BookInfo = Book Int String [String]
                 deriving (Show)
 #+END_SRC
@@ -50,8 +50,8 @@ Type contains the same components as a 3-tuple of type ~(Int, String,
 deliberately) use one in a context where the other is expected. For
 instance, a bookstore is also likely to carry magazines.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 data MagazineInfo = Magazine Int String [String]
                     deriving (Show)
 #+END_SRC
@@ -74,8 +74,8 @@ We can create a new value of type ~BookInfo~ by treating ~Book~ as
 a function, and applying it with arguments of types ~Int~, ~String~, and
 ~[String]~.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 myInfo = Book 9780135072455 "Algebra of Programming"
          ["Richard Bird", "Oege de Moor"]
 #+END_SRC
@@ -152,8 +152,8 @@ the same name. If we are writing a type signature, we must be referring
 to a type constructor. If we are writing an expression, we must be using
 the value constructor.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 -- We will introduce the CustomerID type shortly.
 
 data BookReview = BookReview BookInfo CustomerID String
@@ -173,8 +173,8 @@ to give a type a more descriptive name. For example, the ~String~ in our
 ~BookReview~ type doesn't tell us what the string is for, but we can
 clarify this.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 type CustomerID = Int
 type ReviewBody = String
 
@@ -189,8 +189,8 @@ more readable.
 We can also use a type synonym to create a shorter name for a
 verbose type.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 type BookRecord = (BookInfo, BookReview)
 #+END_SRC
 
@@ -205,8 +205,8 @@ The familiar ~Bool~ is the simplest common example of a category
 of type called an /algebraic data type/. An algebraic data type can have
 more than one value constructor.
 
+#+CAPTION: Bool.hs
 #+BEGIN_SRC haskell
--- file: Bool.hs
 data Bool = False | True
 #+END_SRC
 
@@ -232,8 +232,8 @@ Each of an algebraic data type's value constructors can take
 zero or more arguments. As an example, here's one way we might represent
 billing information.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 type CardHolder = String
 type CardNumber = String
 type Address = [String]
@@ -299,8 +299,8 @@ Algebraic data types allow us to distinguish between otherwise
 identical pieces of information. Two tuples with elements of the same
 type are structurally identical, so they have the same type.
 
+#+CAPTION: Distinction.hs
 #+BEGIN_SRC haskell
--- file: Distinction.hs
 a = ("Porpoise", "Grey")
 b = ("Table", "Oak")
 #+END_SRC
@@ -308,8 +308,8 @@ b = ("Table", "Oak")
 Since they have different names, two algebraic data types have
 distinct types, even if they are otherwise structurally equivalent.
 
+#+CAPTION: Distinction.hs
 #+BEGIN_SRC haskell
--- file: Distinction.hs
 data Cetacean = Cetacean String String
 data Furniture = Furniture String String
 
@@ -326,8 +326,8 @@ no such possibility of confusion.
 Here is a more subtle example. Consider the following
 representations of a two-dimensional vector.
 
+#+CAPTION: AlgebraicVector.hs
 #+BEGIN_SRC haskell
--- file: AlgebraicVector.hs
 -- x and y coordinates or lengths.
 data Cartesian2D = Cartesian2D Double Double
                    deriving (Eq, Show)
@@ -416,8 +416,8 @@ struct book_info {
 The main difference between the two is that the fields in the
 Haskell type are anonymous and positional.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 data BookInfo = Book Int String [String]
                 deriving (Show)
 #+END_SRC
@@ -454,9 +454,8 @@ enum roygbiv {
 
 And here's a Haskell equivalent.
 
+#+CAPTION: Roygbiv.hs
 #+BEGIN_SRC haskell
--- file: Roygbiv.hs
-
 data Roygbiv = Red
              | Orange
              | Yellow
@@ -543,8 +542,8 @@ currently stored in the ~union~.
 The Haskell version of this code is both dramatically shorter
 and safer than the C equivalent.
 
+#+CAPTION: ShapeUnion.hs
 #+BEGIN_SRC haskell
--- file: ShapeUnion.hs
 type Vector = (Double, Double)
 
 data Shape = Circle Vector Double
@@ -584,8 +583,8 @@ A pattern lets us look inside a value and bind variables to the
 data it contains. Here's an example of pattern matching in action on a
 Bool value: we're going to reproduce the ~not~ function.
 
+#+CAPTION: MyNot.hs
 #+BEGIN_SRC haskell
--- file: MyNot.hs
 myNot True  = False
 myNot False = True
 #+END_SRC
@@ -608,8 +607,8 @@ function application.
 Here is a slightly more extended example. This function adds
 together the elements of a list.
 
+#+CAPTION: SumList.hs
 #+BEGIN_SRC haskell
--- file: SumList.hs
 sumList (x:xs) = x + sumList xs
 sumList []     = 0
 #+END_SRC
@@ -696,8 +695,8 @@ The syntax for pattern matching on a tuple is similar to the
 syntax for constructing a tuple. Here's a function that returns the last
 element of a 3-tuple.
 
+#+CAPTION: Tuple.hs
 #+BEGIN_SRC haskell
--- file: Tuple.hs
 third (a, b, c) = c
 #+END_SRC
 
@@ -705,8 +704,8 @@ There's no limit on how “deep” within a value a pattern can
 look. This definition looks both inside a tuple and inside a list within
 that tuple.
 
+#+CAPTION: Tuple.hs
 #+BEGIN_SRC haskell
--- file: Tuple.hs
 complicated (True, a, x:xs, 5) = (a, xs)
 #+END_SRC
 
@@ -738,8 +737,8 @@ We can pattern match on an algebraic data type using its value
 constructors. Recall the ~BookInfo~ type we defined earlier: we can
 extract the values from a ~BookInfo~ as follows.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 bookID      (Book id title authors) = id
 bookTitle   (Book id title authors) = title
 bookAuthors (Book id title authors) = authors
@@ -791,8 +790,8 @@ We can indicate that we don't care what is present in part of a
 pattern. The notation for this is the underscore character “=_=”, which
 we call a /wild card/. We use it as follows.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 nicerID      (Book id _     _      ) = id
 nicerTitle   (Book _  title _      ) = title
 nicerAuthors (Book _  _     authors) = authors
@@ -823,8 +822,8 @@ and one that matches the empty-list constructor ~[]~.
 Let's see what happens if we fail to cover all the cases. Here,
 we deliberately omit a check for the ~[]~ constructor.
 
+#+CAPTION: BadPattern.hs
 #+BEGIN_SRC haskell
--- file: BadPattern.hs
 badExample (x:xs) = x + badExample xs
 #+END_SRC
 
@@ -851,8 +850,8 @@ value constructors.
 If we need to provide a default behavior in cases where we don't
 care about specific constructors, we can use a wild card pattern.
 
+#+CAPTION: BadPattern.hs
 #+BEGIN_SRC haskell
--- file: BadPattern.hs
 goodExample (x:xs) = x + goodExample xs
 goodExample _      = 0
 #+END_SRC
@@ -872,8 +871,8 @@ ghci> goodExample [1,2]
 Writing accessor functions for each of a data type's components
 can be repetitive and tedious.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 nicerID      (Book id _     _      ) = id
 nicerTitle   (Book _  title _      ) = title
 nicerAuthors (Book _  _     authors) = authors
@@ -887,8 +886,8 @@ simultaneously. (The positions of the commas here is a matter of
 preference. If you like, put them at the end of a line instead of the
 beginning.)
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 data Customer = Customer {
       customerID      :: CustomerID
     , customerName    :: String
@@ -899,8 +898,8 @@ data Customer = Customer {
 This is almost exactly identical in meaning to the following,
 more familiar form.
 
+#+CAPTION: AltCustomer.hs
 #+BEGIN_SRC haskell
--- file: AltCustomer.hs
 data Customer = Customer Int String [String]
                 deriving (Show)
 
@@ -925,8 +924,8 @@ customerID :: Customer -> CustomerID
 We can still use the usual application syntax to create a value
 of this type.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 customer1 = Customer 271828 "J.R. Hacker"
             ["255 Syntax Ct",
              "Milpitas, CA 95134",
@@ -936,8 +935,8 @@ customer1 = Customer 271828 "J.R. Hacker"
 Record syntax adds a more verbose notation for creating a value.
 This can sometimes make code more readable.
 
+#+CAPTION: BookStore.hs
 #+BEGIN_SRC haskell
--- file: BookStore.hs
 customer2 = Customer {
               customerID = 271828
             , customerAddress = ["1048576 Disk Drive",
@@ -1007,8 +1006,8 @@ declaration. The Prelude defines a type named Maybe: we can use this to
 represent a value that could be either present or missing, e.g. a field
 in a database row that could be null.
 
+#+CAPTION: Nullable.hs
 #+BEGIN_SRC haskell
--- file: Nullable.hs
 data Maybe a = Just a
              | Nothing
 #+END_SRC
@@ -1017,8 +1016,8 @@ Here, the variable ~a~ is not a regular variable: it's a type
 variable. It indicates that the Maybe type takes another type as its
 parameter. This lets us use Maybe on values of any type.
 
+#+CAPTION: Nullable.hs
 #+BEGIN_SRC haskell
--- file: Nullable.hs
 someBool = Just True
 
 someString = Just "something"
@@ -1043,8 +1042,8 @@ We can nest uses of parameterised types inside each other, but
 when we do, we may need to use parentheses to tell the Haskell compiler
 how to parse our expression.
 
+#+CAPTION: Nullable.hs
 #+BEGIN_SRC haskell
--- file: Nullable.hs
 wrapped = Just (Just "wrapped")
 #+END_SRC
 
@@ -1115,8 +1114,8 @@ same shape as the built-in list type ~[a]~. To do this, we write a
 function that takes any value of type ~[a]~, and produces a value of type
 ~List a~.
 
+#+CAPTION: ListADT.hs
 #+BEGIN_SRC haskell
--- file: ListADT.hs
 fromList (x:xs) = Cons x (fromList xs)
 fromList []     = Nil
 #+END_SRC
@@ -1137,8 +1136,8 @@ Cons (Just True) (Cons Nothing (Cons (Just False) Nil))
 For a third example of what a recursive type is, here is a
 definition of a binary tree type.
 
+#+CAPTION: Tree.hs
 #+BEGIN_SRC haskell
--- file: Tree.hs
 data Tree a = Node a (Tree a) (Tree a)
             | Empty
               deriving (Show)
@@ -1192,8 +1191,8 @@ matching. Instead, we've decided to use a no-argument ~Empty~
 constructor. Where the Java example provides ~null~ to the ~Tree~
 constructor, we supply ~Empty~ in Haskell.
 
+#+CAPTION: Tree.hs
 #+BEGIN_SRC haskell
--- file: Tree.hs
 simpleTree = Node "parent" (Node "left child" Empty Empty)
                            (Node "right child" Empty Empty)
 #+END_SRC
@@ -1222,8 +1221,8 @@ prints the error message we give it.
 The ~mySecond~ function returns the second element of its input
 list, but fails if its input list isn't long enough.
 
+#+CAPTION: MySecond.hs
 #+BEGIN_SRC haskell
--- file: MySecond.hs
 mySecond :: [a] -> a
 
 mySecond xs = if null (tail xs)
@@ -1269,8 +1268,8 @@ constructor.
 Let's see how our ~mySecond~ function changes if we return a
 ~Maybe~ value instead of calling ~error~.
 
+#+CAPTION: MySecond.hs
 #+BEGIN_SRC haskell
--- file: MySecond.hs
 safeSecond :: [a] -> Maybe a
 
 safeSecond [] = Nothing
@@ -1297,8 +1296,8 @@ Just 2
 To return to an earlier topic, we can further improve the
 readability of this function with pattern matching.
 
+#+CAPTION: MySecond.hs
 #+BEGIN_SRC haskell
--- file: MySecond.hs
 tidySecond :: [a] -> Maybe a
 
 tidySecond (_:x:_) = Just x
@@ -1318,8 +1317,8 @@ simple function that determines whether we should lend some money to a
 customer. We meet a money reserve of at least 100, we return our new
 balance after subtracting the amount we have loaned.
 
+#+CAPTION: Lending.hs
 #+BEGIN_SRC haskell
--- file: Lending.hs
 lend amount balance = let reserve    = 100
                           newBalance = balance - amount
                       in if balance < reserve
@@ -1365,8 +1364,8 @@ source file, we say it's at the /top level/.
 We can “nest” multiple ~let~ blocks inside each other in an
 expression.
 
+#+CAPTION: NestedLets.hs
 #+BEGIN_SRC haskell
--- file: NestedLets.hs
 foo = let a = 1
       in let b = 2
          in a + b
@@ -1375,8 +1374,8 @@ foo = let a = 1
 It's perfectly legal, but not exactly wise, to repeat a variable
 name in a nested ~let~ expression.
 
+#+CAPTION: NestedLets.hs
 #+BEGIN_SRC haskell
--- file: NestedLets.hs
 bar = let x = 1
       in ((let x = "foo" in x), x)
 #+END_SRC
@@ -1392,8 +1391,8 @@ ghci> bar
 We can also shadow a function's parameters, leading to even
 stranger results. What is the type of this function?
 
+#+CAPTION: NestedLets.hs
 #+BEGIN_SRC haskell
--- file: NestedLets.hs
 quux a = let a = "foo"
          in a ++ "eek!"
 #+END_SRC
@@ -1422,8 +1421,8 @@ We can use another mechanism to introduce local variables: the
 that /precedes/ it. Here's a similar function to ~lend~, using ~where~
 instead of ~let~.
 
+#+CAPTION: Lending.hs
 #+BEGIN_SRC haskell
--- file: Lending.hs
 lend2 amount balance = if amount < reserve * 0.5
                        then Just newBalance
                        else Nothing
@@ -1449,8 +1448,8 @@ variable looks very similar to its syntax for defining a function. This
 symmetry is preserved in ~let~ and ~where~ blocks: we can define local
 /functions/ just as easily as local /variables/.
 
+#+CAPTION: LocalFunction.hs
 #+BEGIN_SRC haskell
--- file: LocalFunction.hs
 pluralise :: String -> [Int] -> [String]
 pluralise word counts = map plural counts
     where plural 0 = "no " ++ word ++ "s"
@@ -1468,8 +1467,8 @@ local function ~plural~ to every element of the ~counts~ list.
 We can also define variables, as well as functions, at the top
 level of a source file.
 
+#+CAPTION: GlobalVariable.hs
 #+BEGIN_SRC haskell
--- file: GlobalVariable.hs
 itemName = "Weighted Companion Cube"
 #+END_SRC
 
@@ -1489,8 +1488,8 @@ level declaration must have the same indentation.
 Here's an illustration of the top level indentation rule. Our
 first file, ~GoodIndent.hs~, is well behaved.
 
+#+CAPTION: GoodIndent.hs
 #+BEGIN_SRC haskell
--- file: GoodIndent.hs
 -- This is the leftmost column.
 
   -- It's fine for top-level declarations to start in any column...
@@ -1502,8 +1501,8 @@ first file, ~GoodIndent.hs~, is well behaved.
 
 Our second, ~BadIndent.hs~, doesn't play by the rules.
 
+#+CAPTION: BadIndent.hs
 #+BEGIN_SRC haskell
--- file: BadIndent.hs
 -- This is the leftmost column.
 
     -- Our first declaration is in column 4.
@@ -1542,8 +1541,8 @@ considered to continue the previous line. If the indentation is the same
 as the start of the preceding item, this is treated as beginning a new
 item in the same block.
 
+#+CAPTION: Indentation.hs
 #+BEGIN_SRC haskell
--- file: Indentation.hs
 foo = let firstDefinition = blah blah
           -- a comment-only line is treated as empty
                             continuation blah
@@ -1556,8 +1555,8 @@ foo = let firstDefinition = blah blah
 
 Here are nested uses of ~let~ and ~where~.
 
+#+CAPTION: LetLet.hs
 #+BEGIN_SRC haskell
--- file: LetLet.hs
 bar = let b = 2
           c = True
       in let a = b
@@ -1569,8 +1568,8 @@ It's not visible in the outer ~let~. If we try to use the name ~a~
 there, we'll get a compilation error. The indentation gives both us and
 the compiler a visual cue as to what is currently in scope.
 
+#+CAPTION: WhereWhere.hs
 #+BEGIN_SRC haskell
--- file: WhereWhere.hs
 foo = x
     where x = y
               where y = 2
@@ -1596,8 +1595,8 @@ if an indented expression is correctly aligned. In the next example you'll
 see the ~b~ aligned with the ~a~ only if the tab width equals eight in
 whichever app you are using to read this text.
 
+#+CAPTION: TabAlign.hs
 #+BEGIN_SRC haskell
--- file: TabAlign.hs
 x = let a = 1
 	b = 2
 	in a + b
@@ -1607,8 +1606,8 @@ We need the amount of characters before the ~a~ to be equal to
 eight or the ~b~ won't be aligned and won't compile.
 Totally impracticall. It is better to break the expressions as below.
 
+#+CAPTION: TabAlign2.hs
 #+BEGIN_SRC haskell
--- file: TabAlign2.hs
 x = let
 		a = 1
 		b = 2
@@ -1626,8 +1625,8 @@ curly brace; separate each item with a semicolon; and finish the block
 with a closing curly brace. The following two uses of ~let~ have the
 same meanings.
 
+#+CAPTION: Braces.hs
 #+BEGIN_SRC haskell
--- file: Braces.hs
 bar = let a = 1
           b = 2
           c = 3
@@ -1655,8 +1654,8 @@ expression. Here's what it looks like. This function (defined for us in
 ~Data.Maybe~) unwraps a ~Maybe~ value, using a default if the value is
 ~Nothing~.
 
+#+CAPTION: Guard.hs
 #+BEGIN_SRC haskell
--- file: Guard.hs
 fromMaybe defval wrapped =
     case wrapped of
       Nothing     -> defval
@@ -1688,8 +1687,8 @@ to do, it might contain a surprise.
 
 *** Incorrectly matching against a variable
 
+#+CAPTION: BogusPattern.hs
 #+BEGIN_SRC haskell
--- file: BogusPattern.hs
 data Fruit = Apple | Orange
 
 apple = "apple"
@@ -1708,8 +1707,8 @@ value ~f~ to see whether it matches the value ~apple~ or ~orange~.
 It is easier to spot the mistake if we rewrite the code in an
 equational style.
 
+#+CAPTION: BogusPattern.hs
 #+BEGIN_SRC haskell
--- file: BogusPattern.hs
 equational apple = Apple
 equational orange = Orange
 #+END_SRC
@@ -1728,8 +1727,8 @@ patterns.
 
 Here's a corrected version of this function.
 
+#+CAPTION: BogusPattern.hs
 #+BEGIN_SRC haskell
--- file: BogusPattern.hs
 betterFruit f = case f of
                   "apple"  -> Apple
                   "orange" -> Orange
@@ -1743,8 +1742,8 @@ We fixed the problem by matching against the literal values
 What if we want to compare the values stored in two nodes of
 type Tree, and return one of them if they're equal? Here's an attempt.
 
+#+CAPTION: BadTree.hs
 #+BEGIN_SRC haskell
--- file: BadTree.hs
 bad_nodesAreSame (Node a _ _) (Node a _ _) = Just a
 bad_nodesAreSame _            _            = Nothing
 #+END_SRC
@@ -1763,8 +1762,8 @@ provides a feature, /guards/, that give us this ability. We'll introduce
 the idea with a modification of the function we wrote to compare two
 nodes of a tree.
 
+#+CAPTION: BadTree.hs
 #+BEGIN_SRC haskell
--- file: BadTree.hs
 nodesAreSame (Node a _ _) (Node b _ _)
     | a == b     = Just a
 nodesAreSame _ _ = Nothing
@@ -1791,8 +1790,8 @@ be used.
 Here is a reworked version of our ~lend~ function that uses
 guards.
 
+#+CAPTION: Lending.hs
 #+BEGIN_SRC haskell
--- file: Lending.hs
 lend3 amount balance
      | amount <= 0            = Nothing
      | amount > reserve * 0.5 = Nothing
@@ -1810,8 +1809,8 @@ make it much clearer. Remember the ~myDrop~ function we defined in
 [[file:types-and-functions.html#funcstypes.if][the section called
 “Conditional evaluation”]]?
 
+#+CAPTION: myDrop.hs
 #+BEGIN_SRC haskell
--- file: myDrop.hs
 myDrop n xs = if n <= 0 || null xs
               then xs
               else myDrop (n - 1) (tail xs)
@@ -1819,8 +1818,8 @@ myDrop n xs = if n <= 0 || null xs
 
 Here is a reformulation that uses patterns and guards.
 
+#+CAPTION: myDrop.hs
 #+BEGIN_SRC haskell
--- file: myDrop.hs
 niceDrop n xs | n <= 0 = xs
 niceDrop _ []          = []
 niceDrop n (_:xs)      = niceDrop (n - 1) xs
@@ -1851,8 +1850,8 @@ to read.
 7. Define a function that joins a list of lists together using a separator
    value:
 
+#+CAPTION: Intersperse.hs
 #+BEGIN_SRC haskell
--- file: Intersperse.hs
 intersperse :: a -> [[a]] -> [a]
 #+END_SRC
 

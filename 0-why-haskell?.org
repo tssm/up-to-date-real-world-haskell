@@ -74,8 +74,8 @@ elements.
 Better yet, our Haskell code that operates so efficiently is
 tiny, and uses standard library functions.
 
+#+CAPTION: KMinima.hs
 #+BEGIN_SRC haskell
--- file: ch00/KMinima.hs
 -- lines beginning with "--" are comments.
 
 minima k xs = take k (sort xs)

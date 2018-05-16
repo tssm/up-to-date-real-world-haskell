@@ -5,8 +5,8 @@
 This simple microbenchmark reads a text file full of numbers,
 and prints their sum.
 
+#+CAPTION: SumFile.hs
 #+BEGIN_EXAMPLE
--- file: SumFile.hs
 main = do
     contents <- getContents
     print (sumFile contents)
@@ -62,8 +62,8 @@ the file, and seeing if they match a specific sequence of bytes. A byte
 sequence that identifies a file's type is often known as a /magic
 number/.
 
+#+CAPTION: ElfMagic.hs
 #+BEGIN_EXAMPLE
--- file: ElfMagic.hs
 import qualified Data.ByteString.Lazy as L
 
 hasElfMagic :: L.ByteString -> Bool
@@ -112,8 +112,8 @@ We are writing in classic Haskell style, where our
 ~hasElfMagic~ function does not perform I/O. Here is the function that
 uses it on a file.
 
+#+CAPTION: ElfMagic.hs
 #+BEGIN_EXAMPLE
--- file: ElfMagic.hs
 isElfFile :: FilePath -> IO Bool
 isElfFile path = do
   content <- L.readFile path
@@ -159,8 +159,8 @@ How can we find the highest closing price from a series of
 entries like this? Closing prices are in the fourth comma-separated
 column. This function obtains a closing price from one line of data.
 
+#+CAPTION: HighestClose.hs
 #+BEGIN_EXAMPLE
--- file: HighestClose.hs
 import qualified Data.ByteString.Lazy.Char8 as L
 
 closing = readPrice . (!!4) . L.split ','
@@ -172,8 +172,8 @@ a list of them, every time it finds a matching character. The ~(!!)~
 operator retrieves the /k/th element of a list. Our ~readPrice~ function
 turns a string representing a fractional price into a whole number.
 
+#+CAPTION: HighestClose.hs
 #+BEGIN_EXAMPLE
--- file: HighestClose.hs
 readPrice :: L.ByteString -> Maybe Int
 readPrice str =
     case L.readInt str of
@@ -193,8 +193,8 @@ digits is consumed. Our definition is slightly complicated by
 Our function for finding the highest closing price is
 straightforward.
 
+#+CAPTION: HighestClose.hs
 #+BEGIN_EXAMPLE
--- file: HighestClose.hs
 highestClose = maximum . (Nothing:) . map closing . L.lines
 
 highestCloseFrom path = do
@@ -576,8 +576,8 @@ representation as a regular expression. Both glob patterns and regexps
 are text strings, so the type that our function ought to have seems
 clear.
 
+#+CAPTION: GlobRegex.hs
 #+BEGIN_EXAMPLE
--- file: GlobRegex.hs
 module GlobRegex
     ( globToRegex
     , matchesGlob
@@ -592,8 +592,8 @@ The regular expression that we generate must be /anchored/, so
 that it starts matching from the beginning of a string and finishes at
 the end.
 
+#+CAPTION: GlobRegex.hs
 #+BEGIN_EXAMPLE
--- file: GlobRegex.hs
 globToRegex cs = '^' : globToRegex' cs ++ "$"
 #+END_EXAMPLE
 
@@ -624,8 +624,8 @@ will do the bulk of the translation work. We'll use the convenience of
 Haskell's pattern matching to enumerate each of the cases we'll need to
 cover.
 
+#+CAPTION: GlobRegex.hs
 #+BEGIN_EXAMPLE
--- file: GlobRegex.hs
 globToRegex' :: String -> String
 globToRegex' "" = ""
 globToRegex' ('*':cs) = ".*" ++ globToRegex' cs
@@ -646,8 +646,8 @@ possibly escaping it first.
 The ~escape~ function ensures that the regexp engine will not
 interpret certain characters as pieces of regular expression syntax.
 
+#+CAPTION: GlobRegex.hs
 #+BEGIN_EXAMPLE
--- file: GlobRegex.hs
 escape :: Char -> String
 escape c | c `elem` regexChars = '\\' : [c]
          | otherwise = [c]
@@ -658,8 +658,8 @@ The ~charClass~ helper function only checks that a character
 class is correctly terminated. It passes its input through unmodified
 until it hits a ~]~, when it hands control back to ~globToRegex'~.
 
+#+CAPTION: GlobRegex.hs
 #+BEGIN_EXAMPLE
--- file: GlobRegex.hs
 charClass :: String -> String
 charClass (']':cs) = ']' : globToRegex' cs
 charClass (c:cs)   = c : charClass cs
@@ -714,8 +714,8 @@ capitalising all but possibly the first word. For instance, the words
 “camel case” comes from the “humps” introduced by the capital letters.
 In our library, we'll give this function the name ~matchesGlob~.
 
+#+CAPTION: GlobRegex.hs
 #+BEGIN_EXAMPLE
--- file: GlobRegex.hs
 matchesGlob :: FilePath -> String -> Bool
 name `matchesGlob` pat = name =~ globToRegex pat
 #+END_EXAMPLE
@@ -751,8 +751,8 @@ Looking at the ~globToRegex'~ function, we can see that it is
 /not/ tail recursive. To see why, examine its final clause again
 (several of its other clauses are structured similarly).
 
+#+CAPTION: GlobRegex.hs
 #+BEGIN_EXAMPLE
--- file: GlobRegex.hs
 globToRegex' (c:cs) = escape c ++ globToRegex' cs
 #+END_EXAMPLE
 
@@ -768,8 +768,8 @@ language, we'd try to avoid this kind of recursive definition. Here is a
 simpler definition, of the ~(++)~ operator. It is recursivem, but not
 tail recursive.
 
+#+CAPTION: append.hs
 #+BEGIN_EXAMPLE
--- file: append.hs
 (++) :: [a] -> [a] -> [a]
 
 (x:xs) ++ ys = x : (xs ++ ys)
@@ -799,8 +799,8 @@ and directories that match a given glob pattern. Let's build a similar
 function in Haskell. Following the Haskell norm of descriptive naming,
 we'll call our function ~namesMatching~.
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
 module Glob (namesMatching) where
 #+END_EXAMPLE
 
@@ -814,8 +814,8 @@ previously unfamiliar modules along the way.
 The ~System.Directory~ module provides standard functions for
 working with directories and their contents.
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
 import System.Directory (doesDirectoryExist, doesFileExist,
                          getCurrentDirectory, getDirectoryContents)
 #+END_EXAMPLE
@@ -851,8 +851,8 @@ Using ~System.FilePath~ together with the ~System.Directory~
 module, we can write a portable ~namesMatching~ function that will run
 on both Unix-like and Windows systems.
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
 import System.FilePath (dropTrailingPathSeparator, splitFileName, (</>))
 #+END_EXAMPLE
 
@@ -860,8 +860,8 @@ In this module, we'll be emulating a “for” loop; getting our
 first taste of exception handling in Haskell; and of course using the
 ~matchesGlob~ function we just wrote.
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
 import Control.Exception (handle)
 import Control.Monad (forM)
 import GlobRegex (matchesGlob)
@@ -876,8 +876,8 @@ simply check that the given name exists in the filesystem. (Notice that
 we use Haskell's function guard syntax here to write a nice tidy
 definition. An “if” would do, but isn't as aesthetically pleasing.)
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
 isPattern :: String -> Bool
 isPattern = any (`elem` "[*?")
 
@@ -893,8 +893,8 @@ define shortly.
 What if the string /is/ a glob pattern? Our function definition
 continues.
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
   | otherwise = do
     case splitFileName pat of
       ("", baseName) -> do
@@ -960,8 +960,8 @@ file or a directory. This API is ungainly, so we roll the two checks
 into a single function. In the name of performance, we make the check
 for a file first, since files are far more common than directories.
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
 doesNameExist :: FilePath -> IO Bool
 doesNameExist name = do
     fileExists <- doesFileExist name
@@ -974,8 +974,8 @@ We have two other functions to define, each of which returns a
 list of names in a directory. The ~listMatches~ function returns a list
 of all files matching the given glob pattern in a directory.
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
 listMatches :: FilePath -> String -> IO [String]
 listMatches dirName pat = do
     dirName' <- if null dirName
@@ -995,8 +995,8 @@ isHidden _       = False
 The ~listPlain~ function returns either an empty or singleton
 list, depending on whether the single name it's passed exists.
 
+#+CAPTION: Glob.hs
 #+BEGIN_EXAMPLE
--- file: Glob.hs
 listPlain :: FilePath -> String -> IO [String]
 listPlain dirName baseName = do
     exists <- if null baseName
@@ -1099,8 +1099,8 @@ Haskell's type system and libraries to the rescue! We can encode
 the possibility of failure in the type signature of ~globToRegex~, using
 the predefined Either type.
 
+#+CAPTION: GlobRegexEither.hs
 #+BEGIN_EXAMPLE
--- file: GlobRegexEither.hs
 type GlobError = String
 
 globToRegex :: String -> Either GlobError String
@@ -1136,8 +1136,8 @@ Here's one such example. Let's define a ~renameWith~ function
 that, instead of simply renaming a file, applies a function to the
 file's name, and renames the file to whatever that function returns.
 
+#+CAPTION: Useful.hs
 #+BEGIN_EXAMPLE
--- file: Useful.hs
 import System.FilePath (replaceExtension)
 import System.Directory (doesFileExist, renameDirectory, renameFile)
 import Glob (namesMatching)
@@ -1155,8 +1155,8 @@ renameWith f path = do
 Once again, we work around the ungainly file/directory split in
 ~System.Directory~ with a helper function.
 
+#+CAPTION: Useful.hs
 #+BEGIN_EXAMPLE
--- file: Useful.hs
 rename :: FilePath -> FilePath -> IO ()
 
 rename old new = do
@@ -1172,8 +1172,8 @@ them to create functions with complex behaviour. As an example, this
 terse function changes the file name suffixing convention for C++ source
 files.
 
+#+CAPTION: Useful.hs
 #+BEGIN_EXAMPLE
--- file: Useful.hs
 cc2cpp =
   mapM (renameWith (flip replaceExtension ".cpp")) =<< namesMatching "*.cc"
 #+END_EXAMPLE
