@@ -228,10 +228,8 @@ Does our function work?
 #+BEGIN_SRC screen
 ghci> :load HighestClose
 [1 of 1] Compiling Main             ( HighestClose.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> highestCloseFrom "prices.csv"
-Loading package array-0.1.0.0 ... linking ... done.
-Loading package bytestring-0.9.0.1 ... linking ... done.
 Just 2741
 #+END_SRC
 
@@ -315,6 +313,8 @@ module we'll need to work with is ~Text.Regex.Posix~. As usual, the most
 convenient way to explore this module is by interacting with it via
 ~ghci~.
 
+*** TODO: Explain how to install regex-posix with Cabal or Stack
+
 #+BEGIN_SRC screen
 ghci> :module +Text.Regex.Posix
 #+END_SRC
@@ -348,12 +348,6 @@ pass/fail answer.
 
 #+BEGIN_SRC screen
 ghci> "my left foot" =~ "foo" :: Bool
-Loading package array-0.1.0.0 ... linking ... done.
-Loading package containers-0.1.0.1 ... linking ... done.
-Loading package bytestring-0.9.0.1 ... linking ... done.
-Loading package mtl-1.1.0.0 ... linking ... done.
-Loading package regex-base-0.93.1 ... linking ... done.
-Loading package regex-posix-0.93.1 ... linking ... done.
 True
 ghci> "your right hand" =~ "bar" :: Bool
 False
@@ -386,35 +380,12 @@ ghci> "hi ludi, F. Baconis nati, tuiti orbi" =~ "Shakespeare" :: String
 #+END_SRC
 
 Another valid type of result is ~[String]~, which returns a list
-of /all/ matching strings.
+of /all/ matching strings when using with the ~getAllTextMatches~
+function.
 
 #+BEGIN_SRC screen
-ghci> "I, B. Ionsonii, uurit a lift'd batch" =~ "(uu|ii)" :: [String]
-
-<interactive>:1:0:
-    No instance for (RegexContext Regex [Char] [String])
-      arising from a use of `=~' at <interactive>:1:0-50
-    Possible fix:
-      add an instance declaration for
-      (RegexContext Regex [Char] [String])
-    In the expression:
-            "I, B. Ionsonii, uurit a lift'd batch" =~ "(uu|ii)" :: [String]
-    In the definition of `it':
-        it = "I, B. Ionsonii, uurit a lift'd batch" =~ "(uu|ii)" ::
-             [String]
-ghci> "hi ludi, F. Baconis nati, tuiti orbi" =~ "Shakespeare" :: [String]
-
-<interactive>:1:0:
-    No instance for (RegexContext Regex [Char] [String])
-      arising from a use of `=~' at <interactive>:1:0-54
-    Possible fix:
-      add an instance declaration for
-      (RegexContext Regex [Char] [String])
-    In the expression:
-            "hi ludi, F. Baconis nati, tuiti orbi" =~ "Shakespeare" :: [String]
-    In the definition of `it':
-        it = "hi ludi, F. Baconis nati, tuiti orbi" =~ "Shakespeare" ::
-             [String]
+ghci> getAllTextMatches ("I, B. Ionsonii, uurit a lift'd batch" =~ "(uu|ii)") :: [String]
+["ii","uu"]
 #+END_SRC
 
 #+BEGIN_NOTE
@@ -433,7 +404,7 @@ remaining examples. We can define this pattern as a variable in ~ghci~,
 to save a little typing.
 
 #+BEGIN_SRC screen
-ghci> let pat = "(foo[a-z]*bar|quux)"
+ghci> pat = "(foo[a-z]*bar|quux)"
 #+END_SRC
 
 We can obtain quite a lot of information about the context in
@@ -463,24 +434,15 @@ ghci> "before foodiebar after" =~ pat :: (String,String,String,[String])
 #+END_SRC
 
 We can get numeric information about matches, too. A pair of
-Ints gives us the starting offset of the first match, and its length. If
-we ask for a list of these pairs, we'll get this information for all
-matches.
+~Int~s gives us the starting offset of the first match, and its length. If
+we ask for a list of these pairs using the ~getAllMatches~ function we'll
+get this information for all matches.
 
 #+BEGIN_SRC screen
 ghci> "before foodiebar after" =~ pat :: (Int,Int)
 (7,9)
-ghci> "i foobarbar a quux" =~ pat :: [(Int,Int)]
-
-<interactive>:1:0:
-    No instance for (RegexContext Regex [Char] [(Int, Int)])
-      arising from a use of `=~' at <interactive>:1:0-26
-    Possible fix:
-      add an instance declaration for
-      (RegexContext Regex [Char] [(Int, Int)])
-    In the expression: "i foobarbar a quux" =~ pat :: [(Int, Int)]
-    In the definition of `it':
-        it = "i foobarbar a quux" =~ pat :: [(Int, Int)]
+ghci> getAllMatches ("i foobarbar a quux" =~ pat) :: [(Int,Int)]
+[(2,9),(14,4)]
 #+END_SRC
 
 A failed match is represented by the value ~-1~ as the first
@@ -490,16 +452,8 @@ tuple, or an empty list if we've asked for a list of tuples.
 #+BEGIN_SRC screen
 ghci> "eleemosynary" =~ pat :: (Int,Int)
 (-1,0)
-ghci> "mondegreen" =~ pat :: [(Int,Int)]
-
-<interactive>:1:0:
-    No instance for (RegexContext Regex [Char] [(Int, Int)])
-      arising from a use of `=~' at <interactive>:1:0-18
-    Possible fix:
-      add an instance declaration for
-      (RegexContext Regex [Char] [(Int, Int)])
-    In the expression: "mondegreen" =~ pat :: [(Int, Int)]
-    In the definition of `it': it = "mondegreen" =~ pat :: [(Int, Int)]
+ghci> getAllMatches ("mondegreen" =~ pat) :: [(Int,Int)]
+[]
 #+END_SRC
 
 This is not a comprehensive list of built-in instances of the
@@ -532,17 +486,8 @@ ghci> pack "foo" =~ "bar" :: Bool
 False
 ghci> "foo" =~ pack "bar" :: Int
 0
-ghci> pack "foo" =~ pack "o" :: [(Int, Int)]
-
-<interactive>:1:0:
-    No instance for (RegexContext Regex ByteString [(Int, Int)])
-      arising from a use of `=~' at <interactive>:1:0-21
-    Possible fix:
-      add an instance declaration for
-      (RegexContext Regex ByteString [(Int, Int)])
-    In the expression: pack "foo" =~ pack "o" :: [(Int, Int)]
-    In the definition of `it':
-        it = pack "foo" =~ pack "o" :: [(Int, Int)]
+ghci> getAllMatches (pack "foo" =~ pack "o") :: [(Int, Int)]
+[(1,1),(2,1)]
 #+END_SRC
 
 However, we need to be aware that if we want a string value in
@@ -550,17 +495,8 @@ the result of a match, the text we're matching against must be the same
 type of string. Let's see what this means in practice.
 
 #+BEGIN_SRC screen
-ghci> pack "good food" =~ ".ood" :: [ByteString]
-
-<interactive>:1:0:
-    No instance for (RegexContext Regex ByteString [ByteString])
-      arising from a use of `=~' at <interactive>:1:0-25
-    Possible fix:
-      add an instance declaration for
-      (RegexContext Regex ByteString [ByteString])
-    In the expression: pack "good food" =~ ".ood" :: [ByteString]
-    In the definition of `it':
-        it = pack "good food" =~ ".ood" :: [ByteString]
+ghci> getAllTextMatches (pack "good food" =~ ".ood") :: [ByteString]
+["good","food"]
 #+END_SRC
 
 In the above example, we've used the ~pack~ to turn a ~String~
@@ -569,33 +505,26 @@ appears in the result type. But if we try getting a ~String~ out, that
 /won't/ work.
 
 #+BEGIN_SRC screen
-ghci> "good food" =~ ".ood" :: [ByteString]
+ghci> getAllTextMatches ("good food" =~ ".ood") :: [ByteString]
 
-<interactive>:1:0:
-    No instance for (RegexContext Regex [Char] [ByteString])
-      arising from a use of `=~' at <interactive>:1:0-20
-    Possible fix:
-      add an instance declaration for
-      (RegexContext Regex [Char] [ByteString])
-    In the expression: "good food" =~ ".ood" :: [ByteString]
-    In the definition of `it':
-        it = "good food" =~ ".ood" :: [ByteString]
+<interactive>:1:1: error:
+    • No instance for (RegexContext
+                         Regex [Char] (AllTextMatches [] ByteString))
+        arising from a use of ‘=~’
+    • In the first argument of ‘getAllTextMatches’, namely
+        ‘("good food" =~ ".ood")’
+      In the expression:
+          getAllTextMatches ("good food" =~ ".ood") :: [ByteString]
+      In an equation for ‘it’:
+          it = getAllTextMatches ("good food" =~ ".ood") :: [ByteString]
 #+END_SRC
 
 We can easily fix this problem by making the string types of the
 left hand side and the result match once again.
 
 #+BEGIN_SRC screen
-ghci> "good food" =~ ".ood" :: [String]
-
-<interactive>:1:0:
-    No instance for (RegexContext Regex [Char] [String])
-      arising from a use of `=~' at <interactive>:1:0-20
-    Possible fix:
-      add an instance declaration for
-      (RegexContext Regex [Char] [String])
-    In the expression: "good food" =~ ".ood" :: [String]
-    In the definition of `it': it = "good food" =~ ".ood" :: [String]
+ghci> getAllTextMatches ("good food" =~ ".ood") :: [String]
+["good","food"]
 #+END_SRC
 
 This restriction does /not/ apply to the type of the regexp
@@ -608,9 +537,8 @@ When you look through Haskell library documentation, you'll see
 several regexp-related modules. The modules under ~Text.Regex.Base~
 define the common API adhered to by all of the other regexp modules.
 It's possible to have multiple implementations of the regexp API
-installed at one time. At the time of writing, GHC is bundled with one
-implementation, ~Text.Regex.Posix~. As its name suggests, this package
-provides POSIX regexp semantics.
+installed at one time. The module used in this chapter,
+~Text.Regex.Posix~, as its name suggests, provides POSIX regexp semantics.
 
 #+BEGIN_NOTE
 Perl and POSIX regular expressions
@@ -651,8 +579,7 @@ clear.
 #+BEGIN_EXAMPLE
 -- file: GlobRegex.hs
 module GlobRegex
-    (
-      globToRegex
+    ( globToRegex
     , matchesGlob
     ) where
 
@@ -701,16 +628,12 @@ cover.
 -- file: GlobRegex.hs
 globToRegex' :: String -> String
 globToRegex' "" = ""
-
 globToRegex' ('*':cs) = ".*" ++ globToRegex' cs
-
 globToRegex' ('?':cs) = '.' : globToRegex' cs
-
 globToRegex' ('[':'!':c:cs) = "[^" ++ c : charClass cs
 globToRegex' ('[':c:cs)     = '['  :  c : charClass cs
 globToRegex' ('[':_)        = error "unterminated character class"
-
-globToRegex' (c:cs) = escape c ++ globToRegex' cs
+globToRegex' (c:cs)         = escape c ++ globToRegex' cs
 #+END_EXAMPLE
 
 Our first clause stipulates that if we hit the end of our glob
@@ -741,6 +664,8 @@ charClass :: String -> String
 charClass (']':cs) = ']' : globToRegex' cs
 charClass (c:cs)   = c : charClass cs
 charClass []       = error "unterminated character class"
+
+matchesGlob = undefined
 #+END_EXAMPLE
 
 Now that we've finished defining ~globToRegex~ and its helpers,
@@ -749,16 +674,7 @@ let's load it into ~ghci~ and try it out.
 #+BEGIN_SRC screen
 ghci> :load GlobRegex.hs
 [1 of 1] Compiling GlobRegex        ( GlobRegex.hs, interpreted )
-Ok, modules loaded: GlobRegex.
-ghci> :module +Text.Regex.Posix
-ghci> globToRegex "f??.c"
-Loading package array-0.1.0.0 ... linking ... done.
-Loading package containers-0.1.0.1 ... linking ... done.
-Loading package bytestring-0.9.0.1 ... linking ... done.
-Loading package mtl-1.1.0.0 ... linking ... done.
-Loading package regex-base-0.93.1 ... linking ... done.
-Loading package regex-posix-0.93.1 ... linking ... done.
-"^f..\\.c$"
+Ok, one module loaded.
 #+END_SRC
 
 Sure enough, that looks like a reasonable regexp. Can we use it
@@ -776,10 +692,16 @@ True
 It works! Now let's play around a little with ~ghci~. We can
 create a temporary definition for ~fnmatch~ and try it out.
 
+*** TODO Explain -XFlexibleContexts
+
 #+BEGIN_SRC screen
-ghci> let fnmatch pat name  =  name =~ globToRegex pat :: Bool
+ghci> :set -XFlexibleContexts
+ghci> fnmatch pat name = name =~ globToRegex pat :: Bool
 ghci> :type fnmatch
-fnmatch :: (RegexLike Regex source1) => String -> source1 -> Bool
+fnmatch
+  :: Text.Regex.Base.RegexLike.RegexLike
+       Text.Regex.Posix.Wrap.Regex source1 =>
+     String -> source1 -> Bool
 ghci> fnmatch "d*" "myname"
 False
 #+END_SRC
@@ -905,7 +827,6 @@ path components.
 #+BEGIN_SRC screen
 ghci> :m +System.FilePath
 ghci> "foo" </> "bar"
-Loading package filepath-1.1.0.0 ... linking ... done.
 "foo/bar"
 #+END_SRC
 
@@ -1009,7 +930,6 @@ the end of the directory name that it returns.
 #+BEGIN_SRC screen
 ghci> :module +System.FilePath
 ghci> splitFileName "foo/bar"
-Loading package filepath-1.1.0.0 ... linking ... done.
 ("foo/","bar")
 #+END_SRC
 
@@ -1043,7 +963,6 @@ for a file first, since files are far more common than directories.
 #+BEGIN_EXAMPLE
 -- file: Glob.hs
 doesNameExist :: FilePath -> IO Bool
-
 doesNameExist name = do
     fileExists <- doesFileExist name
     if fileExists
@@ -1062,7 +981,7 @@ listMatches dirName pat = do
     dirName' <- if null dirName
                 then getCurrentDirectory
                 else return dirName
-    handle (const (return [])) $ do
+    handle ((const (return [])) :: IOError -> IO [String]) :: IOError -> IO [String]) $ do
         names <- getDirectoryContents dirName'
         let names' = if isHidden pat
                      then filter isHidden names
@@ -1095,7 +1014,7 @@ into ~ghci~ and see what we can find out.
 #+BEGIN_SRC screen
 ghci> :module +Control.Exception
 ghci> :type handle
-handle :: (Exception -> IO a) -> IO a -> IO a
+handle :: Exception e => (e -> IO a) -> IO a -> IO a
 #+END_SRC
 
 This is telling us that ~handle~ takes two arguments. The first
@@ -1116,9 +1035,10 @@ first argument, no matter what its second argument is.
 ghci> :type const
 const :: a -> b -> a
 ghci> :type return []
-return [] :: (Monad m) => m [a]
-ghci> :type handle (const (return []))
-handle (const (return [])) :: IO [a] -> IO [a]
+return [] :: Monad m => m [a]
+ghci> :type handle ((const (return [])) :: IOError -> IO [a])
+handle ((const (return [])) :: IOError -> IO [a])
+  :: IO [a] -> IO [a]
 #+END_SRC
 
 We use ~const~ to write an exception handler that ignores the
