@@ -27,7 +27,6 @@ import System.Directory (doesDirectoryExist, getDirectoryContents)
 import System.FilePath ((</>))
 
 getRecursiveContents :: FilePath -> IO [FilePath]
-
 getRecursiveContents topdir = do
   names <- getDirectoryContents topdir
   let properNames = filter (`notElem` [".", ".."]) names
@@ -51,9 +50,9 @@ its arguments flipped.
 #+BEGIN_SRC screen
 ghci> :m +Control.Monad
 ghci> :type mapM
-mapM :: (Monad m) => (a -> m b) -> [a] -> m [b]
+mapM :: (Monad m, Traversable t) => (a -> m b) -> t a -> m (t b)
 ghci> :type forM
-forM :: (Monad m) => [a] -> (a -> m b) -> m [b]
+forM :: (Monad m, Traversable t) => t a -> (a -> m b) -> m (t b)
 #+END_SRC
 
 The body of the loop checks to see whether the current entry is
@@ -131,7 +130,6 @@ a simple-minded file finder.
 import RecursiveContents (getRecursiveContents)
 
 simpleFind :: (FilePath -> Bool) -> FilePath -> IO [FilePath]
-
 simpleFind p path = do
   names <- getRecursiveContents path
   return (filter p names)
@@ -163,7 +161,7 @@ path, extracts its extension, and compares it with ~.c~.
 ghci> :load SimpleFinder
 [1 of 2] Compiling RecursiveContents ( RecursiveContents.hs, interpreted )
 [2 of 2] Compiling Main             ( SimpleFinder.hs, interpreted )
-Ok, modules loaded: RecursiveContents, Main.
+Ok, two modules loaded.
 ghci> :type simpleFind (\p -> takeExtension p == ".c")
 simpleFind (\p -> takeExtension p == ".c") :: FilePath -> IO [FilePath]
 #+END_SRC
@@ -235,9 +233,6 @@ ghci> :m +System.Directory
   ghci> :type doesFileExist
   doesFileExist :: FilePath -> IO Bool
   ghci> doesFileExist "."
-  Loading package old-locale-1.0.0.0 ... linking ... done.
-  Loading package old-time-1.0.0.0 ... linking ... done.
-  Loading package directory-1.0.0.0 ... linking ... done.
   False
   ghci> :type doesDirectoryExist
   doesDirectoryExist :: FilePath -> IO Bool
@@ -252,15 +247,15 @@ ghci> :m +System.Directory
   getPermissions :: FilePath -> IO Permissions
   ghci> :info Permissions
   data Permissions
-    = Permissions {readable :: Bool,
-                   writable :: Bool,
-                   executable :: Bool,
-                   searchable :: Bool}
-      -- Defined in System.Directory
-  instance Eq Permissions -- Defined in System.Directory
-  instance Ord Permissions -- Defined in System.Directory
-  instance Read Permissions -- Defined in System.Directory
-  instance Show Permissions -- Defined in System.Directory
+    = System.Directory.Permissions {readable :: Bool,
+                                    writable :: Bool,
+                                    executable :: Bool,
+                                    searchable :: Bool}
+          -- Defined in ‘System.Directory’
+  instance [safe] Eq Permissions -- Defined in ‘System.Directory’
+  instance [safe] Ord Permissions -- Defined in ‘System.Directory’
+  instance [safe] Show Permissions -- Defined in ‘System.Directory’
+  instance [safe] Read Permissions -- Defined in ‘System.Directory’
   ghci> getPermissions "."
   Permissions {readable = True, writable = True, executable = False, searchable = True}
   ghci> :type searchable
@@ -270,18 +265,19 @@ ghci> :m +System.Directory
   #+END_SRC
 
   (If you cannot recall the special ~ghci~ variable ~it~, take a
-  look back at [[file:getting-started.html#starting.types][the section
-  called “First steps with types”]].) A directory will be ~searchable~
-  if we have permission to list its contents; files are never
-  ~searchable~.
+  look back at [[file:getting-started.html#starting.types][the section called “First steps with types”]].)
+  A directory will be ~searchable~ if we have permission to list its
+  contents; files are never ~searchable~.
 - Finally, ~getModificationTime~ tells us when an entry was last
   modified.
 
   #+BEGIN_SRC screen
   ghci> :type getModificationTime
-  getModificationTime :: FilePath -> IO System.Time.ClockTime
+  getModificationTime
+    :: FilePath
+       -> IO time-1.8.0.2:Data.Time.Clock.Internal.UTCTime.UTCTime
   ghci> getModificationTime "."
-  Mon Aug 18 12:08:24 CDT 2008
+  2018-05-20 22:59:06 UTC
   #+END_SRC
 
 If we stick with portable, standard Haskell code, these
@@ -296,18 +292,31 @@ Hackage, which provides a Unix-like API on Windows.
 
 How many pieces of data does our new, richer predicate need to
 see? Since we can find out whether an entry is a file or a directory by
-looking at its Permissions, we don't need to pass in the results of
+looking at its permissions, we don't need to pass in the results of
 ~doesFileExist~ or ~doesDirectoryExist~. We thus have four pieces of
 data that a richer predicate needs to look at.
 
 #+CAPTION: BetterPredicate.hs
 #+BEGIN_SRC haskell
+import Control.Exception
+  ( bracket
+  , handle
+  , SomeException(..)
+  )
 import Control.Monad (filterM)
-import System.Directory (Permissions(..), getModificationTime, getPermissions)
-import System.Time (ClockTime(..))
+import System.Directory
+  ( Permissions(..)
+  , getModificationTime
+  , getPermissions
+  )
 import System.FilePath (takeExtension)
-import Control.Exception (bracket, handle)
-import System.IO (IOMode(..), hClose, hFileSize, openFile)
+import System.IO
+  ( IOMode(..)
+  , hClose
+  , hFileSize
+  , openFile
+  )
+import Data.Time.Clock (UTCTime(..))
 
 -- the function we wrote earlier
 import RecursiveContents (getRecursiveContents)
@@ -315,7 +324,7 @@ import RecursiveContents (getRecursiveContents)
 type Predicate =  FilePath      -- path to directory entry
                -> Permissions   -- permissions
                -> Maybe Integer -- file size (Nothing if not file)
-               -> ClockTime     -- last modified
+               -> UTCTime       -- last modified
                -> Bool
 #+END_SRC
 
@@ -332,7 +341,6 @@ hand, our more expressive finder function is still quite trim.
 getFileSize :: FilePath -> IO (Maybe Integer)
 
 betterFind :: Predicate -> FilePath -> IO [FilePath]
-
 betterFind p path = getRecursiveContents path >>= filterM check
     where check name = do
             perms <- getPermissions name
@@ -354,7 +362,7 @@ predicate in the IO monad, allowing the predicate to perform I/O.
 #+BEGIN_SRC screen
 ghci> :m +Control.Monad
 ghci> :type filterM
-filterM :: (Monad m) => (a -> m Bool) -> [a] -> m [a]
+filterM :: Applicative m => (a -> m Bool) -> [a] -> m [a]
 #+END_SRC
 
 Our ~check~ predicate is an I/O-capable wrapper for our pure
@@ -373,7 +381,6 @@ in bytes of an open file. Here's a simple function that wraps it.
 #+CAPTION: BetterPredicate.hs
 #+BEGIN_SRC haskell
 simpleFileSize :: FilePath -> IO Integer
-
 simpleFileSize path = do
   h <- openFile path ReadMode
   size <- hFileSize h
@@ -394,7 +401,6 @@ Here's a safer version of this function.
 #+CAPTION: BetterPredicate.hs
 #+BEGIN_SRC haskell
 saferFileSize :: FilePath -> IO (Maybe Integer)
-
 saferFileSize path = handle (\_ -> return Nothing) $ do
   h <- openFile path ReadMode
   size <- hFileSize h
@@ -540,7 +546,7 @@ type.
 type InfoP a =  FilePath        -- path to directory entry
              -> Permissions     -- permissions
              -> Maybe Integer   -- file size (Nothing if not file)
-             -> ClockTime       -- last modified
+             -> UTCTime         -- last modified
              -> a
 
 pathP :: InfoP FilePath
@@ -603,7 +609,7 @@ into ~ghci~.
 ghci> :load BetterPredicate
 [1 of 2] Compiling RecursiveContents ( RecursiveContents.hs, interpreted )
 [2 of 2] Compiling Main             ( BetterPredicate.hs, interpreted )
-Ok, modules loaded: RecursiveContents, Main.
+Ok, two modules loaded.
 #+END_SRC
 
 Let's see if a simple predicate constructed from these functions
@@ -666,11 +672,11 @@ Prior to that, people wrote ~flip mapM~ instead.
 #+BEGIN_SRC screen
 ghci> :m +Control.Monad
 ghci> :t mapM
-mapM :: (Monad m) => (a -> m b) -> [a] -> m [b]
+mapM :: (Monad m, Traversable t) => (a -> m b) -> t a -> m (t b)
 ghci> :t forM
-forM :: (Monad m) => [a] -> (a -> m b) -> m [b]
+forM :: (Monad m, Traversable t) => t a -> (a -> m b) -> m (t b)
 ghci> :t flip mapM
-flip mapM :: (Monad m) => [a] -> (a -> m b) -> m [b]
+flip mapM :: (Monad m, Traversable t) => t a -> (a -> m b) -> m (t b)
 #+END_SRC
 
 *** Gluing predicates together
@@ -685,7 +691,7 @@ simpleAndP f g w x y z = f w x y z && g w x y z
 #+END_SRC
 
 Now that we know about lifting, it becomes more natural to
-reduce the amount of code we must write by lifting our existing Boolean
+reduce the amount of code we must write by lifting our existing boolean
 operators.
 
 #+CAPTION: BetterPredicate.hs
@@ -776,17 +782,17 @@ ghci> :info ==
 class Eq a where
   (==) :: a -> a -> Bool
   ...
-    -- Defined in GHC.Base
+        -- Defined in ‘GHC.Classes’
 infix 4 ==
 ghci> :info &&
-(&&) :: Bool -> Bool -> Bool  -- Defined in GHC.Base
+(&&) :: Bool -> Bool -> Bool -- Defined in ‘GHC.Classes’
 infixr 3 &&
 ghci> :info >
-class (Eq a) => Ord a where
+class Eq a => Ord a where
   ...
   (>) :: a -> a -> Bool
   ...
-    -- Defined in GHC.Base
+        -- Defined in ‘GHC.Classes’
 infix 4 >
 #+END_SRC
 
@@ -819,36 +825,59 @@ same information.
 
 #+CAPTION: ControlledVisit.hs
 #+BEGIN_SRC haskell
-data Info = Info {
-      infoPath :: FilePath
+module ControlledVisit where
+
+import Control.Monad (forM, liftM)
+import Data.Time.Clock (UTCTime(..))
+import System.FilePath ((</>))
+import System.Directory
+    ( Permissions(..)
+    , getModificationTime
+    , getPermissions
+    , getDirectoryContents
+    )
+import Control.Exception
+    ( bracket
+    , handle
+    , SomeException(..)
+    )
+import System.IO
+    ( IOMode(..)
+    , hClose
+    , hFileSize
+    , openFile
+    )
+
+data Info = Info
+    { infoPath :: FilePath
     , infoPerms :: Maybe Permissions
     , infoSize :: Maybe Integer
-    , infoModTime :: Maybe ClockTime
+    , infoModTime :: Maybe UTCTime
     } deriving (Eq, Ord, Show)
 
 getInfo :: FilePath -> IO Info
 #+END_SRC
 
 We're using record syntax to give ourselves “free” accessor
-functions, such as ~infoPath~. The type of our ~traverse~ function is
+functions, such as ~infoPath~. The type of our ~traverseDirs~ function is
 simple, as we proposed above. To obtain ~Info~ about a file or directory,
 we call the ~getInfo~ action.
 
 #+CAPTION: ControlledVisit.hs
 #+BEGIN_SRC haskell
-traverse :: ([Info] -> [Info]) -> FilePath -> IO [Info]
+traverseDirs :: ([Info] -> [Info]) -> FilePath -> IO [Info]
 #+END_SRC
 
-The definition of ~traverse~ is short, but dense.
+The definition of ~traverseDirs~ is short, but dense.
 
 #+CAPTION: ControlledVisit.hs
 #+BEGIN_SRC haskell
-traverse order path = do
+traverseDirs order path = do
     names <- getUsefulContents path
     contents <- mapM getInfo (path : map (path </>) names)
     liftM concat $ forM (order contents) $ \info -> do
       if isDirectory info && infoPath info /= path
-        then traverse order (infoPath info)
+        then traverseDirs order (infoPath info)
         else return [info]
 
 getUsefulContents :: FilePath -> IO [String]
@@ -879,7 +908,7 @@ definition of an anonymous function that continues to the end of the
 paragraph. Given one ~Info~ value, this function either visits a directory
 recursively (there's an extra check to make sure we don't visit ~path~
 again), or returns that value as a single-element list (to match the
-result type of ~traverse~).
+result type of ~traverseDirs~).
 
 We use ~forM~ to apply this function to each element of the list
 of ~Info~ values returned by ~order~, the user-supplied traversal control
@@ -897,7 +926,7 @@ Finally, we mustn't forget to define our ~getInfo~ function.
 #+CAPTION: ControlledVisit.hs
 #+BEGIN_SRC haskell
 maybeIO :: IO a -> IO (Maybe a)
-maybeIO act = handle (\_ -> return Nothing) (Just `liftM` act)
+maybeIO act = handle (\(SomeException _) -> return Nothing) (Just `liftM` act)
 
 getInfo path = do
   perms <- maybeIO (getPermissions path)
@@ -912,21 +941,21 @@ one that wraps its result in Maybe.
 
 *** Exercises
 
-1. What should you pass to ~traverse~ to traverse a directory tree in
+1. What should you pass to ~traverseDirs~ to traverse a directory tree in
    reverse alphabetic order?
 2. Using ~id~ as a control function, ~traverse id~ performs a /preorder/
    traversal of a tree: it returns a parent directory before its children.
-   Write a control function that makes ~traverse~ perform a /postorder/
+   Write a control function that makes ~traverseDirs~ perform a /postorder/
    traversal, in which it returns children before their parent.
 3. Take the predicates and combinators from
    [[file:io-case-study-a-library-for-searching-the-filesystem.html#find.predicate.combinator][the section called “Gluing predicates together”]] and make them work
    with our new ~Info~ type.
-4. Write a wrapper for ~traverse~ that lets you control traversal using one
+4. Write a wrapper for ~traverseDirs~ that lets you control traversal using one
    predicate, and filter results using another.
 
 ** Density, readability, and the learning process
 
-Code as dense as ~traverse~ is not unusual in Haskell. The gain
+Code as dense as ~traverseDirs~ is not unusual in Haskell. The gain
 in expressiveness is significant, and it requires a relatively small
 amount of practice to be able to fluently read and write code in this
 style.
@@ -960,7 +989,7 @@ combinator, we're using a ~case~ expression. And instead of using
 ~liftM~, we're manually lifting ~concat~ ourselves.
 
 This is not to say that density is a uniformly good property.
-Each line of the original ~traverse~ function is short. We introduce a
+Each line of the original ~traverseDirs~ function is short. We introduce a
 local variable (~usefulNames~) and a local function (~isDirectory~)
 specifically to keep the lines short and the code clearer. Our names are
 descriptive. While we use function composition and pipelining, the
@@ -985,7 +1014,7 @@ continuum is likely to be influenced by your level of experience.
 
 ** Another way of looking at traversal
 
-While the ~traverse~ function gives us more control than our
+While the ~traverseDirs~ function gives us more control than our
 original ~betterFind~ function, it still has a significant failing: we
 can avoid recursing into directories, but we can't filter other names
 until after we've generated the entire list of names in a tree. If we
@@ -994,7 +1023,7 @@ about three, we'll allocate a 100,000-element list before we have a
 chance to trim it down to the three we really want.
 
 One approach would be to provide a filter function as a new
-argument to ~traverse~, which we would apply to the list of names as we
+argument to ~traverseDirs~, which we would apply to the list of names as we
 generate it. This would allow us to allocate a list of only as many
 elements as we need.
 
@@ -1019,6 +1048,12 @@ this control as an algebraic data type.
 
 #+CAPTION: FoldDir.hs
 #+BEGIN_SRC haskell
+import ControlledVisit
+import Data.Char (toLower)
+import Data.Time.Clock (UTCTime(..))
+import System.Directory (Permissions(..))
+import System.FilePath ((</>), takeExtension, takeFileName)
+
 data Iterate seed = Done     { unwrap :: seed }
                   | Skip     { unwrap :: seed }
                   | Continue { unwrap :: seed }
@@ -1048,25 +1083,23 @@ the result of the prior step.
 #+CAPTION: FoldDir.hs
 #+BEGIN_SRC haskell
 foldTree :: Iterator a -> a -> FilePath -> IO a
-
 foldTree iter initSeed path = do
     endSeed <- fold initSeed path
     return (unwrap endSeed)
   where
     fold seed subpath = getUsefulContents subpath >>= walk seed
-
-    walk seed (name:names) = do
+    walk seed (name : names) = do
       let path' = path </> name
       info <- getInfo path'
       case iter seed info of
-        done@(Done _) -> return done
-        Skip seed'    -> walk seed' names
+        done @ (Done _) -> return done
+        Skip seed  '    -> walk seed' names
         Continue seed'
           | isDirectory info -> do
               next <- fold seed' path'
               case next of
-                done@(Done _) -> return done
-                seed''        -> walk (unwrap seed'') names
+                done @ (Done _) -> return done
+                seed''          -> walk (unwrap seed'') names
           | otherwise -> walk seed' names
     walk seed _ = return (Continue seed)
 #+END_SRC
@@ -1100,7 +1133,6 @@ won't recurse into Subversion metadata directories.
 #+CAPTION: FoldDir.hs
 #+BEGIN_SRC haskell
 atMostThreePictures :: Iterator [FilePath]
-
 atMostThreePictures paths info
     | length paths == 3
       = Done paths
@@ -1127,6 +1159,8 @@ countDirectories count info =
               then count + 1
               else count)
 #+END_SRC
+
+*** TODO: This compiles but doesn't run at all
 
 Here, the initial seed that we pass to ~foldTree~ should be the
 number zero.
