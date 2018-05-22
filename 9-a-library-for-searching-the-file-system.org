@@ -1180,10 +1180,6 @@ While many good Haskell programming habits come with experience,
 we have a few general guidelines to offer so that you can write readable
 code more quickly.
 
-As we already mentioned in
-[[file:defining-types-streamlining-functions.html#deftypes.tabs][the section called “A note about tabs versus spaces”]], never use tab
-characters in Haskell source files. Use spaces.
-
 If you find yourself proudly thinking that a particular piece of
 code is fiendishly clever, stop and consider whether you'll be able to
 understand it again after you've stepped away from it for a month.
@@ -1222,14 +1218,18 @@ A Haskell implementation won't make a fuss about indentation as
 long as your code follows the layout rules and can hence be parsed
 unambiguously. That said, some layout patterns are widely used.
 
+As we already mentioned in
+[[file:defining-types-streamlining-functions.html#deftypes.tabs][the section called “A note about tabs versus spaces”]], it is easier to use
+spaces.
+
 The ~in~ keyword is usually aligned directly under the ~let~
 keyword, with the expression immediately following it.
 
 #+CAPTION: Style.hs
 #+BEGIN_SRC haskell
-    tidyLet = let foo = undefined
-                  bar = foo * 2
-              in undefined
+tidyLet = let foo = undefined
+              bar = foo * 2
+          in undefined
 #+END_SRC
 
 While it's /legal/ to indent the ~in~ differently, or to let it
