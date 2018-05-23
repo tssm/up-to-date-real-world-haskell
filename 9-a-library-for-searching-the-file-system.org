@@ -1146,8 +1146,9 @@ atMostThreePictures paths info
         path = infoPath info
 #+END_SRC
 
-To use this, we'd call ~foldTree atMostThreePictures []~,
-giving us a return value of type ~IO [FilePath]~.
+To use this, we'd call ~foldTree atMostThreePictures [] "."~ (where ~.~ is
+the current directory, you can supply another path), giving us a return
+value of type ~IO [FilePath]~.
 
 Of course, iterators don't have to be this complicated. Here's
 one that counts the number of directories it encounters.
@@ -1160,8 +1161,6 @@ countDirectories count info =
               else count)
 #+END_SRC
 
-*** TODO: This compiles but doesn't run at all
-
 Here, the initial seed that we pass to ~foldTree~ should be the
 number zero.
 
@@ -1172,7 +1171,8 @@ number zero.
 2. The ~foldTree~ function performs preorder traversal. Modify it
    to allow the caller to determine the order of traversal.
 3. Write a combinator library that makes it possible to express the
-   kinds of iterators that ~foldTree~ accepts. Does it make the iterators you write any more succinct?
+   kinds of iterators that ~foldTree~ accepts. Does it make the
+   iterators you write any more succinct?
 
 ** Useful coding guidelines
 
