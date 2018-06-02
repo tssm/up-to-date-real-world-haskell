@@ -114,8 +114,7 @@ matchHeader :: L.ByteString -> L.ByteString -> Maybe L.ByteString
 -- "nat" here is short for "natural number"
 getNat :: L.ByteString -> Maybe (Int, L.ByteString)
 
-getBytes :: Int -> L.ByteString
-         -> Maybe (L.ByteString, L.ByteString)
+getBytes :: Int -> L.ByteString -> Maybe (L.ByteString, L.ByteString)
 
 parseP5 s =
   case matchHeader (L8.pack "P5") s of
@@ -221,7 +220,7 @@ our parsing function.
 #+BEGIN_SRC haskell
 parseP5_take2 :: L.ByteString -> Maybe (Greymap, L.ByteString)
 parseP5_take2 s =
-    matchHeader (L8.pack "P5") s       >>?
+    matchHeader (L8.pack "P5") s      >>?
     \s -> skipSpace ((), s)           >>?
     (getNat . snd)                    >>?
     skipSpace                         >>?
@@ -274,9 +273,13 @@ First, we will change the type of state that our parser uses.
 
 #+CAPTION: Parse.hs
 #+BEGIN_SRC haskell
+import qualified Data.ByteString.Lazy.Char8 as L8
+import qualified Data.ByteString.Lazy as L
+import Data.Int
+
 data ParseState = ParseState {
       string :: L.ByteString
-    , offset :: Int64           -- imported from Data.Int
+    , offset :: Int64
     } deriving (Show)
 #+END_SRC
 
@@ -369,14 +372,11 @@ in order to try our code.
 
 #+BEGIN_SRC screen
 ghci> :load Parse
-[1 of 2] Compiling PNM              ( PNM.hs, interpreted )
-[2 of 2] Compiling Parse            ( Parse.hs, interpreted )
-Ok, modules loaded: PNM, Parse.
+[1 of 1] Compiling Main             ( Parse.hs, interpreted )
+Ok, one module loaded.
 ghci> :type parse (identity 1) undefined
-parse (identity 1) undefined :: (Num t) => Either String t
+parse (identity 1) undefined :: Num a => Either String a
 ghci> parse (identity 1) undefined
-Loading package array-0.1.0.0 ... linking ... done.
-Loading package bytestring-0.9.0.1 ... linking ... done.
 Right 1
 ghci> parse (identity "foo") undefined
 Right "foo"
@@ -396,8 +396,7 @@ notation looks like this.
 #+CAPTION: Parse.hs
 #+BEGIN_SRC haskell
 modifyOffset :: ParseState -> Int64 -> ParseState
-modifyOffset initState newOffset =
-    initState { offset = newOffset }
+modifyOffset initState newOffset = initState { offset = newOffset }
 #+END_SRC
 
 This creates a new ~ParseState~ value identical to ~initState~,
@@ -408,9 +407,9 @@ but with its ~offset~ field set to whatever value we specify for
 ghci> let before = ParseState (L8.pack "foo") 0
 ghci> let after = modifyOffset before 3
 ghci> before
-ParseState {string = Chunk "foo" Empty, offset = 0}
+ParseState {string = "foo", offset = 0}
 ghci> after
-ParseState {string = Chunk "foo" Empty, offset = 3}
+ParseState {string = "foo", offset = 3}
 #+END_SRC
 
 We can set as many fields as we want inside the curly braces,
@@ -541,9 +540,8 @@ The ~(==>)~ function serves a similar purpose to our earlier
 #+CAPTION: Parse.hs
 #+BEGIN_SRC haskell
 (==>) :: Parse a -> (a -> Parse b) -> Parse b
-
-firstParser ==> secondParser  =  Parse chainedParser
-  where chainedParser initState   =
+firstParser ==> secondParser = Parse chainedParser
+  where chainedParser initState =
           case runParse firstParser initState of
             Left errMessage ->
                 Left errMessage
@@ -631,6 +629,9 @@ As we might hope, ~treeLengths~ and ~treeMap length~ give the
 same results.
 
 #+BEGIN_SRC screen
+ghci> :l TreeMap.hs
+[1 of 1] Compiling Main             ( TreeMap.hs, interpreted )
+Ok, one module loaded.
 ghci> let tree = Node (Leaf "foo") (Node (Leaf "x") (Leaf "quux"))
 ghci> treeLengths tree
 Node (Leaf 3) (Node (Leaf 1) (Leaf 4))
@@ -737,24 +738,12 @@ impossible to write a ~Functor~ instance for ~Bar~.
 ghci> :load ValidFunctor
 [1 of 1] Compiling Main             ( ValidFunctor.hs, interpreted )
 
-ValidFunctor.hs:13:12:
-    Could not deduce (Eq a) from the context (Functor Bar)
-      arising from a use of `Bar' at ValidFunctor.hs:13:12-16
-    Possible fix:
-      add (Eq a) to the context of the type signature for `fmap'
-    In the pattern: Bar a
-    In the definition of `fmap': fmap f (Bar a) = Bar (f a)
-    In the definition for method `fmap'
-
-ValidFunctor.hs:13:21:
-    Could not deduce (Eq b) from the context (Functor Bar)
-      arising from a use of `Bar' at ValidFunctor.hs:13:21-29
-    Possible fix:
-      add (Eq b) to the context of the type signature for `fmap'
-    In the expression: Bar (f a)
-    In the definition of `fmap': fmap f (Bar a) = Bar (f a)
-    In the definition for method `fmap'
-Failed, modules loaded: none.
+ValidFunctor.hs:1:6: error:
+    Illegal datatype context (use DatatypeContexts): Eq a =>
+  |
+1 | data Eq a => Bar a = Bar a
+  |      ^^^^
+Failed, no modules loaded.
 #+END_SRC
 
 *** Constraints on type definitions are bad
@@ -873,13 +862,17 @@ loop, so instances of this form are forbidden.
 ghci> :load EitherInt
 [1 of 1] Compiling Main             ( EitherInt.hs, interpreted )
 
-EitherInt.hs:2:0:
-    Illegal instance declaration for `Functor (Either Int)'
+EitherInt.hs:1:10: error:
+    • Illegal instance declaration for ‘Functor (Either Int)’
         (All instance types must be of the form (T a1 ... an)
-         where a1 ... an are distinct type *variables*
-         Use -XFlexibleInstances if you want to disable this.)
-    In the instance declaration for `Functor (Either Int)'
-Failed, modules loaded: none.
+         where a1 ... an are *distinct type variables*,
+         and each type variable appears at most once in the instance head.
+         Use FlexibleInstances if you want to disable this.)
+    • In the instance declaration for ‘Functor (Either Int)’
+  |
+1 | instance Functor (Either Int) where
+  |          ^^^^^^^^^^^^^^^^^^^^
+Failed, no modules loaded.
 #+END_SRC
 
 GHC has a more powerful type system than the base Haskell 2010
@@ -891,13 +884,10 @@ using a special compiler directive.
 #+BEGIN_SRC haskell
 {-# LANGUAGE FlexibleInstances #-}
 
-instance Functor (Either Int) where
+instance {-# OVERLAPS #-} Functor (Either Int) where
     fmap _ (Left n)  = Left n
     fmap f (Right r) = Right (f r)
 #+END_SRC
-
-The directive is embedded in the specially formatted ~LANGUAGE~
-pragma.
 
 With our ~Functor~ instance in hand, let's try out ~fmap~ on
 ~Either Int~.
@@ -905,7 +895,7 @@ With our ~Functor~ instance in hand, let's try out ~fmap~ on
 #+BEGIN_SRC screen
 ghci> :load EitherIntFlexible
 [1 of 1] Compiling Main             ( EitherIntFlexible.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> fmap (== "cheeseburger") (Left 1 :: Either Int String)
 Left 1
 ghci> fmap (== "cheeseburger") (Right "fries" :: Either Int String)
@@ -996,7 +986,7 @@ Left "byte offset 0: no more input"
 Good. Now for a parse that should succeed.
 
 #+BEGIN_SRC screen
-ghci> let input = L8.pack "foo"
+ghci> input = L8.pack "foo"
 ghci> L.head input
 102
 ghci> parse parseByte input
@@ -1037,10 +1027,11 @@ function that turns a ~Word8~ into a ~Char~.
 
 #+CAPTION: Parse.hs
 #+BEGIN_SRC haskell
+-- import Data.Char
+
 w2c :: Word8 -> Char
 w2c = chr . fromIntegral
 
--- import Control.Applicative
 parseChar :: Parse Char
 parseChar = w2c <$> parseByte
 #+END_SRC
@@ -1114,6 +1105,8 @@ function look like now?
 
 #+CAPTION: Parse.hs
 #+BEGIN_SRC haskell
+-- import PNM
+
 parseRawPGM =
     parseWhileWith w2c notWhite ==> \header -> skipSpaces ==>&
     assert (header == "P5") "invalid raw header" ==>&
