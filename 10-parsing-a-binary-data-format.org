@@ -654,7 +654,8 @@ class Functor f where
 We can think of ~fmap~ as a kind of /lifting/ function, as we introduced in
 [[file:io-case-study-a-library-for-searching-the-filesystem.html#find.predicate.lift][the section called “Avoiding boilerplate with lifting”]]. It takes a
 function over ordinary values ~a -> b~ and lifts it to become a function
-over containers ~f a -> f b~, where ~f~ is the container type.
+over a type whose constructor takes one type parameter ~f a -> f b~,
+where ~f~ is the type.
 
 If we substitute ~Tree~ for the type variable ~f~, for example,
 the type of ~fmap~ is identical to the type of ~treeMap~, and in fact we
@@ -666,7 +667,7 @@ instance Functor Tree where
     fmap = treeMap
 #+END_SRC
 
-We can also use ~map~ as the implementation of ~fmap~ for lists.
+~map~ is actually the implementation of ~fmap~ for lists.
 
 #+CAPTION: TreeMap.hs
 #+BEGIN_SRC haskell
@@ -674,7 +675,7 @@ instance Functor [] where
     fmap = map
 #+END_SRC
 
-We can now use ~fmap~ over different container types.
+So we can use ~fmap~ over different types.
 
 #+BEGIN_SRC screen
 ghci> fmap length ["foo","quux"]
@@ -806,7 +807,7 @@ otherwise couldn't call ~(<)~. We now have the constraints where they
 actually matter. This has the further benefit of making the type
 signatures better document the true requirements of each function.
 
-Most Haskell container types follow this pattern. The ~Map~ type
+Several Haskell types follow this pattern. The ~Map~ type
 in the ~Data.Map~ module requires that its keys be ordered, but the type
 itself does not have such a constraint. The constraint is expressed on
 functions like ~insert~, where it's actually needed, and not on ~size~,
