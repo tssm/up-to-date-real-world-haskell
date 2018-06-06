@@ -1043,6 +1043,9 @@ instance (JSON a) => JSON [a] where
     fromJValue = undefined
 #+END_SRC
 
+Here the ~(JSON a)~ before the ~=>~ means that the ~a~ in
+~JSON [a]~ must be an instance of ~JSON~ too.
+
 It would also be convenient if we could turn a list of
 name/value pairs into a JSON object.
 
@@ -1128,26 +1131,14 @@ when we try to use a method of the affected typeclass, when it is
 forced to make a decision about which instance to use.
 #+END_NOTE
 
-*** Relaxing some restrictions on typeclasses
+GHC supports three other useful language extensions, which
+addresses this problem.
 
-Normally, we cannot write an instance of a typeclass for a
-specialized version of a polymorphic type. The ~[Char]~ type is
-the polymorphic type ~[a]~ specialized to the type ~Char~. We are
-thus prohibited from declaring ~[Char]~ to be an instance of a
-typeclass. This is highly inconvenient, since strings are
-ubiquitous in real code.
-
-The ~TypeSynonymInstances~ language extension removes this
-restriction, permitting us to write such instances.
-
-GHC supports another useful language extension,
-~OverlappingInstances~, which addresses the problem we saw with
-overlapping instances. When there are multiple overlapping
-instances to choose from, this extension causes the compiler to
-pick the most specific one.
-
-We frequently use this extension together with
-~TypeSynonymInstances~. Here's an example.
+- ~OVERLAPPABLE~: Specifies that the instance author allows this
+  instance to be overlapped by others.
+- ~OVERLAPPING~: Specifies that the instance author is expecting
+  this instance will overlap others.
+- ~OVERLAPS~: Implies both ~OVERLAPPABLE~ and ~OVERLAPPING~.
 
 #+CAPTION: SimpleClass.hs
 #+BEGIN_SRC haskell
@@ -1164,47 +1155,26 @@ instance Foo a => Foo [a] where
 instance Foo Char where
     foo c = [c]
 
-instance Foo String where
+instance Foo Int where
+    foo i = show i
+
+instance {-# OVERLAPPING #-} Foo String where
     foo = id
 #+END_SRC
 
 If we apply ~foo~ to a ~String~, the compiler will use the
 ~String~-specific implementation. Even though we have an instance
-of ~Foo~ for ~[a]~ and ~Char~, the instance for ~String~ is more
-specific, so GHC chooses it. For other types of list, we will see
-the behavior specified for ~[a]~.
-
-With the ~OverlappingInstances~ extension enabled, GHC will still
-reject code if it finds more than one equally specific instance.
-
-#+BEGIN_NOTE
-When to use the OverlappingInstances extension
-
-Here's an important point: GHC treats ~OverlappingInstances~ as
-affecting the declaration of an instance, /not/ a location where
-we use the instance. In other words, when we define an instance
-that we wish to allow to overlap with another instance, we must
-enable the extension for the module that contains the definition.
-When it compiles the module, GHC will record that instance as “can
-be overlapped with other instances”.
-
-Once we import this module and use the instance, we /won't/ need
-to enable ~OverlappingInstances~ in the importing module: GHC will
-already know that the instance was marked as “okay to overlap”
-when it was defined.
-
-This behaviour is useful when we are writing a library: we can
-choose to create overlappable instances, but users of our library
-do not need to enable any special language extensions.
-#+END_NOTE
+of ~Foo~ for ~[a]~ the instance for ~String~ is more specific, so
+GHC chooses it. For list of ~Int~, we will see the behavior
+specified for ~[a]~.
 
 *** How does show work for strings?
 
-The ~OverlappingInstances~ and ~TypeSynonymInstances~ language
-extensions are specific to GHC, and by definition were not present
-in Haskell 2010. However, the familiar ~Show~ typeclass from
-Haskell 210 somehow renders a list of ~Char~ differently from a
-list of ~Int~. It achieves this via a clever, but simple, trick.
+These language extensions are specific to GHC, and by definition
+were not present in Haskell 2010. However, the familiar ~Show~
+typeclass from Haskell 2010 somehow renders a list of ~Char~
+differently from a list of ~Int~. It achieves this via a clever,
+but simple, trick.
 
 The ~Show~ class defines both a ~show~ method, which renders one
 value, and a ~showList~ method, which renders a list of values.
@@ -1221,8 +1191,8 @@ implementation of ~showList~ will be chosen, and it will correctly
 render the string using quotes.
 
 At least sometimes, then, we can avoid the need for the
-~OverlappingInstances~ extension with a little bit of lateral
-thinking.
+~OVERLAPPABLE~, ~OVERLAPPING~ and ~OVERLAPS~ extension with a
+little bit of lateral thinking.
 
 ** How to give a type a new identity
 
@@ -1442,9 +1412,9 @@ instances to use ~newtype~s instead of overlapping instances.
 Our first task, then, is to help the compiler to distinguish
 between ~[a]~, the representation we use for JSON arrays, and
 ~[(String,[a])]~, which we use for objects. These were the types
-that gave us problems before we learned about
-~OverlappingInstances~. We wrap up the list type so that the
-compiler will not see it as a list.
+that gave us problems before we learned about overlapping
+instances. We wrap up the list type so that the compiler will not
+see it as a list.
 
 #+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
