@@ -859,67 +859,6 @@ operator) and lifting a function into a functor. We will see that
 this works well for parsing when we return to the code that we
 have been writing.
 
-*** Flexible instances
-
-You might hope that we could write a ~Functor~ instance for the
-type ~Either Int b~, which has one type parameter.
-
-#+CAPTION: EitherInt.hs
-#+BEGIN_SRC haskell
-instance Functor (Either Int) where
-    fmap _ (Left n) = Left n
-    fmap f (Right r) = Right (f r)
-#+END_SRC
-
-However, the type system of Haskell 2010 cannot guarantee that
-checking the constraints on such an instance will terminate. A
-non-terminating constraint check may send a compiler into an
-infinite loop, so instances of this form are forbidden.
-
-#+BEGIN_SRC screen
-ghci> :load EitherInt
-[1 of 1] Compiling Main             ( EitherInt.hs, interpreted )
-
-EitherInt.hs:1:10: error:
-    • Illegal instance declaration for ‘Functor (Either Int)’
-        (All instance types must be of the form (T a1 ... an)
-         where a1 ... an are *distinct type variables*,
-         and each type variable appears at most once in the instance head.
-         Use FlexibleInstances if you want to disable this.)
-    • In the instance declaration for ‘Functor (Either Int)’
-  |
-1 | instance Functor (Either Int) where
-  |          ^^^^^^^^^^^^^^^^^^^^
-Failed, no modules loaded.
-#+END_SRC
-
-GHC has a more powerful type system than the base Haskell 2010
-standard. It operates in Haskell 2010 compatibility mode by
-default, for maximal portability. We can instruct it to allow more
-flexible instances using a special compiler directive.
-
-#+CAPTION: EitherIntFlexible.hs
-#+BEGIN_SRC haskell
-{-# LANGUAGE FlexibleInstances #-}
-
-instance {-# OVERLAPS #-} Functor (Either Int) where
-    fmap _ (Left n)  = Left n
-    fmap f (Right r) = Right (f r)
-#+END_SRC
-
-With our ~Functor~ instance in hand, let's try out ~fmap~ on
-~Either Int~.
-
-#+BEGIN_SRC screen
-ghci> :load EitherIntFlexible
-[1 of 1] Compiling Main             ( EitherIntFlexible.hs, interpreted )
-Ok, one module loaded.
-ghci> fmap (== "cheeseburger") (Left 1 :: Either Int String)
-Left 1
-ghci> fmap (== "cheeseburger") (Right "fries" :: Either Int String)
-Right False
-#+END_SRC
-
 *** Thinking more about functors
 
 We've made a few implicit assumptions about how functors ought to

@@ -967,6 +967,37 @@ which tells it to enable a language extension. The
 legal. We'll encounter a few other language extensions in this
 chapter, and a handful more later in this book.
 
+** Flexible instances
+
+The code above doesn't compile yet.
+
+#+BEGIN_SRC scree
+ghci> :l JSONClass.hs
+[1 of 2] Compiling SimpleJSON       ( SimpleJSON.hs, interpreted )
+[2 of 2] Compiling JSONClass        ( JSONClass.hs, interpreted )
+
+JSONClass.hs:22:10: error:
+    • Illegal instance declaration for ‘JSON String’
+        (All instance types must be of the form (T a1 ... an)
+         where a1 ... an are *distinct type variables*,
+         and each type variable appears at most once in the instance head.
+         Use FlexibleInstances if you want to disable this.)
+    • In the instance declaration for ‘JSON String’
+   |
+22 | instance JSON String where
+   |          ^^^^^^^^^^^
+Failed, one module loaded.
+#+END_SRC
+
+The error says that instances declarations must have the form of a
+type optionally followed by a type variable (~[a]~ for example,
+where ~[]~ is the type and ~a~ is the type variable) but we are
+providing a type inside another type (remember that ~String~ is an
+alias for ~[Char]~). We can remove this restriction by adding the
+~{-# LANGUAGE FlexibleInstances #-}~ directive at the begining of
+the file. (We can even drop the ~TypeSynonymInstances~ directive
+in this case).
+
 ** Living in an open world
 
 Haskell's typeclasses are intentionally designed to let us create
@@ -1003,7 +1034,7 @@ let's use ~undefined~ as the bodies of the instance's methods.
 
 #+CAPTION: BrokenClass.hs
 #+BEGIN_SRC haskell
-{-# LANGUAGE FlexibleInstances #-} -- Add it to the beginning of JSONClass.hs too
+{-# LANGUAGE FlexibleInstances #-}
 
 import JSONClass
 
@@ -1059,6 +1090,8 @@ makes it clearer what's going on.
 
 #+CAPTION: Overlap.hs
 #+BEGIN_SRC haskell
+{-# LANGUAGE FlexibleInstances #-}
+
 class Borked a where
     bork :: a -> String
 
@@ -1118,7 +1151,7 @@ We frequently use this extension together with
 
 #+CAPTION: SimpleClass.hs
 #+BEGIN_SRC haskell
-{-# LANGUAGE TypeSynonymInstances, OverlappingInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 import Data.List
 
