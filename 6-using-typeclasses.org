@@ -119,7 +119,7 @@ it says about ~isEqual~:
 
 #+BEGIN_SRC screen
 *Main> :type isEqual
-isEqual :: (BasicEq a) => a -> a -> Bool
+isEqual :: BasicEq a => a -> a -> Bool
 #+END_SRC
 
 You can read that this way: "For all types ~a~, so long as ~a~ is
@@ -161,11 +161,10 @@ that we could fix the problem by defining an instance of ~BasicEq~
 for ~[Char]~, which is the same as ~String~.
 
 We'll go into more detail on defining instances in
-[[file:using-typeclasses.html#typeclasses.instances][the section
-called “Declaring typeclass instances”]]. First, though, let's
-continue to look at ways to define typeclasses. In this example, a
-not-equal-to function might be useful. Here's what we might say to
-define a typeclass with two functions:
+[[file:using-typeclasses.html#typeclasses.instances][the section called “Declaring typeclass instances”]]. First, though,
+let's continue to look at ways to define typeclasses. In this
+example, a not-equal-to function might be useful. Here's what we
+might say to define a typeclass with two functions:
 
 #+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
@@ -229,13 +228,14 @@ instances of a particular typeclass by implementing the functions
 necessary for that typeclass.
 
 Recall our attempt to create a test for equality over a ~Color~
-type back in [[file:using-typeclasses.html#typeclasses.need][the
-section called “The need for typeclasses”]]. Now let's see how we
-could make that same ~Color~ type a member of the ~BasicEq3~
-class.
+type back in [[file:using-typeclasses.html#typeclasses.need][the section called “The need for typeclasses”]]. Now
+let's see how we could make that same ~Color~ type a member of the
+~BasicEq3~ class.
 
 #+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
+data Color = Red | Green | Blue
+
 instance BasicEq3 Color where
     isEqual3 Red Red = True
     isEqual3 Green Green = True
@@ -265,7 +265,7 @@ in the ~BasicEq3~ declaration.
 
 Now that we've discussed defining your own typeclasses and making
 your types instances of typeclasses, it's time to introduce you to
-typeclasses that are a standard part of the Haskell Prelude. As we
+typeclasses that are a standard part of the Haskell prelude. As we
 mentioned at the beginning of this chapter, typeclasses are at the
 core of some important aspects of the language. We'll cover the
 most common ones here. For more details, the Haskell library
@@ -286,10 +286,9 @@ The most important function of ~Show~ is ~show~. It takes one
 argument: the data to convert. It returns a ~String~ representing
 that data. ~ghci~ reports the type of ~show~ like this:
 
-
 #+BEGIN_SRC screen
 ghci> :type show
-show :: (Show a) => a -> String
+show :: Show a => a -> String
 #+END_SRC
 
 Let's look at some examples of converting values to strings:
@@ -392,13 +391,14 @@ main = do
 
 This is a simple example of ~read~ and ~show~ together. Notice
 that we gave an explicit type of ~Double~ when processing the
-~read~. That's because ~read~ returns a value of type ~Read a =>
-a~ and ~show~ expects a value of type ~Show a => a~. There are
-many types that have instances defined for both ~Read~ and ~Show~.
-Without knowing a specific type, the compiler must guess from
-these many types which one is needed. In situations like this, it
-may often choose ~Integer~. If we wanted to accept floating-point
-input, this wouldn't work, so we provided an explicit type.
+~read~. That's because ~read~ returns a value of type
+~Read a => a~ and ~show~ expects a value of type ~Show a => a~.
+There are many types that have instances defined for both ~Read~
+and ~Show~. Without knowing a specific type, the compiler must
+guess from these many types which one is needed. In situations
+like this, it may often choose ~Integer~. If we wanted to accept
+floating-point input, this wouldn't work, so we provided an
+explicit type.
 
 #+BEGIN_TIP
 A note about defaulting
@@ -421,7 +421,7 @@ there as well. You'll need to explicitly give types for your
 ghci> read "5"
 *** Exception: Prelude.read: no parse
 ghci> :type (read "5")
-(read "5") :: (Read a) => a
+(read "5") :: Read a => a
 ghci> (read "5") :: Integer
 5
 ghci> (read "5") :: Double
@@ -456,7 +456,7 @@ list on an unsuccessful parse. Here's an example implementation:
 #+BEGIN_SRC haskell
 instance Read Color where
     -- readsPrec is the main function for parsing input
-    readsPrec _ value = 
+    readsPrec _ value =
         -- We pass tryParse a list of pairs. Each pair has a string
         -- and the desired return value. tryParse will try to match
         -- the input to one of these strings.
@@ -551,7 +551,6 @@ Let's try reading it back.
 
 #+BEGIN_SRC screen
 ghci> input <- readFile "test"
-"[Just 5,Nothing,Nothing,Just 8,Just 9]"
 ghci> d2 = read input
 ghci> print d2
 *** Exception: Prelude.read: no parse
@@ -565,10 +564,9 @@ parse the input. If we give it an explicit type, it works, and we
 can verify that the two sets of data are equal.
 
 #+BEGIN_SRC screen
-ghci> d2 = (read input)::[Maybe Int]
 ghci> print d1
 [Just 5,Nothing,Nothing,Just 8,Just 9]
-ghci> print (d2 :: [Maybe Int]) 
+ghci> print (d2 :: [Maybe Int])
 [Just 5,Nothing,Nothing,Just 8,Just 9]
 ghci> d1 == d2
 True
@@ -799,7 +797,6 @@ instances of that typeclass (manually or automatically).
 #+CAPTION: AutomaticDerivation.hs
 #+BEGIN_SRC haskell
 data CannotShow = CannotShow
-                deriving (Show)
 
 -- will not compile, since CannotShow is not an instance of Show
 data CannotDeriveShow = CannotDeriveShow CannotShow
@@ -875,6 +872,8 @@ Haskell's typeclasses offer a tempting solution to this problem.
 #+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
 module JSONClass where
+
+import SimpleJSON
 
 type JSONError = String
 
@@ -1316,7 +1315,7 @@ behaves differently for types defined using ~newtype~ than for
 those that use ~data~.
 
 To understand the difference, let's first review what we might
-expect with a normal datatype. We are already familiar with the
+expect with a normal data type. We are already familiar with the
 idea that if ~undefined~ is evaluated at runtime, it causes a
 crash.
 
@@ -1476,7 +1475,8 @@ code that uses the constructor.
 
 In our circumstances here, we have nothing to gain by making the
 array wrapper abstract, so we may as well simply export the entire
-definition of the type. #+END_NOTE
+definition of the type.
+#+END_NOTE
 
 We provide another wrapper type that hides our representation of a
 JSON object.
@@ -1690,7 +1690,7 @@ afoul of it, the following two compile without problems.
 #+BEGIN_SRC haskell
 myShow2 value = show value
 
-myShow3 :: (Show a) => a -> String
+myShow3 :: Show a => a -> String
 myShow3 = show
 #+END_SRC
 
