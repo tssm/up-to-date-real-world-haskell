@@ -690,8 +690,15 @@ Then run the tests as normal;
 
 #+BEGIN_SRC screen
 $ ./Run
-             simple : .....                            (1000)
-            complex : ..                               (400)
+Running simple tests:
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
++++ OK, passed 1 tests.
++++ OK, passed 200 tests.
+Running complex tests:
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
 #+END_SRC
 
 During the test run the trace of the program is written to .tix
@@ -706,17 +713,17 @@ into the console:
 
 #+BEGIN_SRC screen
 $ hpc report Run --exclude=Main --exclude=QC
- 18% expressions used (30/158)
+ 17% expressions used (30/176)
   0% boolean coverage (0/3)
        0% guards (0/3), 3 unevaluated
      100% 'if' conditions (0/0)
      100% qualifiers (0/0)
- 23% alternatives used (8/34)
+ 17% alternatives used (8/46)
   0% local declarations used (0/4)
- 42% top-level declarations used (9/21)
+ 30% top-level declarations used (10/33)
 #+END_SRC
 
-we see that, on the last line, 42% of top level definitions were
+we see that, on the last line, 30% of top level definitions were
 evaluated during the test run. Not too bad for a first attempt. As
 we test more and more functions from the library, this figure will
 rise. The textual version is useful for a quick summary, but to
@@ -733,45 +740,31 @@ browser, we can see some pretty graphs of the code coverage:
 
 [[file:figs/ch11-hpc-round1.png]]
 
-Not too bad. Clicking through to the pretty module itself, we see
-the actual source of the program, marked up in bold yellow for
+Not too bad. Clicking through to the ~Prettify~ module itself, we
+see the actual source of the program, marked up in bold yellow for
 code that wasn't tested, and code that was executed simply bold.
 
-[[file:figs/ch11-coverage-screen.png]]
-
-We forgot to test the Monoid instance, for example, and some of
-the more complicated functions. HPC helps keep our test suite
-honest. Let's add a test for the typeclass instance of ~Monoid~,
-the class of types that support appending and empty elements:
-
-#+CAPTION: QC.hs
-#+BEGIN_SRC haskell
-prop_mempty_id x =
-    mempty `mappend` x == x
-  &&
-    x `mappend` mempty == (x :: Doc)
-#+END_SRC
-
-Running this property in ~ghci~, to check it is correct:
-
-#+BEGIN_SRC screen
-ghci> quickCheck prop_mempty_id
-00, passed 100 tests.
-#+END_SRC
-
-We can now recompile and run the test driver. It is important to
-remove the old .tix file first though, or an error will occur as
-HPC tries to combine the statistics from separate runs:
+It is important to remove the old .tix file after you make
+modifications or an error will occur as HPC tries to combine the
+statistics from separate runs:
 
 #+BEGIN_SRC screen
 $ ghc -fhpc Run.hs --make -no-recomp
-$ ./Run 
-Hpc failure: inconsistent number of tick boxes
+$ ./Run
+in module 'Prettify'
+Hpc failure: module mismatch with .tix/.mix file hash number
 (perhaps remove Run.tix file?)
 $ rm *.tix
-$ ./Run   
-                   simple : .....                            (1000)
-                  complex : ...                              (600)
+$ ./Run
+Running simple tests:
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
++++ OK, passed 1 tests.
++++ OK, passed 200 tests.
+Running complex tests:
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
 #+END_SRC
 
 Another two hundred tests were added to the suite, and our
