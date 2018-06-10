@@ -42,8 +42,8 @@ To get an overview of how property-based testing works, we'll
 begin with a simple scenario: you've written a specialised sorting
 function and want to test its behaviour.
 
-First, we import the QuickCheck library[fn:1], and any other
-modules we need:
+First, we import the QuickCheck library, and any other modules we
+need:
 
 #+CAPTION: QCBasics.hs
 #+BEGIN_SRC haskell
@@ -109,8 +109,11 @@ the distribution of data QuickCheck produces. For example, to
 generate a random list of boolean values:
 
 #+BEGIN_SRC screen
-ghci> generate 10 (System.Random.mkStdGen 2) arbitrary :: [Bool]
-[False,False,False,False,False,True]
+ghci> :m +Test.QuickCheck.Arbitrary
+ghci> :m +Test.QuickCheck.Gen
+ghci> :m +Test.QuickCheck.Random
+ghci> unGen arbitrary (mkQCGen 2) 10 :: [Bool]
+[False,True,True,True,False,True,False,False,True,False]
 #+END_SRC
 
 QuickCheck generates test data like this and passes it to the
@@ -127,9 +130,9 @@ uninteresting ~()~ type):
 
 #+BEGIN_SRC screen
 ghci> :type quickCheck
-quickCheck :: (Testable a) => a -> IO ()
+quickCheck :: Testable prop => prop -> IO ()
 ghci> quickCheck (prop_idempotent :: [Integer] -> Bool)
-00, passed 100 tests.
++++ OK, passed 100 tests.
 #+END_SRC
 
 For the 100 different lists generated, our property held–great!
@@ -158,14 +161,14 @@ function:
 
 #+CAPTION: QCBasics.hs
 #+BEGIN_SRC haskell
-prop_minimum xs         = head (qsort xs) == minimum xs
+prop_minimum xs = head (qsort xs) == minimum xs
 #+END_SRC
 
 Testing this, though, reveals an error:
 
 #+BEGIN_SRC screen
 ghci> quickCheck (prop_minimum :: [Integer] -> Bool)
-0** Exception: Prelude.head: empty list
+*** Failed! Exception: 'Prelude.head: empty list' (after 1 test): []
 #+END_SRC
 
 The property failed when sorting an empty list–for which ~head~
@@ -201,7 +204,7 @@ we can now confirm the property does in fact hold:
 
 #+BEGIN_SRC screen
 ghci> quickCheck (prop_minimum' :: [Integer] -> Property)
-00, passed 100 tests.
++++ OK, passed 100 tests.
 #+END_SRC
 
 Note that we had to change the type of the property from being a
@@ -277,7 +280,6 @@ and building a test suite for it.
 Recall that the pretty printer is built around the ~Doc~, an
 algebraic data type that represents well-formed documents:
 
-#+CAPTION: Prettify2.hs
 #+BEGIN_SRC haskell
 data Doc = Empty
          | Char Char
@@ -299,12 +301,11 @@ source of input data. To do this, we take advantage of the small
 combinator suite for building random data that QuickCheck provides
 via the ~Arbitrary~ class. The class provides a function,
 ~arbitrary~, to generate data of each type, and with this we can
-define our data generator for our custom data types.[fn:2]
+define our data generator for our custom data types.[fn:1]
 
-#+CAPTION: Arbitrary.hs
 #+BEGIN_SRC haskell
 class Arbitrary a where
-  arbitrary   :: Gen a
+  arbitrary :: Gen a
 #+END_SRC
 
 One thing to notice is that the generators run in a ~Gen~
@@ -319,11 +320,10 @@ defined in the library for introducing new random values and
 gluing them together to build up data structures of the type we're
 interested in. The types of the key functions are:
 
-#+CAPTION: Arbitrary.hs
 #+BEGIN_SRC haskell
 elements :: [a] -> Gen a
-choose   :: Random a => (a, a) -> Gen a
-oneof    :: [Gen a] -> Gen a
+choose :: Random a => (a, a) -> Gen a
+oneof :: [Gen a] -> Gen a
 #+END_SRC
 
 The function ~elements~, for example, takes a list of values, and
@@ -334,6 +334,8 @@ data type for ternary logic:
 
 #+CAPTION: Arbitrary.hs
 #+BEGIN_SRC haskell
+import Test.QuickCheck
+
 data Ternary
     = Yes
     | No
@@ -348,7 +350,7 @@ possible values of ~Ternary~ type:
 #+CAPTION: Arbitrary.hs
 #+BEGIN_SRC haskell
 instance Arbitrary Ternary where
-  arbitrary     = elements [Yes, No, Unknown]
+  arbitrary = elements [Yes, No, Unknown]
 #+END_SRC
 
 Another approach to data generation is to generate values for one
@@ -358,10 +360,10 @@ the type you're actually interested in. We could have written the
 instead, using ~choose~, and then mapping them onto the ternary
 values:
 
-#+CAPTION: Arbitrary2.hs
+#+CAPTION: Arbitrary.hs
 #+BEGIN_SRC haskell
 instance Arbitrary Ternary where
-  arbitrary     = do
+  arbitrary = do
       n <- choose (0, 2) :: Gen Int
       return $ case n of
                     0 -> Yes
@@ -388,33 +390,21 @@ instance (Arbitrary a, Arbitrary b) => Arbitrary (a, b) where
 So let's now write a generator for all the different variants of
 the ~Doc~ type. We'll start by breaking the problem down, first
 generating random constructors for each type, then, depending on
-the result, the components of each field. The most complicated
-case are the union and concatenation variants.
-
-First, though, we need to write an instance for generating random
-characters–QuickCheck doesn't have a default instance for
-characters, due to the abundance of different text encodings we
-might want to use for character tests. We'll write our own, and,
-as we don't care about the actual text content of the document, a
-simple generator of alphabetic characters and punctuation will
-suffice (richer generators are simple extensions of this basic
-approach):
+the result, the components of each field. We choose a random
+integer to represent which document variant to generate, and then
+dispatch based on the result. To generate concat or union document
+nodes, we just recurse on ~arbitrary~, letting type inference
+determine which instance of ~Arbitrary~ we mean:
 
 #+CAPTION: QC.hs
 #+BEGIN_SRC haskell
-instance Arbitrary Char where
-    arbitrary = elements (['A'..'Z'] ++ ['a' .. 'z'] ++ " ~!@#$%^&*()")
-#+END_SRC
+module QC where
 
-With this in place, we can now write an instance for documents, by
-enumerating the constructors, and filling the fields in. We choose
-a random integer to represent which document variant to generate,
-and then dispatch based on the result. To generate concat or union
-document nodes, we just recurse on ~arbitrary~, letting type
-inference determine which instance of ~Arbitrary~ we mean:
+import Prettify
 
-#+CAPTION: QC.hs
-#+BEGIN_SRC haskell
+import Data.List
+import Test.QuickCheck
+
 instance Arbitrary Doc where
     arbitrary = do
         n <- choose (1,6) :: Gen Int
@@ -446,6 +436,7 @@ from each generator):
 
 #+CAPTION: QC.hs
 #+BEGIN_SRC haskell
+-- import Control.Monad
 instance Arbitrary Doc where
     arbitrary =
         oneof [ return Empty
@@ -463,8 +454,10 @@ documents (seeding the pseudo-random generator with an initial
 seed of 2):
 
 #+BEGIN_SRC screen
-ghci> generate 10 (System.Random.mkStdGen 2) arbitrary :: [Doc]
-[Line,Empty,Union Empty Line,Union (Char 'R') (Concat (Union Line (Concat (Text "i@BmSu") (Char ')'))) (Union (Concat (Concat (Concat (Text "kqV!iN") Line) Line) Line) Line)),Char 'M',Text "YdwVLrQOQh"]
+ghci> unGen arbitrary (mkQCGen 2) 10 :: [Doc]
+[Empty,Union (Char 't') Line,Line,Union Line Empty,Concat (Char '\9930')
+(Text "\DEL"),Line,Text "\263060\ACKJ@e",Empty,Char '\367759',Concat Line
+(Text ")\385036N\332758D(")]
 #+END_SRC
 
 Looking at the output we see a good mix of simple, base cases, and
@@ -477,12 +470,11 @@ functions.
 
 Two of the basic functions on documents are the null document
 constant (a nullary function), ~empty~, and the append function.
-Their types are:
 
-#+CAPTION: Prettify2.hs
 #+BEGIN_SRC haskell
 empty :: Doc
-(<>)  :: Doc -> Doc -> Doc
+
+(<>) :: Doc -> Doc -> Doc
 #+END_SRC
 
 Together, these should have a nice property: appending or
@@ -491,10 +483,7 @@ second list unchanged. We can state this invariant as a property:
 
 #+CAPTION: QC.hs
 #+BEGIN_SRC haskell
-prop_empty_id x =
-    empty <> x == x
-  &&
-    x <> empty == x
+prop_empty_id x = empty <> x == x && x <> empty == x
 #+END_SRC
 
 Confirming that this is indeed true, we're now underway with our
@@ -502,7 +491,7 @@ testing:
 
 #+BEGIN_SRC screen
 ghci> quickCheck prop_empty_id
-00, passed 100 tests.
++++ OK, passed 100 tests.
 #+END_SRC
 
 To look at what actual test documents were generated (by replacing
@@ -518,14 +507,16 @@ behaviour, so later changes won't break these basic invariants.
 
 #+CAPTION: QC.hs
 #+BEGIN_SRC haskell
-prop_char c   = char c   == Char c
+prop_char c = char c == Char c
 
-prop_text s   = text s   == if null s then Empty else Text s
+prop_text s = text s == if null s then Empty else Text s
 
-prop_line     = line     == Line
+prop_line = line == Line
 
 prop_double d = double d == text (show d)
 #+END_SRC
+
+**** TODO explain why ~prop_line~ only produces one test
 
 These properties are enough to fully test the structure returned
 by the basic document operators. To test the rest of the library
@@ -540,7 +531,6 @@ concatenation and interleaving separators between document chunks.
 The ~fold~ defined for documents takes a list of document pieces,
 and glues them all together with a supplied combining function:
 
-#+CAPTION: Prettify2.hs
 #+BEGIN_SRC haskell
 fold :: (Doc -> Doc -> Doc) -> [Doc] -> Doc
 fold f = foldr f empty
@@ -571,10 +561,10 @@ prop_punctuate s xs = punctuate s xs == intersperse s xs
 While this looks fine, running it reveals a flaw in our reasoning:
 
 #+BEGIN_SRC screen
-ghci>  quickCheck prop_punctuate
-Falsifiable, after 6 tests:
+ghci> quickCheck prop_punctuate
+*** Failed! Falsifiable (after 4 tests):
 Empty
-[Line,Text "",Line]
+[Char '\DC3',Empty]
 #+END_SRC
 
 The pretty printing library optimises away redundant empty
@@ -590,7 +580,6 @@ prop_punctuate' s xs = punctuate s xs == combine (intersperse s xs)
     where
         combine []           = []
         combine [x]          = [x]
-
         combine (x:Empty:ys) = x : combine ys
         combine (Empty:y:ys) = y : combine ys
         combine (x:y:ys)     = x `Concat` y : combine ys
@@ -602,7 +591,7 @@ the code–exactly what we're looking for:
 
 #+BEGIN_SRC screen
 ghci> quickCheck prop_punctuate'
-00, passed 100 tests.
++++ OK, passed 100 tests.
 #+END_SRC
 
 *** Putting it altogether
@@ -616,13 +605,21 @@ test:
 
 #+CAPTION: Run.hs
 #+BEGIN_SRC haskell
-import Prettify2
-import Test.QuickCheck.Batch
+import QC
+import Test.QuickCheck
+import Control.Monad (forM_)
 
-options = TestOptions
-      { no_of_tests         = 200
-      , length_of_tests     = 1
-      , debug_tests         = False }
+options = stdArgs { maxSuccess = 200, maxSize = 200}
+
+type Run = Args -> IO ()
+
+run :: Testable prop => prop -> Run
+run = flip quickCheckWith
+
+runTests :: String -> Args -> [Run] -> IO ()
+runTests name opts tests =
+    putStrLn ("Running " ++ name ++ " tests:") >>
+        forM_ tests (\ rn -> rn opts)
 
 main = do
     runTests "simple" options
@@ -635,7 +632,7 @@ main = do
 
     runTests "complex" options
         [ run prop_hcat
-        , run prop_puncutate'
+        , run prop_puncutate
         ]
 #+END_SRC
 
@@ -647,13 +644,25 @@ library via the module system. The test script can then be
 compiled and executed:
 
 #+BEGIN_SRC screen
-$ ghc --make Run.hs
-$ ./Run 
-                 simple : .....                            (1000)
-                complex : ..                               (400)
+ghci> :l Run.hs
+[1 of 4] Compiling SimpleJSON       ( SimpleJSON.hs, interpreted )
+[2 of 4] Compiling Prettify         ( Prettify.hs, interpreted )
+[3 of 4] Compiling QC               ( QC.hs, interpreted )
+[4 of 4] Compiling Main             ( Run.hs, interpreted )
+Ok, four modules loaded.
+*Main> main
+Running simple tests:
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
++++ OK, passed 1 tests.
++++ OK, passed 200 tests.
+Running complex tests:
++++ OK, passed 200 tests.
++++ OK, passed 200 tests.
 #+END_SRC
 
-A total of 1400 individual tests were created, which is
+A total of 1201 individual tests were created, which is
 comforting. We can increase the depth easily enough, but to find
 out exactly how well the code is being tested we should turn to
 the built in code coverage tool, HPC, which can state precisely
@@ -780,11 +789,7 @@ and a core part of Haskell development.
 
 ** Footnotes
 
-[fn:1] Throughout this chapter we'll use QuickCheck 1.0 (classic
-QuickCheck). It should be kept in mind that a some functions may
-differ in later releases of the library.
-
-[fn:2] The class also defines a method, ~coarbitrary~, which given
+[fn:1] The class also defines a method, ~coarbitrary~, which given
 a value of some type, yields a function for new generators. We can
 disregard for now, as it is only needed for generating random
 values of function type. One result of disregarding ~coarbitrary~
