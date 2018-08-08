@@ -364,7 +364,7 @@ encodeEAN13 = concat . encodeDigits . map digitToInt
 encodeDigits :: [Int] -> [String]
 encodeDigits s@(first:rest) =
     outerGuard : lefties ++ centerGuard : righties ++ [outerGuard]
-  where (left, right) = splitAt 5 rest
+  where (left, right) = splitAt 6 rest
         lefties = zipWith leftEncode (parityCodes ! first) left
         righties = map rightEncode (right ++ [checkDigit s])
 
@@ -807,6 +807,8 @@ in that table for a given input sequence.
 
 #+CAPTION: Barcode.hs
 #+BEGIN_SRC haskell
+type Digit = Word8
+
 bestScores :: ScoreTable -> [Run] -> [(Score, Digit)]
 bestScores srl ps = take 3 . sort $ scores
     where scores = zip [distance d (scaleToOne ps) | d <- srl] digits
@@ -922,8 +924,6 @@ Wrapping a match in a parity value is straightforward.
 
 #+CAPTION: Barcode.hs
 #+BEGIN_SRC haskell
-type Digit = Word8
-
 bestLeft :: [Run] -> [Parity (Score, Digit)]
 bestLeft ps = sortBy compareWithoutParity
               ((map Odd (bestScores leftOddSRL ps)) ++
@@ -1042,6 +1042,7 @@ Let's take a glance at the candidate digits chosen for each
 group of bars, from a row taken from the image above.
 
 #+BEGIN_SRC screen
+ghci> input = zip (runLengths $ encodeEAN13 "9780132114677") (cycle [Zero, One])
 ghci> :type input
 input :: [(Run, Bit)]
 ghci> take 7 input
