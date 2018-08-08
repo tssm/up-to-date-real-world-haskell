@@ -94,7 +94,6 @@ using in the remainder of this chapter.
 import Data.Array (Array(..), (!), bounds, elems, indices,
                    ixmap, listArray)
 
-import Control.Applicative ((<$>))
 import Control.Monad (forM_)
 import Data.Char (digitToInt)
 import Data.Ix (Ix(..))
@@ -172,7 +171,7 @@ type ~Array (Int, Int) String~.
 #+BEGIN_SRC screen
 ghci> :m +Data.Array
 ghci> :type listArray
-listArray :: (Ix i) => (i, i) -> [e] -> Array i e
+listArray :: Ix i => (i, i) -> [e] -> Array i e
 #+END_SRC
 
 We can construct an array easily.
@@ -190,18 +189,20 @@ elements 0, 1, and 2.
 ghci> listArray (0,3) [True,False,False,True,False]
 array (0,3) [(0,True),(1,False),(2,False),(3,True)]
 ghci> listArray (0,10) "too short"
-array (0,10) [(0,'t'),(1,'o'),(2,'o'),(3,' '),(4,'s'),(5,'h'),(6,'o'),(7,'r'),(8,'t'),(9,*** Exception: (Array.!): undefined array element
+array (0,10) [(0,'t'),(1,'o'),(2,'o'),(3,' '),(4,'s'),(5,'h'),
+(6,'o'),(7,'r'),(8,'t'),(9,*** Exception: (Array.!): undefined
+array element
 #+END_SRC
 
 Once an array is constructed, we can use the ~(!)~ operator to
 access its elements by index.
 
 #+BEGIN_SRC screen
-ghci> let a = listArray (0,14) ['a'..]
+ghci> a = listArray (0,14) ['a'..]
 ghci> a ! 2
 'c'
 ghci> a ! 100
-*** Exception: Error in array index
+*** Exception: Ix{Integer}.index: Index (100) out of range ((0,14))
 #+END_SRC
 
 Since the array construction function lets us specify the bounds
@@ -210,7 +211,7 @@ familiar to C programmers. We can choose whatever bounds are
 convenient for our purposes.
 
 #+BEGIN_SRC screen
-ghci> let a = listArray (-9,5) ['a'..]
+ghci> a = listArray (-9,5) ['a'..]
 ghci> a ! (-2)
 'h'
 #+END_SRC
@@ -219,7 +220,7 @@ The index type can be any member of the ~Ix~ type. This lets us
 use, for example, ~Char~ as the index type.
 
 #+BEGIN_SRC screen
-ghci> let a = listArray ('a', 'h') [97..]
+ghci> a = listArray ('a', 'h') [97..]
 ghci> a ! 'e'
 101
 #+END_SRC
@@ -230,7 +231,7 @@ five elements members of the ~Ix~ class. To illustrate, here's a
 small three-dimensional array.
 
 #+BEGIN_SRC screen
-ghci> let a = listArray ((0,0,0), (9,9,9)) [0..]
+ghci> a = listArray ((0,0,0), (9,9,9)) [0..]
 ghci> a ! (4,3,7)
 437
 #+END_SRC
@@ -249,7 +250,7 @@ elements will undefined. We will not get an error unless we access
 an element beyond the third.
 
 #+BEGIN_SRC screen
-ghci> let a = listArray (0,5) "bar"
+ghci> a = listArray (0,5) "bar"
 ghci> a ! 2
 'r'
 ghci> a ! 4
@@ -707,11 +708,13 @@ Our ~runLength~ function represents each group as a pair of its
 length and first element.
 
 #+BEGIN_SRC screen
-ghci> let bits = [0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0]
+ghci> :l Barcode.hs
+[1 of 3] Compiling PNM              ( PNM.hs, interpreted )
+[2 of 3] Compiling Parse            ( Parse.hs, interpreted )
+[3 of 3] Compiling Main             ( Barcode.hs, interpreted )
+Ok, three modules loaded.
+ghci> bits = [0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0]
 ghci> runLength bits
-Loading package array-0.1.0.0 ... linking ... done.
-Loading package containers-0.1.0.1 ... linking ... done.
-Loading package bytestring-0.9.0.1 ... linking ... done.
 [(2,0),(2,1),(2,0),(2,1),(6,0),(4,1),(4,0)]
 #+END_SRC
 
@@ -795,11 +798,11 @@ An exact match will give a distance of zero, with weaker matches
 resulting in larger distances.
 
 #+BEGIN_SRC screen
-ghci> let group = scaleToOne [2,6,4,4]
+ghci> group = scaleToOne [2,6,4,4]
 ghci> distance group (head leftEvenSRL)
-13%28
+13 % 28
 ghci> distance group (head leftOddSRL)
-17%28
+17 % 28
 #+END_SRC
 
 Given a scaled run length table, we choose the best few matches
@@ -846,7 +849,7 @@ ghci> [ (a,b) | a <- [1..6], b <- [5..7], even (a + b ^ 2) ]
 We can also bind local variables using a ~let~ expression.
 
 #+BEGIN_SRC screen
-ghci> let vowel = (`elem` "aeiou")
+ghci> vowel = (`elem` "aeiou")
 ghci> [ x | a <- "etaoin", b <- "shrdlu", let x = [a,b], all vowel x ]
 ["eu","au","ou","iu"]
 #+END_SRC
@@ -863,9 +866,8 @@ List comprehensions are powerful and concise. As a result, they
 can be difficult to read. When used with care, they can make our
 code easier to follow.
 
-#+CAPTION: Barcode.hs
 #+BEGIN_SRC haskell
--- our original
+-- our original score from Barcode.hs
 zip [distance d (scaleToOne ps) | d <- srl] digits
 
 -- the same expression, expressed without a list comprehension
@@ -1046,19 +1048,19 @@ ghci> input = zip (runLengths $ encodeEAN13 "9780132114677") (cycle [Zero, One])
 ghci> :type input
 input :: [(Run, Bit)]
 ghci> take 7 input
-[(2,Zero),(2,One),(2,Zero),(2,One),(6,Zero),(4,One),(4,Zero)]
+[(1,Zero),(1,One),(1,Zero),(1,One),(3,Zero),(1,One),(2,Zero)]
 ghci> mapM_ print $ candidateDigits input
-[Even 1,Even 5,Odd 7,Odd 1,Even 2,Odd 5]
-[Even 8,Even 7,Odd 1,Odd 2,Odd 0,Even 6]
-[Even 0,Even 1,Odd 8,Odd 2,Odd 4,Even 9]
-[Odd 1,Odd 0,Even 8,Odd 2,Even 2,Even 4]
-[Even 3,Odd 4,Odd 5,Even 7,Even 0,Odd 2]
-[Odd 2,Odd 4,Even 7,Even 0,Odd 1,Even 1]
-[None 1,None 5,None 0]
-[None 1,None 5,None 2]
-[None 4,None 5,None 2]
+[Odd 7,Even 1,Even 2,Odd 3,Even 4,Odd 8]
+[Even 8,Odd 0,Odd 1,Odd 2,Even 6,Even 7]
+[Even 0,Even 1,Odd 2,Odd 4,Odd 6,Even 9]
+[Odd 1,Odd 0,Even 1,Odd 2,Even 2,Even 4]
+[Even 3,Odd 4,Odd 5,Even 7,Even 0,Odd 1]
+[Odd 2,Even 0,Odd 1,Even 1,Even 2,Odd 4]
+[None 1,None 0,None 2]
+[None 1,None 0,None 2]
+[None 4,None 2,None 5]
 [None 6,None 8,None 2]
-[None 7,None 8,None 3]
+[None 7,None 3,None 8]
 [None 7,None 3,None 8]
 #+END_SRC
 
@@ -1194,31 +1196,26 @@ key/value pair, we use ~singleton~.
 
 #+BEGIN_SRC screen
 ghci> M.empty
-Loading package array-0.1.0.0 ... linking ... done.
-Loading package containers-0.1.0.1 ... linking ... done.
 fromList []
 ghci> M.singleton "foo" True
 fromList [("foo",True)]
 #+END_SRC
 
 Since the implementation is abstract, we can't pattern match on
-Map values. Instead, it provides a number of lookup functions, of
-which two are particularly widely used. The ~lookup~ function has
-a slightly tricky type signature, but don't worry; all will become
-clear shortly, in [[file:monads.html][Chapter 14, /Monads/]].
+~Map~ values. Instead, it provides a number of lookup functions,
+of which two are particularly widely used.
 
 #+BEGIN_SRC screen
 ghci> :type M.lookup
-M.lookup :: (Ord k, Monad m) => k -> M.Map k a -> m a
+M.lookup :: Ord k => k -> M.Map k a -> Maybe a
 #+END_SRC
 
-Most often, the type parameter ~m~ in the result is ~Maybe~. In
-other words, if the map contains a value for the given key,
+As we can see if the map contains a value for the given key,
 ~lookup~ will return the value wrapped in ~Just~. Otherwise, it
 will return ~Nothing~.
 
 #+BEGIN_SRC screen
-ghci> let m = M.singleton "foo" 1 :: M.Map String Int
+ghci> m = M.singleton "foo" 1 :: M.Map String Int
 ghci> case M.lookup "bar" m of { Just v -> "yay"; Nothing -> "boo" }
 "boo"
 #+END_SRC
@@ -1236,46 +1233,46 @@ it calls ~error~ if the key is not present in the map.
 #+END_WARNING
 
 To add a key/value pair to the map, the most useful functions are
-~insert~ and ~insertWith'~. The ~insert~ function simply inserts a
+~insert~ and ~insertWith~. The ~insert~ function simply inserts a
 value into the map, overwriting any matching value that may
 already have been present.
 
 #+BEGIN_SRC screen
 ghci> :type M.insert
-M.insert :: (Ord k) => k -> a -> M.Map k a -> M.Map k a
+M.insert :: Ord k => k -> a -> M.Map k a -> M.Map k a
 ghci> M.insert "quux" 10 m
 fromList [("foo",1),("quux",10)]
 ghci> M.insert "foo" 9999 m
 fromList [("foo",9999)]
 #+END_SRC
 
-The ~insertWith'~ function takes a further /combining function/ as
-its argument. If no matching key was present in the map, the new
-value is inserted verbatim. Otherwise, the combining function is
-called on the new and old values, and its result is inserted into
-the map.
+The ~Data.Map.Strict.insertWith~ function takes a further
+/combining function/ as its argument. If no matching key was
+present in the map, the new value is inserted verbatim. Otherwise,
+the combining function is called on the new and old values, and
+its result is inserted into the map.
 
 #+BEGIN_SRC screen
-ghci> :type M.insertWith'
-M.insertWith' :: (Ord k) => (a -> a -> a) -> k -> a -> M.Map k a -> M.Map k a
-ghci> M.insertWith' (+) "zippity" 10 m
+ghci> :module Data.Map.Strict
+ghci> :type insertWith
+insertWith :: Ord k => (a -> a -> a) -> k -> a -> Map k a -> Map k a
+ghci> insertWith (+) "zippity" 10 m
 fromList [("foo",1),("zippity",10)]
-ghci> M.insertWith' (+) "foo" 9999 m
+ghci> insertWith (+) "foo" 9999 m
 fromList [("foo",10000)]
 #+END_SRC
 
-As the tick at the end of its name suggests, ~insertWith'~
+As the module name suggests this version of ~insertWith~
 evaluates the combining function strictly. This allows you to
-avoid space leaks. While there exists a lazy variant (~insertWith~
-without the trailing tick in the name), it's rarely what you
-actually want.
+avoid space leaks. While there exists a lazy variant of
+~insertWith~ in ~Data.Map~ it's rarely what you actually want.
 
 The ~delete~ function deletes the given key from the map. It
 returns the map unmodified if the key was not present.
 
 #+BEGIN_SRC screen
 ghci> :type M.delete
-M.delete :: (Ord k) => k -> M.Map k a -> M.Map k a
+M.delete :: Ord k => k -> Map k a -> Map k a
 ghci> M.delete "foo" m
 fromList []
 #+END_SRC
@@ -1394,14 +1391,14 @@ using that digit and an older solution map.
 #+BEGIN_SRC haskell
 useDigit :: ParityMap -> ParityMap -> Parity Digit -> ParityMap
 useDigit old new digit =
-    new `M.union` M.foldWithKey (updateMap digit) M.empty old
+    new `M.union` M.foldrWithKey (updateMap digit) M.empty old
 #+END_SRC
 
 Once again, let's illustrate what this code is doing using some
-examples. This time, we'll use ~ghci~.
+examples.
 
 #+BEGIN_SRC screen
-ghci> let single n = M.singleton n [Even n] :: ParityMap
+ghci> single n = M.singleton n [Even n] :: ParityMap
 ghci> useDigit (single 1) M.empty (Even 1)
 fromList [(2,[Even 1,Even 1])]
 ghci> useDigit (single 1) (single 2) (Even 2)
