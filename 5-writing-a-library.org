@@ -430,7 +430,7 @@ best to start out fairly aggressive with explicit type signatures,
 and slowly ease back as your mental model of how type checking
 works becomes more accurate.
 
-#*BEGIN_TIP
+#+BEGIN_TIP
 Explicit types, undefined values, and error
 
 The special value ~undefined~ will happily typecheck no matter
@@ -440,7 +440,8 @@ these. Suppose we use ~undefined~ or ~error "write me"~ to act as
 a placeholder in the body of a top-level definition. If we omit a
 type signature, we may be able to use the value we have defined in
 places where a correctly typed version would be rejected by the
-compiler. This can easily lead us astray. #*END_TIP
+compiler. This can easily lead us astray.
+#+END_TIP
 
 ** A more general look at rendering
 
@@ -461,13 +462,13 @@ and functional programming techniques.
 We will call our generic pretty printing module ~Prettify~, so our
 code will go into a source file named ~Prettify.hs~.
 
-#*BEGIN_NOTE
+#+BEGIN_NOTE
 Naming
 
 In our ~Prettify~ module, we will base our names on those used by
 several established Haskell pretty printing libraries. This will
 give us a degree of compatibility with existing mature libraries.
-#*END_NOTE
+#+END_NOTE
 
 To make sure that ~Prettify~ meets practical needs, we write a new
 JSON renderer that uses the ~Prettify~ API. After we're done,
