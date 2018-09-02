@@ -30,7 +30,7 @@ up data in an association list. Its type is
 from that type? Let's take a look in ~ghci~.
 
 #+BEGIN_SRC screen
-ghci> let al = [(1, "one"), (2, "two"), (3, "three"), (4, "four")]
+ghci> al = [(1, "one"), (2, "two"), (3, "three"), (4, "four")]
 ghci> lookup 1 al
 Just "one"
 ghci> lookup 5 al
@@ -202,10 +202,8 @@ expected:
 #+BEGIN_SRC screen
 ghci> :l buildmap.hs
 [1 of 1] Compiling Main             ( buildmap.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> al
-Loading package array-0.1.0.0 ... linking ... done.
-Loading package containers-0.1.0.1 ... linking ... done.
 [(1,"one"),(2,"two"),(3,"three"),(4,"four")]
 ghci> mapFromAL
 fromList [(1,"one"),(2,"two"),(3,"three"),(4,"four")]
@@ -269,7 +267,7 @@ called a /closure/. Let's play with this a bit:
 #+BEGIN_SRC screen
 ghci> :l funcrecs.hs
 [1 of 1] Compiling Main             ( funcrecs.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> :t plus5
 plus5 :: FuncRec
 ghci> name plus5
@@ -314,7 +312,7 @@ multiple places. Let's try it out:
 #+BEGIN_SRC screen
 ghci> :l funcrecs2.hs
 [1 of 1] Compiling Main             ( funcrecs2.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> :t plus5
 plus5 :: FuncRec
 ghci> name plus5
@@ -323,7 +321,7 @@ ghci> (calc plus5) 5
 10
 ghci> (namedCalc plus5) 5
 ("plus5",10)
-ghci> let plus5a = plus5 {name = "PLUS5A"}
+ghci> plus5a = plus5 {name = "PLUS5A"}
 ghci> name plus5a
 "PLUS5A"
 ghci> (namedCalc plus5a) 5
@@ -504,7 +502,7 @@ write it in a bit, but first we'll look at how we might use it.
 #+BEGIN_SRC screen
 ghci> :l num.hs
 [1 of 1] Compiling Main             ( num.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> 5 + 1 * 3
 8
 ghci> prettyShow $ 5 + 1 * 3
@@ -557,7 +555,9 @@ ghci> 5 / 2
 ghci> (units 5 "m") / (units 2 "s")
 2.5_m/s
 ghci> (units 5 "m") + (units 2 "s")
-*** Exception: Mis-matched units in add
+*** Exception: Mis-matched units in add or substract
+CallStack (from HasCallStack):
+  error, called at num.hs:109:19 in main:Main
 ghci> (units 5 "m") + (units 2 "m")
 7_m
 ghci> (units 5 "m") / 2
@@ -679,7 +679,7 @@ Ok, modules loaded: Main.
 ghci> Number 5
 Number 5
 ghci> :t Number 5
-Number 5 :: (Num t) => SymbolicManip t
+Number 5 :: Num a => SymbolicManip a
 ghci> :t Number (5::Int)
 Number (5::Int) :: SymbolicManip Int
 ghci> Number 5 * Number 10
@@ -875,8 +875,8 @@ rudimentary simplification on expressions.
 #+CAPTION: num.hs
 #+BEGIN_SRC haskell
 {- Perform some basic algebraic simplifications on a SymbolicManip. -}
-simplify :: (Num a) => SymbolicManip a -> SymbolicManip a
-simplify (BinaryArith op ia ib) = 
+simplify :: (Num a, Eq a) => SymbolicManip a -> SymbolicManip a
+simplify (BinaryArith op ia ib) =
     let sa = simplify ia
         sb = simplify ib
         in
@@ -911,7 +911,7 @@ established library. This will let us represent quantities such as
 {- New data type: Units.  A Units type contains a number
 and a SymbolicManip, which represents the units of measure.
 A simple label would be something like (Symbol "m") -}
-data Num a => Units a = Units a (SymbolicManip a)
+data Units a = Units a (SymbolicManip a)
            deriving (Eq)
 #+END_SRC
 
@@ -925,8 +925,8 @@ an instance of ~Num~ for ~Units~.
 arbitrary units, so we generate an error if we try to add numbers with
 different units.  For multiplication, generate the appropriate
 new units. -}
-instance (Num a) => Num (Units a) where
-    (Units xa ua) + (Units xb ub) 
+instance (Num a, Eq a) => Num (Units a) where
+    (Units xa ua) + (Units xb ub)
         | ua == ub = Units (xa + xb) ua
         | otherwise = error "Mis-matched units in add or subtract"
     (Units xa ua) - (Units xb ub) = (Units xa ua) + (Units (xb * (-1)) ub)
@@ -948,7 +948,7 @@ instances for ~Units~.
 #+CAPTION: num.hs
 #+BEGIN_SRC haskell
 {- Make Units an instance of Fractional -}
-instance (Fractional a) => Fractional (Units a) where
+instance (Fractional a, Eq a) => Fractional (Units a) where
     (Units xa ua) / (Units xb ub) = Units (xa / xb) (ua / ub)
     recip a = 1 / a
     fromRational r = Units (fromRational r) (Number 1)
@@ -957,7 +957,7 @@ instance (Fractional a) => Fractional (Units a) where
 
 Use some intelligence for angle calculations: support deg and rad
 -}
-instance (Floating a) => Floating (Units a) where
+instance (Floating a, Eq a) => Floating (Units a) where
     pi = (Units pi (Number 1))
     exp _ = error "exp not yet implemented in Units"
     log _ = error "log not yet implemented in Units"
@@ -1026,7 +1026,7 @@ define a ~Show~ instance for ~Units~.
 #+BEGIN_SRC haskell
 {- Showing units: we show the numeric component, an underscore,
 then the prettyShow version of the simplified units -}
-instance (Show a, Num a) => Show (Units a) where
+instance (Show a, Num a, Eq a) => Show (Units a) where
     show (Units xa ua) = show xa ++ "_" ++ prettyShow (simplify ua)
 #+END_SRC
 
@@ -1162,7 +1162,7 @@ composing functions, and instead provide a ~String~ to the function
 we've created?
 
 #+BEGIN_SRC screen
-ghci> let f = ("a" ++) . ("b" ++)
+ghci> f = ("a" ++) . ("b" ++)
 ghci> f []
 "ab"
 #+END_SRC
@@ -1364,6 +1364,32 @@ instance Monoid (DList a) where
     mappend = append
 #+END_SRC
 
+When working with a GHC version prior to 8.4 then that should be
+enough and the module is ready to be load in ~ghci~. When working
+with GHC 8.4 or later then you must make ~DList~ an instance of
+~Semigroup~ too.
+
+#+CAPTION: DList.hs
+#+BEGIN_SRC haskell
+instance Semigroup (DList a) where
+    (<>) = append
+
+instance Monoid (DList a) where
+    mempty = empty
+#+END_SRC
+
+A semigroup is a mathematical object with and associative binary
+operator, i. e. every monoid is also a semigroup (but not al
+semigroups are monoids) and that's what GHC 8.4 is forcing us to
+express.
+
+#+BEGIN_TIP
+Tip
+
+If we need compatiblity with GHC prior to version 8.4 we can
+[[https://prime.haskell.org/wiki/Libraries/Proposals/SemigroupMonoid#Writingcompatiblecode][write compatible code]].
+#+END_TIP
+
 Let's try our the methods of the ~Monoid~ type class in ~ghci~.
 
 #+BEGIN_SRC screen
@@ -1395,17 +1421,21 @@ newtype AInt = A { unA :: Int }
     deriving (Show, Eq, Num)
 
 -- monoid under addition
+instance Semigroup AInt where
+    (<>) = (+)
+
 instance Monoid AInt where
     mempty = 0
-    mappend = (+)
 
 newtype MInt = M { unM :: Int }
     deriving (Show, Eq, Num)
 
 -- monoid under multiplication
+instance Semigroup MInt where
+    (<>) = (*)
+
 instance Monoid MInt where
     mempty = 1
-    mappend = (*)
 #+END_SRC
 
 We'll then get different behaviour depending on the type we use.
@@ -1450,9 +1480,10 @@ We can construct an empty ~Seq~ using ~empty~, and a
 single-element container using ~singleton~.
 
 #+BEGIN_SRC screen
+ghci> :l DataSequence.hs
+[1 of 1] Compiling Main             ( DataSequence.hs, interpreted )
+Ok, one module loaded.
 ghci> Seq.empty
-Loading package array-0.1.0.0 ... linking ... done.
-Loading package containers-0.1.0.1 ... linking ... done.
 fromList []
 ghci> Seq.singleton 1
 fromList [1]
@@ -1461,7 +1492,7 @@ fromList [1]
 We can create a ~Seq~ from a list using ~fromList~.
 
 #+BEGIN_SRC screen
-ghci> let a = Seq.fromList [1,2,3]
+ghci> a = Seq.fromList [1,2,3]
 #+END_SRC
 
 The ~Data.Sequence~ module provides some constructor functions in
@@ -1500,8 +1531,8 @@ proportional to the logarithm of whichever is shorter. To append,
 we use the ~(><)~ operator.
 
 #+BEGIN_SRC screen
-ghci> let left = Seq.fromList [1,3,3]
-ghci> let right = Seq.fromList [7,1]
+ghci> left = Seq.fromList [1,3,3]
+ghci> right = Seq.fromList [7,1]
 ghci> left >< right
 fromList [1,3,3,7,1]
 #+END_SRC
