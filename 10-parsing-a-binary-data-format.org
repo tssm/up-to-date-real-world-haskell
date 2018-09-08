@@ -851,13 +851,11 @@ ghci> fmap (1+) ([1,2,3] ++ [4,5,6])
 [2,3,4,5,6,7]
 #+END_SRC
 
-If you really want to use ~fmap~ as an operator, the
-~Control.Applicative~ module contains an operator ~(<$>)~ that is
-an alias for ~fmap~. The ~$~ in its name appeals to the similarity
-between applying a function to its arguments (using the ~($)~
-operator) and lifting a function into a functor. We will see that
-this works well for parsing when we return to the code that we
-have been writing.
+There's also a ~(<$>)~ operator that is an alias for ~fmap~. The
+~$~ in its name appeals to the similarity between applying a
+function to its arguments (using the ~($)~ operator) and lifting a
+function into a functor. We will see that this works well for
+parsing when we return to the code that we have been writing.
 
 *** Thinking more about functors
 
