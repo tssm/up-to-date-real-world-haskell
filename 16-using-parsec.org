@@ -24,6 +24,10 @@ perform both lexical analysis and parsing.
 
 ** First Steps with Parsec: Simple CSV Parsing
 
+#+BEGIN_WARNING
+The book uses a deprecated API of Parsec and should be updated.
+#+END_WARNING
+
 Let's jump right in by writing some code for parsing a CSV file.
 CSV files are often used as a plain text representation of
 spreadsheets or databases. Each line is a record, and each field
@@ -102,7 +106,7 @@ better idea of what's going on. You can always use ~:t~ in ~ghci~
 to inspect types as well.
 
 The ~csvFile~ uses a ~do~ block. As this implies, Parsec is a
-monadic library: it defines its own special parsing monad[fn:1],
+monadic library: it defines its own special parsing monad,
 ~GenParser~.
 
 We start by running ~many line~. ~many~ is a function that takes a
@@ -136,7 +140,7 @@ defines a cell the way we want it.
 Back in ~remainingCells~, we have the first example of a choice in
 Parsec. The choice operator is ~<|>~. This operator behaves like
 this: it will first try the parser on the left. If it consumed no
-input[fn:2], it will try the parser on the right.
+input[fn:1], it will try the parser on the right.
 
 So, in ~remainingCells~, our task is to come up with all the cells
 after the first. Recall that ~cellContent~ uses ~noneOf ",\n"~. So
@@ -170,7 +174,6 @@ ghci> :l csv1.hs
 [1 of 1] Compiling Main             ( csv1.hs, interpreted )
 Ok, modules loaded: Main.
 ghci> parseCSV ""
-Loading package parsec-2.1.0.0 ... linking ... done.
 Right []
 #+END_SRC
 
@@ -259,8 +262,8 @@ see that:
 ** Choices and Errors
 
 Different operating systems use different characters to mark the
-end-of-line. Unix/Linux systems, plus Windows in text mode, use
-simply ~"\n"~. DOS and Windows systems use ~"\r\n"~, and Macs
+end-of-line. Most Unix-like systems, plus Windows in text mode,
+use simply ~"\n"~. DOS and Windows systems use ~"\r\n"~, and macOS
 traditionally used ~"\r"~. We could add in support for ~"\n\r"~
 too, just in case anybody uses that.
 
@@ -278,6 +281,9 @@ Our first attempt might look like this:
 
 #+CAPTION: csv3.hs
 #+BEGIN_SRC haskell
+import Text.ParserCombinators.Parsec
+
+eol :: Parser String -- To avoid the monomorphic restriction
 -- This function is not correct!
 eol = string "\n" <|> string "\n\r"
 #+END_SRC
@@ -289,9 +295,7 @@ system that the following line begins with ~\r~. Not what we want.
 Try it in ~ghci~:
 
 #+BEGIN_SRC screen
-ghci> :m Text.ParserCombinators.Parsec
-ghci> let eol = string "\n" <|> string "\n\r"
-Loading package parsec-2.1.0.0 ... linking ... done.
+ghci> :l csv3.hs
 ghci> parse eol "" "\n"
 Right "\n"
 ghci> parse eol "" "\n\r"
@@ -307,7 +311,7 @@ after our end of line:
 #+BEGIN_SRC screen
 ghci> parse (eol >> eof) "" "\n\r"
 Left (line 2, column 1):
-unexpected "\r"
+unexpected '\r'
 expecting end of input
 ghci> parse (eol >> eof) "" "\n"
 Right ()
@@ -318,6 +322,9 @@ temptation may be to try it this way:
 
 #+CAPTION: csv4.hs
 #+BEGIN_SRC haskell
+import Text.ParserCombinators.Parsec
+
+eol :: Parser String
 -- This function is not correct!
 eol = string "\n\r" <|> string "\n"
 #+END_SRC
@@ -329,9 +336,7 @@ we've already consumed the ~\n~. This time, we fail on the other
 case in ~ghci~:
 
 #+BEGIN_SRC screen
-ghci> :m Text.ParserCombinators.Parsec
-ghci> let eol = string "\n\r" <|> string "\n"
-Loading package parsec-2.1.0.0 ... linking ... done.
+ghci> :l csv4.hs
 ghci> parse (eol >> eof) "" "\n\r"
 Right ()
 ghci> parse (eol >> eof) "" "\n"
@@ -349,6 +354,9 @@ all the options after the ~\n~ like this:
 
 #+CAPTION: csv5.hs
 #+BEGIN_SRC haskell
+import Text.ParserCombinators.Parsec
+
+eol :: Parser Char
 eol =
     do char '\n'
        char '\r' <|> return '\n'
@@ -364,9 +372,8 @@ function ~option~ that can also express this idiom as
 #+BEGIN_SRC screen
 ghci> :l csv5.hs
 [1 of 1] Compiling Main             ( csv5.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> parse (eol >> eof) "" "\n\r"
-Loading package parsec-2.1.0.0 ... linking ... done.
 Right ()
 ghci> parse (eol >> eof) "" "\n"
 Right ()
@@ -414,9 +421,8 @@ test the ~eol~ function in ~ghci~.
 #+BEGIN_SRC screen
 ghci> :l csv6.hs
 [1 of 1] Compiling Main             ( csv6.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> parse (eol >> eof) "" "\n\r"
-Loading package parsec-2.1.0.0 ... linking ... done.
 Right ()
 ghci> parse (eol >> eof) "" "\n"
 Right ()
@@ -460,23 +466,18 @@ That's a pretty long, and technical, error message. We could make
 an attempt to resolve this by using the monad ~fail~ function like
 so:
 
-#+CAPTION: csv7.hs
+#+CAPTION: csv6.hs
 #+BEGIN_SRC haskell
-eol =   try (string "\n\r")
-    <|> try (string "\r\n")
-    <|> string "\n"
-    <|> string "\r"
     <|> fail "Couldn't find EOL"
 #+END_SRC
 
 Under ~ghci~, we can see the result:
 
 #+BEGIN_SRC screen
-ghci> :l csv7.hs
+ghci> :r
 [1 of 1] Compiling Main             ( csv7.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> parseCSV "line1"
-Loading package parsec-2.1.0.0 ... linking ... done.
 Left "(unknown)" (line 1, column 6):
 unexpected end of input
 expecting ",", "\n\r", "\r\n", "\n" or "\r"
@@ -490,23 +491,19 @@ the parser on its left. Instead of trying another parser in the
 event of a failure, it presents an error message. Here's how we'd
 use it:
 
-#+CAPTION: csv8.hs
+#+CAPTION: csv6.hs
 #+BEGIN_SRC haskell
-eol =   try (string "\n\r")
-    <|> try (string "\r\n")
-    <|> string "\n"
-    <|> string "\r"
+    -- <|> fail "Couldn't find EOL"
     <?> "end of line"
 #+END_SRC
 
 Now, when you generate an error, you'll get more helpful output:
 
 #+BEGIN_SRC screen
-ghci> :l csv8.hs
+ghci> :r
 [1 of 1] Compiling Main             ( csv8.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> parseCSV "line1"
-Loading package parsec-2.1.0.0 ... linking ... done.
 Left "(unknown)" (line 1, column 6):
 unexpected end of input
 expecting "," or end of line
@@ -529,7 +526,7 @@ Here is a full CSV parser. You can use this from ~ghci~, or if you
 compile it to a standalone program, it will parse a CSV file on
 standard input and convert it to a different format on output.
 
-#+CAPTION: csv9.hs
+#+CAPTION: csv7.hs
 #+BEGIN_SRC haskell
 import Text.ParserCombinators.Parsec
 
@@ -537,7 +534,7 @@ csvFile = endBy line eol
 line = sepBy cell (char ',')
 cell = quotedCell <|> many (noneOf ",\n\r")
 
-quotedCell = 
+quotedCell =
     do char '"'
        content <- many quotedChar
        char '"' <?> "quote at end of cell"
@@ -610,11 +607,10 @@ Parsec.
 We can test this program with ~ghci~ over some quoted cells.
 
 #+BEGIN_SRC screen
-ghci> :l csv9.hs
+ghci> :l csv7.hs
 [1 of 1] Compiling Main             ( csv9.hs, interpreted )
-Ok, modules loaded: Main.
+Ok, one module loaded.
 ghci> parseCSV "\"This, is, one, big, cell\"\n"
-Loading package parsec-2.1.0.0 ... linking ... done.
 Right [["This, is, one, big, cell"]]
 ghci> parseCSV "\"Cell without an end\n"
 Left "(unknown)" (line 2, column 1):
@@ -625,25 +621,24 @@ expecting "\"\"" or quote at end of cell
 Let's run it over a real CSV file. Here's one generated by a
 spreadsheet program:
 
-#+BEGIN_SRC haskell
+#+CAPTION: test.csv
+#+BEGIN_EXAMPLE
 "Product","Price"
 "O'Reilly Socks",10
 "Shirt with ""Haskell"" text",20
 "Shirt, ""O'Reilly"" version",20
 "Haskell Caps",15
-    
-#+END_SRC
+#+END_EXAMPLE
 
 Now, we can run this under our test program and watch:
 
 #+BEGIN_SRC screen
-$ runhaskell csv9.hs < test.csv
+$ runhaskell csv7.hs < test.csv
 ["Product","Price"]
 ["O'Reilly Socks","10"]
 ["Shirt with \"Haskell\" text","20"]
 ["Shirt, \"O'Reilly\" version","20"]
 ["Haskell Caps","15"]
-    
 #+END_SRC
 
 ** Parsec and MonadPlus
@@ -654,7 +649,6 @@ typeclass that we introduced in
 represents a parse failure, while ~mplus~ combines two alternative
 parses into one, using ~(<|>)~.
 
-#+CAPTION: ParsecPlus.hs
 #+BEGIN_SRC haskell
 instance MonadPlus (GenParser tok st) where
     mzero = fail "mzero"
@@ -672,6 +666,9 @@ Each key-value pair is separated by the ~&~ character.
 
 #+CAPTION: FormParse.hs
 #+BEGIN_SRC haskell
+import Numeric
+import Text.ParserCombinators.Parsec
+
 p_query :: CharParser () [(String, Maybe String)]
 p_query = p_pair `sepBy` char '&'
 #+END_SRC
@@ -729,7 +726,6 @@ as a ~%~ character followed by two hexadecimal digits. The
 
 #+BEGIN_SRC screen
 ghci> parseTest p_query "foo=bar&a%21=b+c"
-Loading package parsec-2.1.0.0 ... linking ... done.
 [("foo",Just "bar"),("a!",Just "b c")]
 #+END_SRC
 
@@ -770,6 +766,8 @@ We can get rid of the need for explicit variables by using the
 
 #+CAPTION: FormParse.hs
 #+BEGIN_SRC haskell
+-- Import Control.Monad at the beginning of the file
+
 p_pair_app1 =
     liftM2 (,) (many1 p_char) (optionMaybe (char '=' >> many p_char))
 #+END_SRC
@@ -788,53 +786,30 @@ effort of coming to grips with the idea.
 ** Applicative functors for parsing
 
 The standard Haskell libraries include a module named
-~Control.Applicative~, which we already encountered in
-[[file:code-case-study-parsing-a-binary-data-format.html#binary.fmap][the section called “Infix use of fmap”]]. This module defines a
-typeclass named ~Applicative~, which represents an /applicative
-functor/. This is a little bit more structured than a functor, but
-a little bit less than a monad. It also defines ~Alternative~,
-which is similar to ~MonadPlus~
+~Control.Applicative~, which defines a typeclass named
+~Applicative~, which represents an /applicative functor/. Because
+every applicative functor is also a functor they are represented
+as a hierarchy.
 
-As usual, we think that the best way to introduce applicative
-functors is by putting them to work. In theory, every monad is an
-applicative functor, but not every applicative functor is a monad.
-Because applicative functors were added to the standard Haskell
-libraries long after monads, we often don't get an ~Applicative~
-instance for free: frequently, we have to declare the monad we're
-using to be ~Applicative~ or ~Alternative~.
-
-To do this for Parsec, we'll write a small module that we can
-import instead of the normal ~Parsec~ module.
-
-#+CAPTION: ApplicativeParsec.hs
 #+BEGIN_SRC haskell
-module ApplicativeParsec
-    (
-      module Control.Applicative
-    , module Text.ParserCombinators.Parsec
-    ) where
-
-import Control.Applicative
-import Control.Monad (MonadPlus(..), ap)
--- Hide a few names that are provided by Applicative.
-import Text.ParserCombinators.Parsec hiding (many, optional, (<|>))
-
--- The Applicative instance for every Monad looks like this.
-instance Applicative (GenParser s a) where
-    pure  = return
-    (<*>) = ap
-
--- The Alternative instance for every MonadPlus looks like this.
-instance Alternative (GenParser s a) where
-    empty = mzero
-    (<|>) = mplus
+class Functor f => Applicative f where
+  pure :: a -> f a
+  (<*>) :: f (a -> b) -> f a -> f b
 #+END_SRC
 
-For convenience, our module's export section exports all the names
-we imported from both the ~Applicative~ and ~Parsec~ modules.
-Because we hid Parsec's version of ~(<|>)~ when importing, the one
-that will be exported is from ~Control.Applicative~, as we would
-like.
+The ~pure~ function lifts a value into an applicative functor and
+~<*>~ is like ~fmap~ but the function to be applied is in a
+functor so ~<*>~ takes care of applying it.
+
+#+BEGIN_SRC screen
+ghci> :type fmap
+fmap :: Functor f => (a -> b) -> f a -> f b
+ghci> :type (<*>)
+(<*>) :: Applicative f => f (a -> b) -> f a -> f b
+#+END_SRC
+
+As usual, we think that the best way to introduce applicative
+functors is by putting them to work.
 
 ** Applicative parsing by example
 
@@ -844,6 +819,10 @@ sequence. Here's the code in normal ~do~ notation style.
 
 #+CAPTION: FormApp.hs
 #+BEGIN_SRC haskell
+import Control.Monad
+import Numeric
+import Text.ParserCombinators.Parsec
+
 p_hex :: CharParser () Char
 p_hex = do
   char '%'
@@ -853,25 +832,29 @@ p_hex = do
   return . toEnum $ d
 #+END_SRC
 
-And here's our applicative version.
+Because Parsec includes an applicative instance it is easy to
+write our applicative version.
 
 #+CAPTION: FormApp.hs
 #+BEGIN_SRC haskell
+hexify :: Char -> Char -> Char
+hexify a b = toEnum . fst . head .readHex $ [a, b]
+
+a_hex :: Parser Char
 a_hex = hexify <$> (char '%' *> hexDigit) <*> hexDigit
-    where hexify a b = toEnum . fst . head . readHex $ [a,b]
 #+END_SRC
 
 Although the individual parsers are mostly untouched, the
 combinators that we're gluing them together with have changed. The
-only familiar one is ~(<$>)~, which we already know is a synonym
-for ~fmap~.
+familiar ones are ~(<$>)~, which we already know is a synonym for
+~fmap~ and ~(<*>)~ which is plain old ~fmap~ lifted to applicative
+functors so it applies the parser on its left, then the parser
+on its right, and applies the function that's the result of the
+left parse to the value that's the result of the right.
 
-From our definition of ~Applicative~, we know that ~(<*>)~ is
-~ap~.
-
-The remaining unfamiliar combinator is ~(*>)~, which applies its
-first argument, throws away its result, then applies the second
-and returns its result. In other words, it's similar to ~(>>)~.
+The unfamiliar combinator is ~(*>)~, which applies its first
+argument, throws away its result, then applies the second and
+returns its result. In other words, it's similar to ~(>>)~.
 
 #+BEGIN_TIP
 A handy tip about angle brackets
@@ -886,32 +869,19 @@ returns results from both sides; and ~(<*)~, which we have not yet
 seen, returns the result on its left.
 #+END_TIP
 
-Although the concepts here should mostly be familiar from our
-earlier coverage of functors and monads, we'll walk through this
-function to explain what's happening. First, to get a grip on our
-types, we'll hoist ~hexify~ to the top level and give it a
-signature.
-
-#+CAPTION: FormApp.hs
-#+BEGIN_SRC haskell
-hexify :: Char -> Char -> Char
-hexify a b = toEnum . fst . head . readHex $ [a,b]
-#+END_SRC
-
 Parsec's ~hexDigit~ parser parses a single hexadecimal digit.
 
 #+BEGIN_SRC screen
 ghci> :type hexDigit
-hexDigit :: CharParser st Char
+hexDigit :: (Stream s m Char) => ParsecT s u m Char
 #+END_SRC
 
 Therefore, ~char '%' *> hexDigit~ has the same type, since ~(*>)~
-returns the result on its right. (The ~CharParser~ type is nothing
-more than a synonym for ~GenParser Char~.)
+returns the result on its right.
 
 #+BEGIN_SRC screen
 ghci> :type char '%' *> hexDigit
-char '%' *> hexDigit :: GenParser Char st Char
+char '%' *> hexDigit :: (Stream s m Char) => ParsecT s u m Char
 #+END_SRC
 
 The expression ~hexify <$> (char '%' *> hexDigit)~ is a parser
@@ -919,25 +889,13 @@ that matches a “%” character followed by hex digit, and whose
 result is a function.
 
 #+BEGIN_SRC screen
+ghci> :l FormApp.hs
+[1 of 1] Compiling Main             ( FormApp.hs, interpreted )
+Ok, one module loaded.
 ghci> :type hexify <$> (char '%' *> hexDigit)
-hexify <$> (char '%' *> hexDigit) :: GenParser Char st (Char -> Char)
-#+END_SRC
-
-Finally, ~(<*>)~ applies the parser on its left, then the parser
-on its right, and applies the function that's the result of the
-left parse to the value that's the result of the right.
-
-If you've been able to follow this, then you understand the
-~(<*>)~ and ~ap~ combinators: ~(<*>)~ is plain old ~($)~ lifted to
-applicative functors, and ~ap~ the same thing lifted to monads.
-
-#+BEGIN_SRC screen
-ghci> :type ($)
-($) :: (a -> b) -> a -> b
-ghci> :type (<*>)
-(<*>) :: (Applicative f) => f (a -> b) -> f a -> f b
-ghci> :type ap
-ap :: (Monad m) => m (a -> b) -> m a -> m b
+hexify <$> (char '%' *> hexDigit)
+  :: Stream s m Char =>
+     ParsecT s u m (Char -> Char)
 #+END_SRC
 
 Next, we'll consider the ~p_char~ parser.
@@ -993,6 +951,13 @@ array.
 
 #+CAPTION: JSONParsec.hs
 #+BEGIN_SRC haskell
+{-# LANGUAGE FlexibleContexts #-}
+
+import Control.Monad (mzero)
+import JSONClass
+import Numeric
+import Text.ParserCombinators.Parsec
+
 p_text :: CharParser () JValue
 p_text = spaces *> text
      <?> "JSON text"
@@ -1016,8 +981,7 @@ p_series left parser right =
 Here, we finally have a use for the ~(<*)~ combinator that we
 introduced earlier. We use it to skip over any white space that
 might follow certain tokens. With this ~p_series~ function,
-parsing an array
-is simple.
+parsing an array is simple.
 
 #+CAPTION: JSONParsec.hs
 #+BEGIN_SRC haskell
@@ -1086,6 +1050,11 @@ p_number = do s <- getInput
                 _         -> empty
 #+END_SRC
 
+The only piece of functionality that applicative functors are
+missing, compared to monads, is the ability to bind a value to a
+variable, which we need here in order to be able to validate the
+value we're trying to decode.
+
 Our trick here is to take advantage of Haskell's standard number
 parsing library functions, which are defined in the ~Numeric~
 module. The ~readFloat~ function reads an unsigned floating point
@@ -1094,10 +1063,10 @@ turns it into a parser for possibly signed numbers.
 
 Since these functions know nothing about Parsec, we have to work
 with them specially. Parsec's ~getInput~ function gives us direct
-access to Parsec's unconsumed input stream. If ~readSigned
-readFloat~ succeeds, it returns both the parsed number and the
-rest of the unparsed input. We then use ~setInput~ to give this
-back to Parsec as its new unconsumed input stream.
+access to Parsec's unconsumed input stream. If
+~readSigned readFloat~ succeeds, it returns both the parsed number
+and the rest of the unparsed input. We then use ~setInput~ to give
+this back to Parsec as its new unconsumed input stream.
 
 Parsing a string isn't difficult, merely detailed.
 
@@ -1129,20 +1098,6 @@ p_unicode = char 'u' *> (decode <$> count 4 hexDigit)
               where ((code,_):_) = readHex x
 #+END_SRC
 
-The only piece of functionality that applicative functors are
-missing, compared to monads, is the ability to bind a value to a
-variable, which we need here in order to be able to validate the
-value we're trying to decode.
-
-This is the one place in our parser that we've needed to use a
-monadic function. This pattern extends to more complicated
-parsers, too: only infrequently do we need the extra bit of power
-that monads offer.
-
-As we write this book, applicative functors are still quite new to
-Haskell, and people are only beginning to explore the possible
-uses for them beyond the realm of parsing.
-
 ** Parsing a HTTP request
 
 As another example of applicative parsing, we will develop a basic
@@ -1155,12 +1110,11 @@ module HttpRequestParser
       HttpRequest(..)
     , Method(..)
     , p_request
-    , p_query
     ) where
 
-import ApplicativeParsec
 import Numeric (readHex)
 import Control.Monad (liftM4)
+import Text.ParserCombinators.Parsec
 import System.IO (Handle)
 #+END_SRC
 
@@ -1221,7 +1175,9 @@ consume the same initial tokens, so we turn them into a single
 parser.
 
 #+BEGIN_SRC screen
-ghci> let parser = (++) <$> string "HT" <*> (string "TP" <|> string "ML")
+ghci> :set -XFlexibleContexts
+ghci> :m Text.ParserCombinators.Parsec
+ghci> parser = (++) <$> string "HT" <*> (string "TP" <|> string "ML")
 ghci> parseTest parser "HTTP"
 "HTTP"
 ghci> parseTest parser "HTML"
@@ -1295,7 +1251,5 @@ resistant to even the most basic denial of service attacks.
 
 ** Footnotes
 
-[fn:1] For more on monads, refer to [[file:monads.html][Chapter 14, /Monads/]].
-
-[fn:2] For information on dealing with choices that may consume
+[fn:1] For information on dealing with choices that may consume
 some input before failing, see [[file:using-parsec.html#parsec.lookahead][the section called “Lookahead”]].
