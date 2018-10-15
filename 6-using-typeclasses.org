@@ -873,8 +873,6 @@ Haskell's typeclasses offer a tempting solution to this problem.
 #+BEGIN_SRC haskell
 module JSONClass where
 
-import SimpleJSON
-
 type JSONError = String
 
 class JSON a where
@@ -972,8 +970,7 @@ The code above doesn't compile yet.
 
 #+BEGIN_SRC scree
 ghci> :l JSONClass.hs
-[1 of 2] Compiling SimpleJSON       ( SimpleJSON.hs, interpreted )
-[2 of 2] Compiling JSONClass        ( JSONClass.hs, interpreted )
+[1 of 1] Compiling JSONClass        ( JSONClass.hs, interpreted )
 
 JSONClass.hs:22:10: error:
     • Illegal instance declaration for ‘JSON String’
@@ -1444,7 +1441,6 @@ constructor, in order to keep the details of the type abstract.
 Instead, we would define a function to apply the constructor for
 us.
 
-#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
 jary :: [a] -> JAry a
 jary = JAry
@@ -1454,7 +1450,6 @@ We would then export the type constructor, the deconstructor
 function, and our construction function, but not the data
 constructor.
 
-#+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
 module JSONClass
     ( JAry(fromJAry)
@@ -1500,6 +1495,17 @@ data JValue = JString String
             | JObject (JObj JValue)   -- was [(String, JValue)]
             | JArray (JAry JValue)    -- was [JValue]
               deriving (Eq, Ord, Show)
+#+END_SRC
+
+And to the module's header.
+
+#+CAPTION: JSONClass.hs
+#+BEGIN_SRC haskell
+module JSONClass
+    ( JAry(..)
+    , JObj(..)
+    , JValue(..)
+    ) where
 #+END_SRC
 
 This change doesn't affect the instances of the JSON typeclass
