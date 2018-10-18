@@ -2,15 +2,10 @@
 
 ** Introduction
 
-In [[file:io.html][Chapter 7, /I/O/]], we talked about the ~IO~ monad, but we
-intentionally kept the discussion narrowly focused on how to
-communicate with the outside world. We didn't discuss what a monad
-/is/.
-
-We've already seen in [[file:io.html][Chapter 7, /I/O/]] that the ~IO~ monad is easy
-to work with. Notational differences aside, writing code in the
-~IO~ monad isn't much different from coding in any other
-imperative language.
+In [[file:io.html][Chapter 7, /I/O/]] and [[file:parsec.html][Chapter 14, /Using Parsec/]] we talked about
+the ~IO~ and ~GenParser~ monads respectively, but we intentionally
+kept the discussion narrowly focused on how to use them. We didn't
+discuss what a monad /is/.
 
 When we had practical problems to solve in earlier chapters, we
 introduced structures that, as we will soon see, are actually
@@ -145,7 +140,6 @@ them in /less/ detail.
 
 First, let's look at the type definitions.
 
-#+CAPTION: Maybe.hs
 #+BEGIN_SRC haskell
 data Maybe a = Nothing
              | Just a
@@ -167,11 +161,12 @@ Next, we'll examine the chaining functions that we wrote for the
 two types.
 
 #+BEGIN_SRC screen
+ghci> :l Parse.hs
+[1 of 2] Compiling PNM              ( PNM.hs, interpreted )
+[2 of 2] Compiling Parse            ( Parse.hs, interpreted )
+Ok, two modules loaded.
 ghci> :type (>>?)
 (>>?) :: Maybe a -> (a -> Maybe b) -> Maybe b
-#+END_SRC
-
-#+BEGIN_SRC screen
 ghci> :type (==>)
 (==>) :: Parse a -> (a -> Parse b) -> Parse b
 #+END_SRC
@@ -180,7 +175,6 @@ These functions have strikingly similar types. If we were to turn
 those type constructors into a type variable, we'd end up with a
 single more abstract type.
 
-#+CAPTION: Maybe.hs
 #+BEGIN_SRC haskell
 chain :: m a -> (a -> m b) -> m b
 #+END_SRC
@@ -200,7 +194,6 @@ Again, it's not the details or complexity that we're interested
 in, it's the fact that each of these types has an “injector”
 function, which looks like this.
 
-#+CAPTION: Maybe.hs
 #+BEGIN_SRC haskell
 inject :: a -> m a
 #+END_SRC
@@ -238,14 +231,21 @@ types that we want them to have, in a Haskell typeclass. The
 standard ~Prelude~ already defines just such a typeclass, named
 ~Monad~.
 
-#+CAPTION: Maybe.hs
 #+BEGIN_SRC haskell
-class Monad m where
+class Applicative m => Monad m where
     -- chain
-    (>>=)  :: m a -> (a -> m b) -> m b
+    (>>=) :: m a -> (a -> m b) -> m b
     -- inject
     return :: a -> m a
 #+END_SRC
+
+As you can see every monad is also an applicative functor in the
+same way that every functor is an applicative functor. These terms
+as well as their relationship are borrowed from a branch of
+mathematics called category theory which is a source of
+inspiration for a lot of Haskell design since Phillip Wadler, one
+of its authors, suggested in his paper [[https://www.cambridge.org/core/journals/mathematical-structures-in-computer-science/article/div-classtitlecomprehending-monadsa-hreffn01-ref-typefnspan-classsupspanadiv/8678CDA48EB1DF29B9C2C9943AF6BC29][Comprehending monads]] to
+follow Eugenio Moggi's idea of using monads to structure programs.
 
 Here, ~(>>=)~ is our chaining function. We've already been
 introduced to it in [[file:io.html#io.bind][the section called “Sequencing”]]. It's often
@@ -310,7 +310,6 @@ The second non-core ~Monad~ function is ~fail~, which takes an
 error message and does something to make the chain of functions
 fail.
 
-#+CAPTION: Maybe.hs
 #+BEGIN_SRC haskell
     fail :: String -> m a
     fail = error
@@ -338,11 +337,28 @@ is its ~Monad~ instance.
 
 #+CAPTION: Parse.hs
 #+BEGIN_SRC haskell
+instance Functor Parse where
+    fmap = liftM
+
+instance Applicative Parse where
+    pure = identity
+    (<*>) = ap
+
 instance Monad Parse where
-    return = identity
+    return = pure
     (>>=) = (==>)
     fail = bail
 #+END_SRC
+
+We are going to see ~liftM~ in
+[[file:monads.html#monads.liftM][the section called “Mixing pure and monadic code”]] and ~ap~ in
+[[file:programming-with-monads.html#monadcase.ap][the section called “Generalised lifting”]] but you already can see
+they are “aliases” to known functions.
+
+Notice that ~pure~ is defined as our ~identity~ function and
+~return~ is defined as ~pure~. You can actually get rid of the
+~return~ definition and use ~pure~ instead but there's enough code
+in the wild using ~return~ to cover it here.
 
 ** And now, a jargon moment
 
@@ -411,6 +427,8 @@ module Logger
     , runLogger
     , record
     ) where
+
+import Control.Monad (ap)
 #+END_SRC
 
 Hiding the details like this has two benefits: it grants us
@@ -488,7 +506,7 @@ order to be able to use this monad.
 Here is a preview, in ~ghci~, of how our monad will behave.
 
 #+BEGIN_SRC screen
-ghci> let simple = return True :: Logger Bool
+ghci> simple = return True :: Logger Bool
 ghci> runLogger simple
 (True,[])
 #+END_SRC
@@ -530,7 +548,7 @@ type constructor.
 
 #+BEGIN_SRC screen
 ghci> :type (>>=)
-(>>=) :: (Monad m) => m a -> (a -> m b) -> m b
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
 ghci> :type (globToRegex "" >>=)
 (globToRegex "" >>=) :: (String -> Logger b) -> Logger b
 #+END_SRC
@@ -604,7 +622,7 @@ the apparent problem. Let's say we have a trivial piece of code
 that runs in the ~Logger~ monad and returns a string.
 
 #+BEGIN_SRC screen
-ghci> let m = return "foo" :: Logger String
+ghci> m = return "foo" :: Logger String
 #+END_SRC
 
 If we want to find out the length of that string, we can't simply
@@ -613,12 +631,10 @@ call ~length~: the string is wrapped, so the types don't match up.
 #+BEGIN_SRC screen
 ghci> length m
 
-<interactive>:1:7:
-    Couldn't match expected type `[a]'
-           against inferred type `Logger String'
-    In the first argument of `length', namely `m'
-    In the expression: length m
-    In the definition of `it': it = length m
+<interactive>:1:7: error:
+    • No instance for (Foldable Logger) arising from a use of ‘length’
+    • In the expression: length m
+      In an equation for ‘it’: it = length m
 #+END_SRC
 
 What we've done so far to work around this is something like the
@@ -648,7 +664,7 @@ need to know any details of a monad's implementation.
 
 #+CAPTION: Logger.hs
 #+BEGIN_SRC haskell
-liftM :: (Monad m) => (a -> b) -> m a -> m b
+liftM :: Monad m => (a -> b) -> m a -> m b
 liftM f m = m >>= \i ->
             return (f i)
 #+END_SRC
@@ -752,7 +768,7 @@ The definition of our ~Logger~ type is very simple.
 
 #+CAPTION: Logger.hs
 #+BEGIN_SRC haskell
-newtype Logger a = Logger { execLogger :: (a, Log) }
+newtype Logger a = Logger { execLogger :: (a, Log) } deriving Show
 #+END_SRC
 
 It's a pair, where the first element is the result of an action,
@@ -782,12 +798,19 @@ the result slot.
 
 Let's begin our ~Monad~ instance with ~return~, which is trivial:
 it logs nothing, and stores its input in the result slot of the
-tuple.
+tuple so it is equal to ~pure~.
 
 #+CAPTION: Logger.hs
 #+BEGIN_SRC haskell
+instance Functor Logger where
+    fmap = liftM
+
+instance Applicative Logger where
+    pure a = Logger (a, [])
+    (<*>) = ap
+
 instance Monad Logger where
-    return a = Logger (a, [])
+    return = pure
 #+END_SRC
 
 Slightly more interesting is ~(>>=)~, which is the heart of the
@@ -823,9 +846,9 @@ flavours, each with different levels of strictness.
 
 *** The writer monad
 
-Our Logger monad is a specialised version of the standard ~Writer~
-monad, which can be found in the ~Control.Monad.Writer~ module of
-the ~mtl~ package. We will present a ~Writer~ example in
+Our ~Logger~ monad is a specialised version of the standard
+~Writer~ monad, which can be found in the ~Control.Monad.Writer~
+module of the ~mtl~ package. We will present a ~Writer~ example in
 [[file:programming-with-monads.html#monadcase.io.class][the section called “Using typeclasses”]].
 
 ** The Maybe monad
@@ -833,18 +856,23 @@ the ~mtl~ package. We will present a ~Writer~ example in
 The ~Maybe~ type is very nearly the simplest instance of ~Monad~.
 It represents a computation that might not produce a result.
 
-#+CAPTION: Maybe.hs
 #+BEGIN_SRC haskell
+instance Functor Maybe where
+    fmap = liftM
+
+instance Applicative Maybe where
+    pure x = Just x
+
 instance Monad Maybe where
-    Just x >>= k  =  k x
-    Nothing >>= _ =  Nothing
+    Just x >>= k  = k x
+    Nothing >>= _ = Nothing
 
-    Just _ >> k   =  k
-    Nothing >> _  =  Nothing
+    Just _ >> k   = k
+    Nothing >> _  = Nothing
 
-    return x      =  Just x
+    return        = pure
 
-    fail _        =  Nothing
+    fail _        = Nothing
 #+END_SRC
 
 When we chain together a number of computations over ~Maybe~ using
@@ -880,7 +908,7 @@ Since the ~Maybe~ type is so simple, it's about as common to
 simply pattern-match on a ~Maybe~ value as it is to call ~maybe~.
 Each one is more readable in different circumstances.
 
-*** Maybe at work, and good API design
+*** Maybe at work
 
 Here's an example of ~Maybe~ in use as a monad. Given a customer's
 name, we want to find the billing address of their mobile phone
@@ -919,39 +947,7 @@ variation1 person phoneMap carrierMap addressMap =
             Just carrier -> M.lookup carrier addressMap
 #+END_SRC
 
-The ~Data.Map~ module's ~lookup~ function has a monadic return
-type.
-
-#+BEGIN_SRC screen
-ghci> :module +Data.Map
-ghci> :type Data.Map.lookup
-Data.Map.lookup :: (Ord k, Monad m) => k -> Map k a -> m a
-#+END_SRC
-
-In other words, if the given key is present in the map, ~lookup~
-injects it into the monad using ~return~. Otherwise, it calls
-~fail~. This is an interesting piece of API design, though one
-that we think was a poor choice.
-
-- On the positive side, the behaviours of success and failure are
-  automatically customised to our needs, based on the monad we're
-  calling ~lookup~ from. Better yet, ~lookup~ itself doesn't know
-  or care what those behaviours are.
-
-  The ~case~ expressions above typecheck because we're comparing
-  the result of ~lookup~ against values of type ~Maybe~.
-- The hitch is, of course, that using ~fail~ in the wrong monad
-  throws a bothersome exception. We have already warned against
-  the use of ~fail~, so we will not repeat ourselves here.
-
-In practice, /everyone/ uses ~Maybe~ as the result type for
-~lookup~. The result type of such a conceptually simple function
-provides generality where it is not needed: ~lookup~ should have
-been written to return ~Maybe~.
-
-Let's set aside the API question, and deal with the ugliness of
-our code. We can make more sensible use of ~Maybe~'s status as a
-monad.
+We can make more sensible use of ~Maybe~'s status as a monad.
 
 #+CAPTION: Carrier.hs
 #+BEGIN_SRC haskell
@@ -1036,7 +1032,7 @@ as we did with ~return~, we discover that it should have the type
 
 #+BEGIN_SRC screen
 ghci> :type (>>=)
-(>>=) :: (Monad m) => m a -> (a -> m b) -> m b
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
 ghci> :type map
 map :: (a -> b) -> [a] -> [b]
 #+END_SRC
@@ -1046,7 +1042,7 @@ that's easy to fix.
 
 #+BEGIN_SRC screen
 ghci> :type (>>=)
-(>>=) :: (Monad m) => m a -> (a -> m b) -> m b
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
 ghci> :type flip map
 flip map :: [a] -> (a -> b) -> [b]
 #+END_SRC
@@ -1080,15 +1076,17 @@ the form of ~concat~.
 
 #+BEGIN_SRC screen
 ghci> :type concat
-concat :: [[a]] -> [a]
+:: Foldable t => t [a] -> [a]
 #+END_SRC
 
-The types suggest that we should flip the arguments to ~map~,
-then ~concat~ the results to give a single list.
+A list is ~Foldable~, i.e. it supports ~foldr~ so we can
+interpret the type as ~[[a]] -> [a]~. It suggest that we should
+flip the arguments to ~map~, then ~concat~ the results to give a
+single list.
 
 #+BEGIN_SRC screen
 ghci> :type \xs f -> concat (map f xs)
-\xs f -> concat (map f xs) :: [a] -> (a -> [a1]) -> [a1]
+\xs f -> concat (map f xs) :: [a1] -> (a1 -> [a2]) -> [a2]
 #+END_SRC
 
 This is exactly the definition of ~(>>=)~ for lists.
@@ -1370,9 +1368,9 @@ The ~(=<<)~ function shows up frequently whether or not we use
 
 #+BEGIN_SRC screen
 ghci> :type (>>=)
-(>>=) :: (Monad m) => m a -> (a -> m b) -> m b
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
 ghci> :type (=<<)
-(=<<) :: (Monad m) => (a -> m b) -> m a -> m b
+(=<<) :: Monad m => (a -> m b) -> m a -> m b
 #+END_SRC
 
 It comes in handy if we want to compose monadic functions in the
@@ -1538,7 +1536,7 @@ code harder to follow.
 
 In order to define a ~Monad~ instance, we have to provide a proper
 type constructor as well as definitions for ~(>>=)~ and ~return~.
-This leads us to the /real/ definition of ~State~.
+This leads us to the following definition of ~State~.
 
 #+CAPTION: State.hs
 #+BEGIN_SRC haskell
@@ -1590,7 +1588,7 @@ put :: s -> State s ()
 put s = State $ \_ -> ((), s)
 #+END_SRC
 
-*** Using the state monad: generating random values
+*** Using the ~State~ monad: generating random values
 
 We've already used ~Parse~, our precursor to the ~State~ monad, to
 parse binary data. In that case, we wired the type of the state we
@@ -1616,10 +1614,11 @@ standard ~rand~ function that generates a pseudorandom number,
 using a global state that it updates.
 
 Haskell's standard random value generation module is named
-~System.Random~. It allows the generation of random values of any
-type, not just numbers. The module contains several handy
-functions that live in the ~IO~ monad. For example, a rough
-equivalent of C's ~rand~ function would be the following:
+~System.Random~ and is located in the ~random~ package. It allows
+the generation of random values of any type, not just numbers. The
+module contains several handy functions that live in the ~IO~
+monad. For example, a rough equivalent of C's ~rand~ function
+would be the following:
 
 #+CAPTION: Random.hs
 #+BEGIN_SRC haskell
@@ -1674,10 +1673,6 @@ Needless to say, this has unpleasant consequences.
 
 #+BEGIN_SRC screen
 ghci> twoBadRandoms `fmap` getStdGen
-Loading package old-locale-1.0.0.0 ... linking ... done.
-Loading package old-time-1.0.0.0 ... linking ... done.
-Loading package random-1.0.0.0 ... linking ... done.
-Loading package mtl-1.1.0.0 ... linking ... done.
 (945769311181683171,945769311181683171)
 #+END_SRC
 
@@ -1712,6 +1707,7 @@ of state.
 
 #+CAPTION: Random.hs
 #+BEGIN_SRC haskell
+-- import Control.Mand.State at the beginning
 type RandomState a = State StdGen a
 #+END_SRC
 
@@ -1856,44 +1852,11 @@ putCountModify :: Int -> CRState ()
 putCountModify a = modify $ \st -> st { crCount = a }
 #+END_SRC
 
-** Monads and functors
+** Another way of looking at monads
 
-Functors and monads are closely related. The terms are borrowed
-from a branch of mathematics called category theory, but they did
-not make the transition completely unscathed.
-
-In category theory, a monad is built from a functor. You might
-expect that in Haskell, the ~Monad~ typeclass would thus be a
-subclass of ~Functor~, but it isn't defined as such in the
-standard ~Prelude~. This is an unfortunate oversight.
-
-However, authors of Haskell libraries use a workaround: when
-someone defines an instance of ~Monad~ for a type, they almost
-always write a ~Functor~ instance for it, too. You can expect that
-you'll be able to use the ~Functor~ typeclass's ~fmap~ function
-with any monad.
-
-If we compare the type signature of ~fmap~ with those of some of
-the standard monad functions that we've already seen, we get a
-hint as to what ~fmap~ on a monad does.
-
-#+BEGIN_SRC screen
-ghci> :type fmap
-fmap :: (Functor f) => (a -> b) -> f a -> f b
-ghci> :module +Control.Monad
-ghci> :type liftM
-liftM :: (Monad m) => (a1 -> r) -> m a1 -> m r
-#+END_SRC
-
-Sure enough, ~fmap~ lifts a pure function into the monad, just as
-~liftM~ does.
-
-*** Another way of looking at monads
-
-Now that we know about the relationship between functors and
-monads, If we look back at the list monad, we can see something
-interesting. Specifically, take a look at the definition of
-~(>>=)~ for lists.
+Now that we know enough about monads structure we can look back at
+the list monad and see something interesting. Specifically, take a
+look at the definition of ~(>>=)~ for lists.
 
 #+CAPTION: ListMonad.hs
 #+BEGIN_SRC haskell
@@ -1906,7 +1869,6 @@ Recall that ~f~ has type ~a -> [a]~. When we call ~map f xs~, we
 get back a value of type ~[[a]]~, which we have to “flatten” using
 ~concat~.
 
-Consider what we could do if ~Monad~ was a subclass of ~Functor~.
 Since ~fmap~ for lists is defined to be ~map~, we could replace
 ~map~ with ~fmap~ in the definition of ~(>>=)~. This is not very
 interesting by itself, but suppose we could go further.
@@ -1923,13 +1885,12 @@ completely generic. Here's what an alternative definition of the
 ~Monad~ typeclass might look like, along with a definition of
 ~(>>=)~.
 
-#+CAPTION: AltMonad.hs
 #+BEGIN_SRC haskell
 import Prelude hiding ((>>=), return)
 
-class Functor m => AltMonad m where
+class Applicative m => AltMonad m where
     join :: m (m a) -> m a
-    return :: a -> m a
+    return :: a -> m a -- Or simply pure
 
 (>>=) :: AltMonad m => m a -> (a -> m b) -> m b
 xs >>= f = join (fmap f xs)
@@ -1943,7 +1904,6 @@ Removing a layer of monadic wrapping can, in fact, be useful in
 realistic circumstances. We can find a generic definition of
 ~join~ in the ~Control.Monad~ module.
 
-#+CAPTION: MonadJoin.hs
 #+BEGIN_SRC haskell
 join :: Monad m => m (m a) -> m a
 join x = x >>= id
