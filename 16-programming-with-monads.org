@@ -33,10 +33,11 @@ thus represent the above string as the following Haskell value.
  ("occupation", Just "Khan")]
 #+END_SRC
 
-In [[file:using-parsec.html#applicative.urlencoded][the section called “Parsing an URL-encoded query string”]], we'll
-parse an ~application/x-www-form-urlencoded~ string, and represent
-the result as an alist of ~[(String, Maybe String)]~. Let's say we
-want to use one of these alists to fill out a data structure.
+In [[file:using-parsec.html#applicative.urlencoded][the section called “Parsing an URL-encoded query string”]], we
+parsed an ~application/x-www-form-urlencoded~ string, and
+represented the result as an alist of ~[(String, Maybe String)]~.
+Let's say we want to use one of these alists to fill out a data
+structure.
 
 #+CAPTION: MovieReview.hs
 #+BEGIN_SRC haskell
@@ -159,19 +160,19 @@ We can chain applications of ~ap~ like this as many times as we
 need to, thereby bypassing the ~liftM~ family of functions.
 
 Another helpful way to look at ~ap~ is that it's the monadic
-equivalent of the familiar ~($)~ operator: think of pronouncing
+equivalent of the familiar ~(<*>)~ operator: think of pronouncing
 ~ap~ as /apply/. We can see this clearly when we compare the type
 signatures of the two functions.
 
 #+BEGIN_SRC screen
-ghci> :type ($)
-($) :: (a -> b) -> a -> b
+ghci> :type (<*>)
+(<*>) :: Applicative f => f (a -> b) -> f a -> f b
 ghci> :type ap
 ap :: Monad m => m (a -> b) -> m a -> m b
 #+END_SRC
 
-In fact, ~ap~ is usually defined as either ~liftM2 id~ or
-~liftM2 ($)~.
+And that's why, as we saw in [[file:monads.html][Chapter 15, /Monads/]], they are
+synonyms.
 
 ** Looking for alternatives
 
