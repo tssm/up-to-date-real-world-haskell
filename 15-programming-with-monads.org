@@ -825,27 +825,6 @@ module SupplyClass
     ) where
 #+END_SRC
 
-The ~FlexibleInstances~ extension is necessary so that the
-compiler will accept our instance declaration. This extension
-relaxes the normal rules for writing instances in some
-circumstances, in a way that still lets the compiler's type
-checker guarantee that it will terminate. Our need for
-~FlexibleInstances~ here is caused by our use of functional
-dependencies, but the details are unfortunately beyond the scope
-of this book.
-
-#+BEGIN_TIP
-How to know when a language extension is needed
-
-If GHC cannot compile a piece of code because it would require
-some language extension to be enabled, it will tell us which
-extension we should use. For example, if it decides that our code
-needs flexible instance support, it will suggest that we try
-compiling with the ~-XFlexibleInstances~ option. A ~-X~ option has
-the same effect as a ~LANGUAGE~ directive: it enables a particular
-extension.
-#+END_TIP
-
 Notice that we're re-exporting the ~runSupply~ and ~Supply~ names
 from this module. It's perfectly legal to export a name from one
 module even though it's defined in another. In our case, it means

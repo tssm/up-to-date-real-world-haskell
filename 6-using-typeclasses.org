@@ -964,6 +964,19 @@ which tells it to enable a language extension. The
 legal. We'll encounter a few other language extensions in this
 chapter, and a handful more later in this book.
 
+#+BEGIN_TIP
+How to know when a language extension is needed
+
+If GHC cannot compile a piece of code because it would require
+some language extension to be enabled, it will tell us which
+extension we should use. For example, if it decides that our code
+needs type synonym support, it will suggest that we try compiling
+with the ~TypeSynonymInstances~ extension. An extension can be
+enabled using the ~LANGUAGE~ directive in the source file or with
+the ~-X~ option in the command line, for example:
+~-XTypeSynonymInstances~.
+#+END_TIP
+
 ** Flexible instances
 
 The code above doesn't compile yet.
@@ -990,9 +1003,9 @@ type optionally followed by a type variable (~[a]~ for example,
 where ~[]~ is the type and ~a~ is the type variable) but we are
 providing a type inside another type (remember that ~String~ is an
 alias for ~[Char]~). We can remove this restriction by adding the
-~{-# LANGUAGE FlexibleInstances #-}~ directive at the begining of
+~{-# LANGUAGE FlexibleInstances #-}~ directive at the beginning of
 the file. (We can even drop the ~TypeSynonymInstances~ directive
-in this case).
+because it is implied by ~FlexibleInstances~.
 
 ** Living in an open world
 
