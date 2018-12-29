@@ -4,3 +4,37 @@ building small programs. Sadly the language and libraries have
 changed enough to make several of the examples useless so I am
 making them working again. After I finish I pretend to make the
 changes listed as /enhancements/ in the issue tracker.
+
+* Progress
+
+1. DONE [[file:0-why-haskell.org][Introduction]]
+2. DONE [[file:1-getting-started.org][Getting started]]
+3. DONE [[file:2-types-and-functions.org][Types and functions]]
+4. DONE [[file:3-defining-types-streamlining-functions.org][Defining Types, Streamlining Functions]]
+5. DONE [[file:4-functional-programming.org][Functional programming]]
+6. DONE [[file:5-writing-a-library.org][Writing a library]]
+7. DONE [[file:6-using-typeclasses.org][Using type classes]]
+8. DONE [[file:7-io.org][I/O]]
+9. DONE [[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org][Effiient file processing]]
+10. DONE [[file:9-a-library-for-searching-the-file-system.org][A library for searching the file system]]
+11. DONE [[file:10-parsing-a-binary-data-format.org][Parsing a binary data format]]
+12. DONE [[file:11-testing-and-quality-assurance.org][Testing and quality assurance]]
+13. DONE [[file:12-barcode-recognition.org][Barcode recognition]]
+14. DONE [[file:13-data-structures.org][Data structures]]
+15. DONE [[file:14-using-parsec.org][Using Parsec]]
+16. DONE [[file:15-monads.org][Monads]]
+17. DONE [[file:16-programming-with-monads.org][Programming with monads]]
+18. TODO [[file:17-interfacing-with-c.org][Interfacing with C]]
+19. STARTED [[file:18-monad-transformers.org][Monad transformers]]
+20. STARTED [[file:19-error-handling.org][Error handling]]
+21. TODO [[file:20-systems-programming-in-haskell.org][Systems programming]]
+22. TODO [[file:21-using-databases.org][Using databases]]
+23. TODO [[file:22-web-client-programming.org][Web client programming]]
+24. TODO [[file:23-gui-programming-with-gtk2hs.org][GUI programming with gtk2hs]]
+25. TODO [[file:24-concurrent-and-multicore-programming.org][Concurrent and multicore programming]]
+26. TODO [[file:25-profiling-and-optimization.org][Profiling and optimization]]
+27. TODO [[file:26-building-a-bloom-filter.org][Building a Bloom filter]]
+28. TODO [[file:27-sockets-and-syslog.org][Sockets and syslog]]
+28. TODO [[file:28-software-transactional-memory.org][Software transactional memory]]
+29. TODO [[file:appendix-characters-strings-and-escaping-rules.org][Appendix: Characters, strings and scaping rules]]
+30. TODO [[file:bibliography.org][Bibliography]]
