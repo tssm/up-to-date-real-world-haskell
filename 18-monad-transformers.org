@@ -36,8 +36,8 @@ standalone entity: instead, it modifies the behaviour of an
 underlying monad. Most of the monads in the ~mtl~ library have
 transformer equivalents. By convention, the transformer version of
 a monad has the same name, with a /T/ stuck on the end. For
-example, the transformer equivalent of State is ~StateT~; it adds
-mutable state to an underlying monad. The ~WriterT~ monad
+example, the transformer equivalent of ~State~ is ~StateT~; it
+adds mutable state to an underlying monad. The ~WriterT~ monad
 transformer makes it possible to write data when stacked on top of
 another monad.
 
@@ -89,8 +89,8 @@ writer monad that records a list of directory names and sizes.
 
 The ~WriterT~ transformer has a similar structure, but it adds
 another type parameter ~m~: this is the underlying monad whose
-behaviour we are augmenting. The full signature of
-~WriterT is WriterT w m a~.
+behaviour we are augmenting. The full signature of ~WriterT~ is
+~WriterT w m a~.
 
 Because we need to traverse directories, which requires access to
 the ~IO~ monad, we'll stack our writer on top of the ~IO~ monad.
@@ -133,7 +133,7 @@ ghci> :type execWriterT
 execWriterT :: (Monad m) => WriterT w m a -> m w
 #+END_SRC
 
-These functions execute the action, then remove the WriterT
+These functions execute the action, then remove the ~WriterT~
 wrapper and give a result that is wrapped in the underlying monad.
 The ~runWriterT~ function gives both the result of the action and
 whatever was recorded as it ran, while ~execWriterT~ throws away
