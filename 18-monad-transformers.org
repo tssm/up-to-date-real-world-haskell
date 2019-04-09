@@ -127,6 +127,7 @@ To run our code, we must use one of ~WriterT~'s execution
 functions.
 
 #+BEGIN_SRC screen
+ghci> :m Control.Monad.Writer
 ghci> :type runWriterT
 runWriterT :: WriterT w m a -> m (a, w)
 ghci> :type execWriterT
@@ -141,6 +142,9 @@ the result and just gives us what was recorded.
 
 #+BEGIN_SRC screen
 ghci> :l CountEntriesT.hs
+[1 of 2] Compiling CountEntries     ( CountEntries.hs, interpreted )
+[2 of 2] Compiling CountEntriesT    ( CountEntriesT.hs, interpreted )
+Ok, two modules loaded.
 ghci> :type countEntries ".."
 countEntries ".." :: WriterT [(FilePath, Int)] IO ()
 ghci> :type execWriterT (countEntries "..")
@@ -186,6 +190,8 @@ concrete, here is a simple example.
 
 #+CAPTION: LocalReader.hs
 #+BEGIN_SRC haskell
+{-# LANGUAGE FlexibleContexts #-}
+
 import Control.Monad.Reader
 
 myName step = do
@@ -204,8 +210,10 @@ If we execute the ~localExample~ action in ~ghci~, we can see that
 the effect of modifying the environment is confined to one place.
 
 #+BEGIN_SRC screen
+ghci> :l LocalReader.hs
+[1 of 1] Compiling Main             ( LocalReader.hs, interpreted )
+Ok, one module loaded.
 ghci> runReader localExample "Fred"
-Loading package mtl-1.1.0.0 ... linking ... done.
 ("First, I am Fred","Second, I am Freddy","Third, I am Fred")
 #+END_SRC
 
@@ -376,6 +384,13 @@ between the implementation of our custom monad and its interface.
 
 #+CAPTION: UglyStack.hs
 #+BEGIN_SRC haskell
+instance Functor MyApp where
+    fmap = liftM
+
+instance Applicative MyApp where
+    pure = return
+    (<*>) = ap
+
 newtype MyApp a = MyA {
       runA :: ReaderT AppConfig (StateT AppState IO) a
     } deriving (Monad, MonadIO, MonadReader AppConfig,
@@ -470,8 +485,10 @@ typeclass defines a useful function named ~lift~.
 #+BEGIN_SRC screen
 ghci> :m +Control.Monad.Trans
 ghci> :info MonadTrans
-class MonadTrans t where lift :: (Monad m) => m a -> t m a
-  	-- Defined in Control.Monad.Trans
+class MonadTrans (t :: (* -> *) -> * -> *) where
+  lift :: Monad m => m a -> t m a
+  {-# MINIMAL lift #-}
+        -- Defined in ‘Control.Monad.Trans.Class’
 #+END_SRC
 
 This function takes a monadic action from one layer down the
@@ -526,6 +543,9 @@ at multiple levels.
 
 #+CAPTION: StackStack.hs
 #+BEGIN_SRC haskell
+import Control.Monad.Reader
+import Control.Monad.State
+
 type Foo = StateT Int (State String)
 #+END_SRC
 
@@ -584,6 +604,12 @@ make it a distinct type, via a ~newtype~ declaration.
 
 #+CAPTION: MaybeT.hs
 #+BEGIN_SRC haskell
+module MaybeT where
+
+import Control.Monad
+import Control.Monad.State
+import Control.Monad.Trans
+
 newtype MaybeT m a = MaybeT {
       runMaybeT :: m (Maybe a)
     }
@@ -650,8 +676,14 @@ returnMT a = MaybeT $ return (Just a)
 failMT :: (Monad m) => t -> MaybeT m a
 failMT _ = MaybeT $ return Nothing
 
+instance (Monad m) => Functor (MaybeT m) where
+    fmap = liftM
+
+instance (Monad m) => Applicative (MaybeT m) where
+    pure = returnMT
+    (<*>) = ap
+
 instance (Monad m) => Monad (MaybeT m) where
-  return = returnMT
   (>>=) = bindMT
   fail = failMT
 #+END_SRC
@@ -740,6 +772,13 @@ data ParseState = ParseState {
     , offset :: Int64
     } deriving (Show)
 
+instance Functor Parse where
+    fmap = liftM
+
+instance Applicative Parse where
+    pure = return
+    (<*>) = ap
+
 newtype Parse a = P {
       runP :: MaybeT (State ParseState) a
     } deriving (Monad, MonadState ParseState)
@@ -823,7 +862,6 @@ Let's try the alternatives in ~ghci~.
 
 #+BEGIN_SRC screen
 ghci> runWriterT a
-Loading package mtl-1.1.0.0 ... linking ... done.
 Nothing
 ghci> runWriter $ runMaybeT b
 (Nothing,["this is where i fail"])
@@ -833,6 +871,8 @@ This difference in results should not come as a surprise: just
 look at the signatures of the execution functions.
 
 #+BEGIN_SRC screen
+ghci> :l MTComposition.hs
+ghci> :m +Control.Monad.Writer
 ghci> :t runWriterT
 runWriterT :: WriterT w m a -> m (a, w)
 ghci> :t runWriter . runMaybeT
@@ -864,11 +904,10 @@ counterparts, simply to tack on a placeholder parameter ~m~ for
 some monadic type constructor.
 
 #+BEGIN_SRC screen
-ghci> :t filter
-filter :: (a -> Bool) -> [a] -> [a]
-ghci> :i filterM
-filterM :: (Monad m) => (a -> m Bool) -> [a] -> m [a]
-    -- Defined in Control.Monad
+ghci> :t foldl
+foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
+ghci> :t foldM
+foldM :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m b
 #+END_SRC
 
 However, the coverage is incomplete: the standard libraries don't
