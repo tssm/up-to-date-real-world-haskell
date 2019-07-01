@@ -1353,15 +1353,15 @@ badWhere =           -- legal, but ugly and hard to read
 
 ** Exercises
 
+1. Port the code from this chapter to your platform's native API,
+   either ~System.Posix~ or ~System.Win32~.
+2. Add the ability to find out who owns a directory entry to your
+   code. Make this information available to predicates.
+
+** Footnotes
+
 Although the file finding code we described in this chapter is a
 good vehicle for learning, it's not ideal for real systems
 programming tasks, because Haskell's portable I/O libraries don't
 expose enough information to let us write interesting and
 complicated queries.
-
-** Footnotes
-
-1. Port the code from this chapter to your platform's native API,
-   either ~System.Posix~ or ~System.Win32~.
-2. Add the ability to find out who owns a directory entry to your
-   code. Make this information available to predicates.
