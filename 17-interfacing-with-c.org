@@ -446,13 +446,13 @@ the ~#const~ keyword:
 
 #+CAPTION: Regex-hsc-const.hs
 #+BEGIN_SRC haskell
-caseless
+caseless       :: PCREOption
 caseless       = PCREOption #const PCRE_CASELESS
 
 dollar_endonly :: PCREOption
 dollar_endonly = PCREOption #const PCRE_DOLLAR_ENDONLY
 
-dotall
+dotall         :: PCREOption
 dotall         = PCREOption #const PCRE_DOTALL
 #+END_SRC
 
