@@ -553,11 +553,11 @@ removed for brevity):
 
 #+CAPTION: Regex.hs
 #+BEGIN_SRC haskell
-caseless
+caseless              :: PCREOption
 caseless              = PCREOption 1
-dollar_endonly
+dollar_endonly        :: PCREOption
 dollar_endonly        = PCREOption 32
-dotall
+dotall                :: PCREOption
 dotall                = PCREOption 4
 #+END_SRC
 
