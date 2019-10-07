@@ -475,7 +475,7 @@ variables have been expanded, yielding valid Haskell code:
 
 #+CAPTION: Regex-hsc-const-generated.hs
 #+BEGIN_SRC haskell
-caseless
+caseless       :: PCREOption
 caseless       = PCREOption 1
 {-# LINE 21 "Regex.hsc" #-}
 
@@ -483,7 +483,7 @@ dollar_endonly :: PCREOption
 dollar_endonly = PCREOption 32
 {-# LINE 24 "Regex.hsc" #-}
 
-dotall
+dotall         :: PCREOption
 dotall         = PCREOption 4
 {-# LINE 27 "Regex.hsc" #-}
 #+END_SRC
