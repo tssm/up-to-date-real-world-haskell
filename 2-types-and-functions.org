@@ -98,7 +98,7 @@ expressions as valid than a stronger type system.
 
 For example, in Perl, the expression ~"foo" + 2~ evaluates to the
 number 2, but the expression ~"13foo" + 2~ evaluates to the number
-15. Haskell rejects both expressions as invalid, because the ~(+)~
+~15~. Haskell rejects both expressions as invalid, because the ~(+)~
 operator requires both of its operands to be numeric. Because
 Perl's type system is more permissive than Haskell's, we say that
 it is weaker under this narrow technical interpretation.
