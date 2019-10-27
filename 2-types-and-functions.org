@@ -7,8 +7,8 @@ example, the value ~True~ has the type ~Bool~, while the value
 ~"foo"~ has the type String. The type of a value indicates that it
 shares certain properties with other values of the same type. For
 example, we can add numbers, and we can concatenate lists; these
-are properties of those types. We say an expression “has type
-~X~”, or “is of type ~X~”.
+are properties of those types. We say an expression "has type
+~X~", or "is of type ~X~".
 
 Before we launch into a deeper discussion of Haskell's type
 system, let's talk about why we should care about types at all:
