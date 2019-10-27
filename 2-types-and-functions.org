@@ -364,7 +364,7 @@ ghci> tail [True,False]
 ghci> tail "list"
 "ist"
 ghci> tail []
-*** Exception: Prelude.tail: empty list
+,*** Exception: Prelude.tail: empty list
 #+END_SRC
 
 As you can see, we can apply ~head~ and ~tail~ to lists of
