@@ -341,7 +341,7 @@ common composite data types in Haskell are lists and tuples.
 We've already seen the list type mentioned in
 [[file:getting-started.html#starting.string][the section called “Strings and characters”]], where we found that
 Haskell represents a text string as a list of ~Char~ values, and
-that the type “list of ~Char~” is written ~[Char]~.
+that the type "list of ~Char~" is written ~[Char]~.
 
 The ~head~ function returns the first element of a list.
 
