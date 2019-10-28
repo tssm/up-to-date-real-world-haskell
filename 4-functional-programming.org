@@ -84,7 +84,7 @@ world, such as reading or writing a file. The ~<-~ operator is the
 equivalent of assignment inside a ~do~ block. This is enough
 explanation to get us started. We will talk in much more detail
 about these details of notation, and I/O in general, in
-[[file:io.html][Chapter 7, /I/O/]].
+[[file:7-io.org][Chapter 7, /I/O/]].
 
 When we want to test a function that cannot talk to the outside
 world, we simply replace the name ~id~ in the code above with the

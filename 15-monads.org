@@ -2,7 +2,7 @@
 
 ** Introduction
 
-In [[file:io.html][Chapter 7, /I/O/]] and [[file:parsec.html][Chapter 14, /Using Parsec/]] we talked about
+In [[file:7-io.org][Chapter 7, /I/O/]] and [[file:parsec.html][Chapter 14, /Using Parsec/]] we talked about
 the ~IO~ and ~GenParser~ monads respectively, but we intentionally
 kept the discussion narrowly focused on how to use them. We didn't
 discuss what a monad /is/.

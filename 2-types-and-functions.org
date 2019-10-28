@@ -1438,7 +1438,7 @@ information to help it to make a choice in understanding our code.
 [[file:types-and-functions.html#funcstypes.polymorphism][the section called “Polymorphism in Haskell”]].
 
 [fn:4] The environment in which ~ghci~ operates is called the IO
-monad. In [[file:io.html][Chapter 7, /I/O/]], we will cover the IO
+monad. In [[file:7-io.org][Chapter 7, /I/O/]], we will cover the IO
 monad in depth, and the seemingly arbitrary restrictions that
 ~ghci~ places on us will make more sense.
 
