@@ -1116,7 +1116,7 @@ in Haskell is called /actions/. Actions resemble functions. They
 do nothing when they are defined, but perform some task when they
 are invoked. I/O actions are defined within the IO monad. Monads
 are a powerful way of chaining functions together purely and are
-covered in [[file:monads.html][Chapter 14, /Monads/]]. It's not necessary to understand
+covered in [[file:15-monads.org][Chapter 14, /Monads/]]. It's not necessary to understand
 monads in order to understand I/O. Just understand that the result
 type of actions is "tagged" with IO. Let's take a look at some
 types:

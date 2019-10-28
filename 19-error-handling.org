@@ -227,7 +227,7 @@ Back in [[file:error-handling.html#errors.maybe][the section called “Use of Ma
 program named ~divby2.hs~. This example didn't preserve laziness,
 but returned a value of type ~Maybe [a]~. The exact same algorithm
 could be expressed using a monadic style. For more information and
-important background on monads, please refer to [[file:monads.html][Chapter 14, /Monads/]].
+important background on monads, please refer to [[file:15-monads.org][Chapter 14, /Monads/]].
 Here's our new monadic-style algorithm:
 
 #+CAPTION: divby4.hs

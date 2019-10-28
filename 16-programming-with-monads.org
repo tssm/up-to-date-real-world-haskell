@@ -171,7 +171,7 @@ ghci> :type ap
 ap :: Monad m => m (a -> b) -> m a -> m b
 #+END_SRC
 
-And that's why, as we saw in [[file:monads.html][Chapter 15, /Monads/]], they are
+And that's why, as we saw in [[file:15-monads.org][Chapter 15, /Monads/]], they are
 synonyms.
 
 ** Looking for alternatives
