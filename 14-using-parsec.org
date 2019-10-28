@@ -58,7 +58,7 @@ line =
        eol                       -- end of line
        return result
 
--- Build up a list of cells.  Try to parse the first cell, then figure out 
+-- Build up a list of cells.  Try to parse the first cell, then figure out
 -- what ends the cell.
 cells :: GenParser Char st [String]
 cells =
@@ -658,7 +658,7 @@ instance MonadPlus (GenParser tok st) where
 ** Parsing an URL-encoded query string
 
 When we introduced ~application/x-www-form-urlencoded~ text in
-[[file:programming-with-monads.html#monadcase.urlencoded][the section called “Golfing practice: association lists”]], we
+[[file:16-programming-with-monads.org::*Golfing%20practice:%20association%20lists][the section called "Golfing practice: association lists"]], we
 mentioned that we'd write a parser for these strings. We can
 quickly and easily do this using Parsec.
 
