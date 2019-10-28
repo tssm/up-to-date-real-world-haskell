@@ -14,7 +14,7 @@ Because databases are so important, Haskell support for them is
 important as well. In this chapter, we will introduce you to one
 of the Haskell frameworks for working with databases. We will also
 use this framework to begin building a podcast downloader, which
-we will further develop in [[file:extended-example-web-client-programming.html][Chapter 22, /Extended Example: Web Client Programming/]].
+we will further develop in [[file:22-web-client-programming.org][Chapter 22, /Extended Example: Web Client Programming/]].
 
 ** Overview of HDBC
 
@@ -610,7 +610,7 @@ every un-caught ~SqlError~ will be printed in a helpful manner.
 There are also ~catchSql~ and ~handleSql~—similar to the standard
 ~catch~ and ~handle~ functions. ~catchSql~ and ~handleSql~ will
 intercept only HDBC errors. For more information on error
-handling, refer to [[file:error-handling.html][Chapter 19, /Error handling/]].
+handling, refer to [[file:19-error-handling.org][Chapter 19, /Error handling/]].
 
 ** Footnotes
 

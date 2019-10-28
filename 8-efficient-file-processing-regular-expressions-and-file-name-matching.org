@@ -1072,7 +1072,7 @@ empty list if we catch an exception.
 
 We won't have anything more to say about exception handling here.
 There's plenty more to cover, though, so we'll be returning to the
-subject of exceptions in chapter [[file:error-handling.html][Chapter 19, /Error handling/]].
+subject of exceptions in chapter [[file:19-error-handling.org][Chapter 19, /Error handling/]].
 
 *** Exercises
 

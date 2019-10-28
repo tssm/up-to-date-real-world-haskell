@@ -2620,7 +2620,7 @@ leaks around; or introduce new leaks.
 
 The best guides to whether ~seq~ is necessary, and how well it is
 working, are performance measurement and profiling, which we will
-cover in [[file:profiling-and-optimization.html][Chapter 25, /Profiling and optimization/]]. From a base of
+cover in [[file:25-profiling-and-optimization.org][Chapter 25, /Profiling and optimization/]]. From a base of
 empirical measurement, you will develop a reliable sense of when
 ~seq~ is most useful.
 

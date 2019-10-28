@@ -794,7 +794,7 @@ and ~Data.Typeable~. We will not go into a great level of detail
 on those modules here, but will give you the tools you need to
 craft and use your own dynamic exception type.
 
-In [[file:using-databases.html][Chapter 21, /Using Databases/]], you will see that the HDBC database
+In [[file:21-using-databases.org][Chapter 21, /Using Databases/]], you will see that the HDBC database
 library uses dynamic exceptions to indicate errors from SQL
 databases back to applications. Errors from database engines often
 have three components: an integer that represents an error code, a

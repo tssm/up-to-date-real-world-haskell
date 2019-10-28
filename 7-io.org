@@ -545,7 +545,7 @@ file already exists, it is removed before the rename takes place.
 Like many other functions that take a filename, if the "old" name
 doesn't exist, ~renameFile~ will raise an exception. More
 information on exception handling can be found in
-[[file:error-handling.html][Chapter 19, /Error handling/]].
+[[file:19-error-handling.org][Chapter 19, /Error handling/]].
 
 There are many other functions in ~System.Directory~ for doing
 things such as creating and removing directories, finding lists of
@@ -687,7 +687,7 @@ There is some exception handling going on to make the program more
 robust in the face of errors. You normally want the temporary
 files to be deleted after processing completes, even if something
 went wrong. So we make sure that happens. For more on exception
-handling, see [[file:error-handling.html][Chapter 19, /Error handling/]].
+handling, see [[file:19-error-handling.org][Chapter 19, /Error handling/]].
 
 Let's return to the start of the program. ~main~ is defined simply
 as ~withTempFile "mytemp.txt" myAction~. ~myAction~, then, will be

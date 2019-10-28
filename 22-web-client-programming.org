@@ -98,7 +98,7 @@ database on disk. Also, the first time the user runs the program,
 we'll need to create the database tables that we'll use to store
 our data.
 
-We'll use HDBC (see [[file:using-databases.html][Chapter 21, /Using Databases/]])
+We'll use HDBC (see [[file:21-using-databases.org][Chapter 21, /Using Databases/]])
 to interact with a Sqlite database. Sqlite is lightweight and
 self-contained, which makes it perfect for this project. For
 information on installing HDBC and Sqlite, consult

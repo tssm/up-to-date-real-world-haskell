@@ -2,7 +2,7 @@
 
 ** Introduction
 
-In [[file:7-io.org][Chapter 7, /I/O/]] and [[file:parsec.html][Chapter 14, /Using Parsec/]] we talked about
+In [[file:7-io.org][Chapter 7, /I/O/]] and [[file:14-using-parsec.org][Chapter 14, Using Parsec]] we talked about
 the ~IO~ and ~GenParser~ monads respectively, but we intentionally
 kept the discussion narrowly focused on how to use them. We didn't
 discuss what a monad /is/.
@@ -18,7 +18,7 @@ in this chapter, to show how easy it is.
 *** Maybe chaining
 
 Let's take another look at the ~parseP5~ function that we wrote
-in [[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]].
+in [[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]].
 
 #+CAPTION: PNM.hs
 #+BEGIN_SRC haskell
@@ -332,7 +332,7 @@ might be dangerous in its new context.
 #+END_WARNING
 
 To revisit the parser that we developed in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]], here
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]], here
 is its ~Monad~ instance.
 
 #+CAPTION: Parse.hs
@@ -1384,7 +1384,7 @@ wordCount = print . length . words =<< getContents
 ** The state monad
 
 We discovered earlier in this chapter that the ~Parse~ from
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]] was a
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]] was a
 monad. It has two logically distinct aspects. One is the idea of a
 parse failing, and providing a message with the details: we
 represented this using the ~Either~ type. The other involves

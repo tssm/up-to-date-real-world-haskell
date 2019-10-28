@@ -119,7 +119,7 @@ Tip
 
 For a more detailed discussion of filtering the results of
 ~getDirectoryContents~, refer to
-[[file:efficient-file-processing-regular-expressions-and-file-name-matching.html][Chapter 8, /Efficient file processing, regular expressions, and file name matching/]].
+[[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org][Chapter 8, /Efficient file processing, regular expressions, and file name matching/]].
 
 Is the ~filter (`notElem` [".", ".."])~ part confusing? That
 could got also be written as

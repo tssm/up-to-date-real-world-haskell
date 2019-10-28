@@ -1146,7 +1146,7 @@ those into common functions. Along the way, we introduced the
 notion of a functor, which offers a generalised way to map over a
 parameterised type.
 
-We will revisit parsing in [[file:using-parsec.html][Chapter 16, /Using Parsec/]], to discuss
+We will revisit parsing in [[file:14-using-parsec.org][Chapter 16, /Using Parsec/]], to discuss
 Parsec, a widely used and flexible parsing library. And in
 [[file:15-monads.org][Chapter 14, Monads]], we will return to our theme of abstraction,
 where we will find that much of the code that we have developed in

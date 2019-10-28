@@ -953,7 +953,7 @@ monad's plumbing, intermediate functions that don't care about the
 configuration information don't need to see it.
 
 The clearest motivation for the ~Reader~ monad will come in
-[[file:monad-transformers.html][Chapter 18, /Monad transformers/]], when we discuss combining
+[[file:18-monad-transformers.org][Chapter 18, /Monad transformers/]], when we discuss combining
 several monads to build a new monad. There, we'll see how to gain
 finer control over state, so that our code can modify some values
 via the ~State~ monad, while other values remain immutable,
@@ -1079,7 +1079,7 @@ While the separation of interface and implementation that we've
 discussed above is appealing for its architectural cleanliness, it
 has important practical applications that will become clearer
 later. When we start combining monads in
-[[file:monad-transformers.html][Chapter 18, /Monad transformers/]], we will save a lot of effort
+[[file:18-monad-transformers.org][Chapter 18, /Monad transformers/]], we will save a lot of effort
 through the use of ~GeneralizedNewtypeDeriving~ and typeclasses.
 
 ** Hiding the ~IO~ monad

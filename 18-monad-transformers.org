@@ -8,7 +8,7 @@ thing. In real code, we often need to be able to use several
 effects at once.
 
 Recall the ~Parse~ type that we developed in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]], for
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]], for
 instance. When we introduced monads, we mentioned that this type
 was a state monad in disguise. Our monad is more complex than the
 standard ~State~ monad, because it uses the ~Either~ type to allow

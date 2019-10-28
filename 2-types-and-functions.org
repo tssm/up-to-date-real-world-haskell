@@ -142,7 +142,7 @@ useful kinds of code. In languages like Python, “duck typing” is
 common, where an object acts enough like another to be used as a
 substitute for it[fn:1]. Fortunately, Haskell's system of
 /typeclasses/, which we will cover in
-[[file:using-typeclasses.html][Chapter 6, /Using Typeclasses/]], provides almost all of the
+[[file:6-using-typeclasses.org][Chapter 6, /Using Typeclasses/]], provides almost all of the
 benefits of dynamic typing, in a safe and convenient form. Haskell
 has some support for programming with truly dynamic types, though
 it is not quite as easy as in a language that wholeheartedly
@@ -416,7 +416,7 @@ Haskell by traversing a list, either by recursing or using a
 function that recurses for us. Lists are the easiest stepping
 stone into the idea that we can use data to structure our program
 and its control flow. We'll be spending a lot more time discussing
-lists in [[file:functional-programming.html][Chapter 4, /Functional programming/]].
+lists in [[file:4-functional-programming.org][Chapter 4, /Functional programming/]].
 #+END_NOTE
 
 A tuple is a fixed-size collection of values, where each value can
@@ -1277,7 +1277,7 @@ point numbers. Haskell deliberately avoids even this kind of
 simple automatic coercion.
 
 This is not the whole story of polymorphism in Haskell: we'll
-return to the subject in [[file:using-typeclasses.html][Chapter 6, /Using Typeclasses/]].
+return to the subject in [[file:6-using-typeclasses.org][Chapter 6, /Using Typeclasses/]].
 
 *** Reasoning about polymorphic functions
 
@@ -1422,7 +1422,7 @@ introduced to polymorphism, conditional expressions, purity, and
 about lazy evaluation.
 
 This all amounts to a lot of information to absorb. In
-[[file:defining-types-streamlining-functions.html][Chapter 3, /Defining Types, Streamlining Functions/]], we'll build
+[[file:3-defining-types-streamlining-functions.org][Chapter 3, /Defining Types, Streamlining Functions/]], we'll build
 on this basic knowledge to further enhance our understanding of
 Haskell.
 

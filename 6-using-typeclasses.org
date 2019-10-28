@@ -508,7 +508,7 @@ Read is not widely used
 While it is possible to build sophisticated parsers using the
 ~Read~ typeclass, many people find it easier to do so using
 Parsec, and rely on ~Read~ only for simpler tasks. Parsec is
-covered in detail in [[file:using-parsec.html][Chapter 16, /Using Parsec/]].
+covered in detail in [[file:14-using-parsec.org][Chapter 16, /Using Parsec/]].
 #+END_TIP
 
 *** Serialization with Read and Show
@@ -531,7 +531,7 @@ String handling in Haskell is normally lazy, so ~read~ and ~show~
 can be used on quite large data structures without incident. The
 built-in ~read~ and ~show~ instances in Haskell are efficient and
 implemented in pure Haskell. For information on how to handle
-parsing exceptions, refer to [[file:error-handling.html][Chapter 19, /Error handling/]].
+parsing exceptions, refer to [[file:19-error-handling.org][Chapter 19, /Error handling/]].
 #+END_TIP
 
 Let's try it out in ~ghci~:
