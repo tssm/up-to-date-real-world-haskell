@@ -5,3 +5,6 @@ data/chapter_links.txt : setup
 
 setup:
 	mkdir -p data
+
+htmlLinks:
+	grep '\[file:[^ ]*.html#' *.org

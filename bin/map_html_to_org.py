@@ -1,4 +1,5 @@
 import os
+import re
 
 data_file = 'data/chapter_links.txt'
 
@@ -42,10 +43,41 @@ print('<Unmapped ORG>')
 print([f for f in org_files if f not in mapping.values()])
 print('</Unmapped ORG>')
 
+
 def format_sed_cmd(i, o):
-    return "sed -i 's/\\[file:{infile}\\]/\\[file:{outfile}\\]/g' *.org".format(infile=i, outfile=o)
+    return ("sed -i 's/\\[file:{infile}\\]/\\[file:{outfile}\\]/g' *.org"
+            ).format(infile=i, outfile=o)
+
 
 print('')
 print('sed commands:')
 for h, o in mapping.items():
     print(format_sed_cmd(h, o))
+
+def replace_section_ref(line, html_mapping):
+    """
+    >>> replace_section_ref("[file:xyz.html#abc][the section called \"blah\"]", {"xyz.html": "0-xyz.org"})
+    "[file:0-xyz.org::*blah][the section called \"blah\"]"
+    """
+
+    return re.sub('\[\[file:([^ ]+.html)#([^ \]]+)\]\[the section called “([^“]+)”\].*', '[[file:\\1::*\\3][the section called \"\\3\"]]', line)
+
+def fn_replace_section_ref(matchobj, html_mapping=mapping):
+    """This gets called in re.sub(...)"""
+    (html, _, sec) = matchobj.groups()
+    org = html_mapping.get(html, html.replace('.html', '.org'))
+
+    return '[[file:{a1}::*{a3}][the section called \"{a3}\"]]'.format(a1=org, a3=sec)
+
+if __name__ == '__main__':
+    import sys
+
+    # print(sys.argv[1:])
+
+    files_to_format = [f for f in sys.argv[1:] if f.startswith('2-')]
+
+    print('To format: {}'.format(files_to_format))
+
+    import fileinput
+    for line in fileinput.input(files=files_to_format, inplace=True, backup='.bak'):
+        print re.sub('\[\[file:([^ ]+.html)#([^ \]]+)\]\[the section called “([^“]+)”\].*', fn_replace_section_ref, line),
