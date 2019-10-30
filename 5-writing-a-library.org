@@ -1474,13 +1474,13 @@ example, but a much richer and more useful set of pretty printing
 functions. We recommend using it, rather than writing your own.
 
 The design of the ~HughesPJ~ pretty printer was introduced by John
-Hughes in [[[file:bibliography.html#bib.hughes95][Hughes95]]]. The library was subsequently improved by
+Hughes in [[[file:bibliography.org#bib.hughes95][Hughes95]]]. The library was subsequently improved by
 Simon Peyton Jones, hence the name. Hughes's paper is long, but
 well worth reading for his discussion of how to design a library
 in Haskell.
 
 In this chapter, our pretty printing library is based on a simpler
-system described by Philip Wadler in [[[file:bibliography.html#bib.wadler98][Wadler98]]]. His library was
+system described by Philip Wadler in [[[file:bibliography.org#bib.wadler98][Wadler98]]]. His library was
 extended by Daan Leijen; this version is available for download
 from Hackage as ~wl-pprint~. If you use the ~cabal~ command line
 tool, you can download, build, and install it in one step with

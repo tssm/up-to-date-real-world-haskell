@@ -25,3 +25,6 @@ typeclass:
 typecheck:
 	# No instances of "Typecheck"
 	sed -i 's/typecheck/type-check/g' *.org
+
+biblio:
+	sed -i 's/file:bibliography.html/file:bibliography.org/g' *.org

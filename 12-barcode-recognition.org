@@ -1297,7 +1297,7 @@ impressively thorough.
 
 *** Further reading
 
-The book [[[file:bibliography.html#bib.okasaki99][Okasaki99]]] gives a wonderful and thorough implementor's
+The book [[[file:bibliography.org#bib.okasaki99][Okasaki99]]] gives a wonderful and thorough implementor's
 tour of many pure functional data structures, including several
 kinds of balanced tree. It also provides valuable insight into
 reasoning about the performance of purely functional data
@@ -1305,7 +1305,7 @@ structures and lazy evaluation.
 
 We recommend Okasaki's book as essential reading for functional
 programmers. If you're not convinced, Okasaki's PhD thesis,
-[[[file:bibliography.html#bib.okasaki96][Okasaki96]]], is a less complete and polished version of the book,
+[[[file:bibliography.org#bib.okasaki96][Okasaki96]]], is a less complete and polished version of the book,
 and it is available for free online.
 
 ** Turning digit soup into an answer

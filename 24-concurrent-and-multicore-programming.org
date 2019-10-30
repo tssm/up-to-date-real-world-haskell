@@ -1691,7 +1691,7 @@ using a single core, and 0.361 with two (using ~+RTS -N2~).
 *** Finding the most popular URLs
 
 In this example, we count the number of times each URL is
-accessed. This example comes from [[[file:bibliography.html#bib.google08][Google08]]], Google's original
+accessed. This example comes from [[[file:bibliography.org#bib.google08][Google08]]], Google's original
 paper discussing MapReduce. In the /map/ phase, for each chunk, we
 create a ~Map~ from URL to the number of times it was accessed. In
 the /reduce/ phase, we union-merge these maps into one.

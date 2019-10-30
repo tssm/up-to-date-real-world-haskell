@@ -1,5 +1,6 @@
 * Bibliography
 
+#+NAME: Broder02
 [Broder02] Andrei Broder. Michael Mitzenmacher.
 "[[http://www.eecs.harvard.edu/~michaelm/postscripts/im2005b.pdf][Network applications of Bloom filters: a survey]]".
 [[http://www.internetmathematics.org/][/Internet Mathematics/]].
@@ -30,7 +31,7 @@ Bastad, Sweden.
 
 [Okasaki96] Chris Okasaki.
 [[http://www.cs.cmu.edu/~rwh/theses/okasaki.pdf][/Purely Functional Data Structures/]]. Carnegie Mellon University.
-This is Okasaki's PhD thesis, a less complete precursor to [[[file:bibliography.html#bib.okasaki99][Okasaki99]]]
+This is Okasaki's PhD thesis, a less complete precursor to [[[file:bibliography.org#bib.okasaki99][Okasaki99]]]
 
 [Wadler89] Philip Wadler.
 "[[http://citeseer.ist.psu.edu/wadler89theorems.html][Theorems for free!]]".

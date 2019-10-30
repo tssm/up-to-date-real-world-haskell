@@ -1836,7 +1836,7 @@ use ~foldl'~.
 
 *** Further reading
 
-The article [[[file:bibliography.html#bib.hutton99][Hutton99]]] is an excellent and deep tutorial covering
+The article [[[file:bibliography.org#bib.hutton99][Hutton99]]] is an excellent and deep tutorial covering
 folds. It includes many examples of how to use simple, systematic
 calculation techniques to turn functions that use explicit
 recursion into folds.
