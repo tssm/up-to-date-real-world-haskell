@@ -1,37 +1,44 @@
 * Bibliography
 
+#+NAME: Broder02
 [Broder02] Andrei Broder. Michael Mitzenmacher.
 "[[http://www.eecs.harvard.edu/~michaelm/postscripts/im2005b.pdf][Network applications of Bloom filters: a survey]]".
 [[http://www.internetmathematics.org/][/Internet Mathematics/]].
 1. 4. 2005. 485-509.
 [[http://www.akpeters.com/][A K Peters Ltd.]].
 
+#+NAME: Google08
 [Google08] Jeffrey Dean. Sanjay Ghemawat.
 "[[http://labs.google.com/papers/mapreduce.html][MapReduce: simplified data processing on large clusters]]".
 [[http://cacm.acm.org/][/Communications of the ACM/]].
 51. 1. January 2008. 107-113.
 [[http://www.acm.org/][Association for Computing Machinery]]. 0956-7968.
 
+#+NAME: Hughes95
 [Hughes95] John Hughes.
 "[[http://citeseer.ist.psu.edu/hughes95design.html][The design of a pretty-printing library]]".
 May, 1995. First International Spring School on Advanced
 Functional Programming Techniques.
 Bastad, Sweden.
 
+#+NAME: Hutton99
 [Hutton99] Graham Hutton.
 "[[http://www.cs.nott.ac.uk/~gmh/fold.pdf][A tutorial on the universality and expressiveness of fold]]".
 [[http://journals.cambridge.org/jid_JFP][/Journal of Functional Programming/]].
 9. 4. July 1999. 355-372.
 [[http://www.cambridge.org/][Cambridge University Press]]. 0956-7968.
 
+#+NAME: Okasaki99
 [Okasaki99] Chris Okasaki.
 /Purely Functional Data Structures/.
 [[http://www.cambridge.org/][Cambridge University Press]]. 0521663504.
 
+#+NAME: Okasaki96
 [Okasaki96] Chris Okasaki.
 [[http://www.cs.cmu.edu/~rwh/theses/okasaki.pdf][/Purely Functional Data Structures/]]. Carnegie Mellon University.
-This is Okasaki's PhD thesis, a less complete precursor to [[[file:bibliography.html#bib.okasaki99][Okasaki99]]]
+This is Okasaki's PhD thesis, a less complete precursor to [[[Okasaki99][Okasaki99]]]
 
+#+NAME: Wadler89
 [Wadler89] Philip Wadler.
 "[[http://citeseer.ist.psu.edu/wadler89theorems.html][Theorems for free!]]".
 September, 1989.
@@ -39,4 +46,5 @@ International Conference on Functional Programming and Computer
 Architecture.
 4. London, England.
 
+#+NAME: Wadler98
 [Wadler98] Philip Wadler. "[[http://citeseer.ist.psu.edu/wadler98prettier.html][A prettier printer]]". March 1998.
