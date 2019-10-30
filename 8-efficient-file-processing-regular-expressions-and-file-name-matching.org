@@ -1102,7 +1102,7 @@ case we'd like to be able to report a meaningful error message.
 
 Calling the ~error~ function when this kind of problem occurs can
 be a drastic response (exploring its consequences was the focus of
-exercise [[file:efficient-file-processing-regular-expressions-and-file-name-matching.html#ch07.q.error][Q: 1]]). The ~error~ throws an exception. Pure Haskell code
+exercise [[Exercise 8.1][Q:1]]). The ~error~ throws an exception. Pure Haskell code
 cannot deal with exceptions, so control is going to rocket out of
 our pure code into the nearest caller that lives in ~IO~ and has
 an appropriate exception handler installed. If no such handler is
@@ -1139,6 +1139,7 @@ Haskell code.)
 
 *** Exercises
 
+#+NAME: Exercise 8.1
 1. Write a version of ~globToRegex~ that uses the type signature
    above.
 2. Modify the type signature of ~namesMatching~ so that it encodes

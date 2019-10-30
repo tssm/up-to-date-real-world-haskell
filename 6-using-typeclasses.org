@@ -601,11 +601,12 @@ first-class citizens in Haskell.
 
 Let's begin our discussion of the typeclasses surrounding numeric
 types with an examination of the types themselves.
-[[file:using-typeclasses.html#numerictypes.summary][Table 6.1, “Selected Numeric Types”]] describes the most
+[[Table%C2%A06.1.%C2%A0Selected Numeric Types][Table 6.1, “Selected Numeric Types”]] describes the most
 commonly-used numeric types in Haskell. Note that there are also
 many more numeric types available for specific purposes such as
 interfacing to C.
 
+#+NAME: Table 6.1. Selected Numeric Types
 #+CAPTION: Table 6.1. Selected Numeric Types
 | Type       | Description                                                                                 |
 |------------+---------------------------------------------------------------------------------------------|
@@ -627,15 +628,16 @@ interfacing to C.
 These are quite a few different numeric types. There are some
 operations, such as addition, that work with all of them. There
 are others, such as ~asin~, that only apply to floating-point
-types. [[file:using-typeclasses.html#numerictypes.funcs][Table 6.2, “Selected Numeric Functions and Constants”]]
+types. [[Table%C2%A06.2.%C2%A0Selected Numeric Functions and Constants][Table 6.2, “Selected Numeric Functions and Constants”]]
 summarizes the different functions that operate on numeric types,
-and [[file:using-typeclasses.html#numerictypes.typeclasses][Table 6.3, “Typeclass Instances for Numeric Types”]] matches the
+and [[Table%C2%A06.3.%C2%A0Typeclass Instances for Numeric Types][Table 6.3, “Typeclass Instances for Numeric Types”]] matches the
 types with their respective typeclasses. As you read that table,
 keep in mind that Haskell operators are just functions: you can
 say either ~(+) 2 3~ or ~2 + 3~ with the same result. By
 convention, when referring to an operator as a function, it is
 written in parenthesis as seen in this table.
 
+#+NAME: Table 6.2. Selected Numeric Functions and Constants
 #+CAPTION: Table 6.2. Selected Numeric Functions and Constants
 | Item             | Type                                        | Module       | Description                                                                            |
 |--------------------+-------------------------------------------------------------+----------------+----------------------------------------------------------------------------------------|
@@ -675,6 +677,7 @@ written in parenthesis as seen in this table.
 | ~truncate~       | ~(RealFrac a, Integral b) ~> a -> b~        | ~Prelude~    | Truncates number towards zero                                                          |
 | ~xor~            | ~Bits a ~> a -> a -> a~                     | ~Data.Bits~  | Bitwise exclusive or                                                                   |
 
+#+NAME: Table 6.3. Typeclass Instances for Numeric Types
 #+CAPTION: Table 6.3. Typeclass Instances for Numeric Types
 | Type                      | ~Bits~ | ~Bounded~ | ~Floating~ | ~Fractional~ | ~Integral~ | ~Num~ | ~Real~ | ~RealFrac~ |
 |---------------------------+--------+-----------+------------+--------------+------------+-------+--------+------------|
@@ -692,13 +695,14 @@ written in parenthesis as seen in this table.
 | ~Word64~                  | X      | X         |            |              | X          | X     | X      |            |
 
 Converting between numeric types is another common need.
-[[file:using-typeclasses.html#numerictypes.funcs][Table 6.2, “Selected Numeric Functions and Constants”]] listed many
+[[Table%C2%A06.2.%C2%A0Selected Numeric Functions and Constants][Table 6.2, “Selected Numeric Functions and Constants”]] listed many
 functions that can be used for conversion. However, it is not
 always obvious how to apply them to convert between two arbitrary
 types. To help you out,
-[[file:using-typeclasses.html#numerictypes.conversion][Table 6.4, “Conversion Between Numeric Types”]] provides information
+[[Table%C2%A06.4.%C2%A0Conversion Between Numeric Types][Table 6.4, “Conversion Between Numeric Types”]] provides information
 on converting between different types.
 
+#+NAME: Table 6.4. Conversion Between Numeric Types
 #+CAPTION: Table 6.4. Conversion Between Numeric Types*
 |                   | Destination Type                                                                   |
 | Source Type       |------------------------------------------------------------------------------------|

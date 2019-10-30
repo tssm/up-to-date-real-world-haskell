@@ -333,8 +333,7 @@ came from pure computation, you must use ~return~ to wrap it in
 ~IO~. As an example, if ~7~ is an ~Int~, then ~return 7~ would
 create an action stored in a value of type ~IO Int~. When
 executed, that action would produce the result ~7~. For more
-details on ~return~, see [[file:io.html#io.return][the section
-called “The True Nature of Return”]].
+details on ~return~, see [[file:7-io.org::*The True Nature of Return][the section called "The True Nature of Return"]]
 
 Let's try running the program. We've got a file named ~input.txt~
 that looks like this:
@@ -380,8 +379,9 @@ used as a filename, and not as regular data.
 
 ~IOMode~ specifies how the file is to be managed. The possible
 values for ~IOMode~ are listed in
-[[file:io.html#io.files.openFile.IOModes][Table 7.2, “Possible IOMode Values”]].
+[[Table%C2%A07.2.%C2%A0Possible IOMode Values][Table 7.2, “Possible IOMode Values”]].
 
+#+NAME: Table 7.2. Possible IOMode Values
 #+CAPTION: Table 7.2. Possible IOMode Values
 | ~IOMode~        | Can read? | Can write? | Starting position | Notes                                                                       |
 |-----------------+-----------+------------+-------------------+-----------------------------------------------------------------------------|
@@ -425,8 +425,8 @@ be responsible and call ~hClose~ all the time.
 
 Haskell provides several tools for you to use to easily ensure
 this happens, regardless of whether errors are present. You can
-read about ~finally~ in [[file:io.html#io.example][the section
-called “Extended Example: Functional I/O and Temporary Files”]]
+read about ~finally~ in
+[[file:7-io.org::*Extended Example: Functional I/O and Temporary Files][the section called "Extended Example: Functional I/O and Temporary Files"]]
 and ~bracket~ in
 [[file:9-a-library-for-searching-the-file-system.org::*The acquire-use-release cycle][the section called "The acquire-use-release cycle"]]
 

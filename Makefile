@@ -8,4 +8,6 @@ setup:
 	mkdir -p data
 
 htmlLinks:
-	grep '\[file:[^ ]*.html#' *.org
+	# grep '\[file:[^ ]*.html#' *.org
+
+	grep -n file *.org | grep '\.html' | grep -v 'bibliography.html'

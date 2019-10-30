@@ -1033,7 +1033,7 @@ ghci> asInt "potato"
 *** Exception: Char.digitToInt: not a digit 'p'
 #+END_SRC
 
-We'll defer fixing our function's shortcomings to [[file:functional-programming.html#fp.asInt.fix][Q: 1]].
+We'll defer fixing our function's shortcomings to [[Exercise 4.1][Q:1]].
 
 Because the last thing that ~loop~ does is simply call itself,
 it's an example of a tail recursive function. There's another
@@ -1748,6 +1748,7 @@ use ~foldl'~.
 
 *** Exercises
 
+#+NAME: Exercise 4.1
 1. Use a fold (choosing the appropriate fold will make your code
    much simpler) to rewrite and improve upon the ~asInt~ function
    from [[file:4-functional-programming.org::*Explicit recursion][the section called "Explicit recursion"]]
