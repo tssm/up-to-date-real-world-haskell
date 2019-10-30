@@ -644,7 +644,7 @@ $ runhaskell csv7.hs < test.csv
 ** Parsec and MonadPlus
 
 Parsec's ~GenParser~ monad is an instance of the ~MonadPlus~
-typeclass that we introduced in
+type class that we introduced in
 [[file:16-programming-with-monads.org::*Looking for alternatives][the section called "Looking for alternatives"]]
 represents a parse failure, while ~mplus~ combines two alternative
 parses into one, using ~(<|>)~.
@@ -786,7 +786,7 @@ effort of coming to grips with the idea.
 ** Applicative functors for parsing
 
 The standard Haskell libraries include a module named
-~Control.Applicative~, which defines a typeclass named
+~Control.Applicative~, which defines a type class named
 ~Applicative~, which represents an /applicative functor/. Because
 every applicative functor is also a functor they are represented
 as a hierarchy.

@@ -15,3 +15,8 @@ htmlLinks:
 quote_marks:
 	sed -i 's/“/"/g' *.org
 	sed -i 's/”/"/g' *.org
+
+typeclass:
+	# First, manually check that all instances of "Typeclass" don't need to be "Type Class"
+	sed -i 's/Typeclass/Type class/g' *.org
+	sed -i 's/typeclass/type class/g' *.org

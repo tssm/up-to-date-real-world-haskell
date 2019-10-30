@@ -953,7 +953,7 @@ a meaningful value.
 
 Of course, in many cases we will need to force the evaluation of
 individual elements of the list, too. Below, we will discuess a
-typeclass-based solution to this problem.
+type class-based solution to this problem.
 
 *** What promises does par make?
 
@@ -1346,7 +1346,7 @@ rwhnf x = x `seq` ()
 #+END_SRC
 
 To evaluate a value to normal form, the module provides a
-typeclass with a method named ~rnf~.
+type class with a method named ~rnf~.
 
 #+CAPTION: Strat.hs
 #+BEGIN_SRC haskell
@@ -1366,7 +1366,7 @@ data"; and so on.
 
 For the basic types, such as ~Int~, weak head normal form and
 normal form are the same thing, which is why the ~NFData~
-typeclass uses ~rwhnf~ as the default implementation of ~rnf~. For
+type class uses ~rwhnf~ as the default implementation of ~rnf~. For
 many common types, the ~Control.Parallel.Strategies~ module
 provides instances of ~NFData~.
 

@@ -361,7 +361,7 @@ maybeSTM m = (Just `liftM` m) `orElse` return Nothing
 Secondly, we want to try an action over successive elements of a
 list, stopping at the first that succeeds, or performing a ~retry~
 if every one fails. Conveniently for us, STM is an instance of the
-~MonadPlus~ typeclass.
+~MonadPlus~ type class.
 
 #+CAPTION: STMPlus.hs
 #+BEGIN_EXAMPLE
@@ -392,7 +392,7 @@ shoppingList list buyer seller = maybeSTM . msum $ map sellOne list
             return this
 #+END_EXAMPLE
 
-Since STM is an instance of the ~MonadPlus~ typeclass, we can
+Since STM is an instance of the ~MonadPlus~ type class, we can
 generalize ~maybeSTM~ to work over any ~MonadPlus~.
 
 #+CAPTION: GameInventory.hs

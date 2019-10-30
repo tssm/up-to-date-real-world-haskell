@@ -653,8 +653,8 @@ ghci> treeMap (odd . length) tree
 Node (Leaf True) (Node (Leaf True) (Leaf False))
 #+END_SRC
 
-Haskell provides a well-known typeclass to further generalise
-~treeMap~. This typeclass is named ~Functor~, and it defines one
+Haskell provides a well-known type class to further generalise
+~treeMap~. This type class is named ~Functor~, and it defines one
 function, ~fmap~.
 
 #+CAPTION: TreeMap.hs
@@ -748,7 +748,7 @@ instance Functor Bar where
 #+END_SRC
 
 This says that we can only put a type ~a~ into a ~Foo~ if ~a~ is a
-member of the ~Eq~ typeclass. However, the constraint renders it
+member of the ~Eq~ type class. However, the constraint renders it
 impossible to write a ~Functor~ instance for ~Bar~.
 
 #+BEGIN_SRC screen

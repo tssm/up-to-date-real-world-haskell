@@ -101,7 +101,7 @@ tedious, and violates the moral code of the efficient functional
 programmer: let the machine do the work! To automate this the
 QuickCheck library comes with a set of data generators for all the
 basic Haskell data types. QuickCheck uses the ~Arbitrary~
-typeclass to present a uniform interface to (pseudo-)random data
+type class to present a uniform interface to (pseudo-)random data
 generation with the type system used to resolve which generator to
 use. QuickCheck normally hides the data generation plumbing,
 however we can also run the generators by hand to get a sense for

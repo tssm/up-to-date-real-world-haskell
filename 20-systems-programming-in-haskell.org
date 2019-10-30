@@ -314,10 +314,10 @@ highlighted:
   is not necessary to put accurate values into these fields,
   unless your later calculations will depend upon them.
 - All of these three types are members of the ~Eq~, ~Ord~, ~Read~,
-  and ~Show~ typeclasses. In addition, ~Month~ and ~Day~ are
-  declared as members of the ~Enum~ and ~Bounded~ typeclasses. For
-  more information on these typeclasses, refer to
-  [[file:6-using-typeclasses.org::*Important Built-In Typeclasses][the section called "Important Built-In Typeclasses"]]
+  and ~Show~ type classes. In addition, ~Month~ and ~Day~ are
+  declared as members of the ~Enum~ and ~Bounded~ type classes. For
+  more information on these type classes, refer to
+  [[file:6-using-type classes.org::*Important%20Built-In%20Type%20Classes][the section called "Important Built-In Type Classes"]]
 
   You can generate ~CalendarTime~ values several ways. You could
   start by converting a ~ClockTime~ to a ~CalendarTime~ such as
@@ -830,7 +830,7 @@ ghci> runIO $ ("ls", ["/etc"]) -|- ("grep", ["m.*ap"]) -|- ("tr", ["a-z", "A-Z"]
 We start by running a simple command, ~pwd~, which just prints the
 name of the current working directory. We pass ~[]~ for the list
 of arguments, because ~pwd~ doesn't need any arguments. Due to the
-typeclasses used, Haskell can't infer the type of ~[]~, so we
+type classes used, Haskell can't infer the type of ~[]~, so we
 specifically mention that it's a ~String~.
 
 Then we get into more complex commands. We run ~ls~, sending it
@@ -844,7 +844,7 @@ Let's look at the program. The very first line has a special
 ~OPTIONS_GHC~ clause. This is the same as passing ~-fglasgow-exts~
 to ~ghc~ or ~ghci~. We are using a GHC extension that permits us
 to use a ~(String, [String])~ type as an instance of a
-typeclass.[fn:5] By putting it in the source file, we don't have
+type class.[fn:5] By putting it in the source file, we don't have
 to remember to specify it every time we use this module.
 
 After the ~import~ lines, we define a few types. First, we define
@@ -1151,7 +1151,7 @@ instance RunResult (IO ()) where
     run cmd = run cmd >>= checkResult
 
 instance RunResult (IO ProcessStatus) where
-    run cmd = 
+    run cmd =
         do res <- setUpCommand cmd
 
            -- Process its output
@@ -1207,7 +1207,7 @@ runIO = run
 ------------------------------------------------------------
 cd :: FilePath -> IO ()
 cd = setCurrentDirectory
- 
+
 {- | Takes a string and sends it on as standard output.
 The input to this function is never read. -}
 echo :: String -> String -> String
@@ -1254,7 +1254,7 @@ Here's what has changed:
 - New ~CommandLike~ instances for ~String -> IO String~ and
   various other types that are implemented in terms of this one.
   These process Haskell functions as commands.
-- A new ~RunResult~ typeclass that defines a function ~run~ that
+- A new ~RunResult~ type class that defines a function ~run~ that
   returns information about the command in many different ways.
   See the comments in the source for more information. ~runIO~ is
   now just an alias for one particular ~RunResult~ instance.

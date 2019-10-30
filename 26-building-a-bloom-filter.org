@@ -285,7 +285,7 @@ new hash numBits = MB hash `liftM` newArray (0,numBits-1) False
 #+END_SRC
 
 Most of the methods of ~STUArray~ are actually implementations of
-the ~MArray~ typeclass, which is defined in the
+the ~MArray~ type class, which is defined in the
 ~Data.Array.MArray~ module.
 
 Our ~length~ function is slightly complicated by two factors. We
@@ -407,7 +407,7 @@ execution with freezing. Given an action that returns an
 ~STUArray~, it executes the action using ~runST~; freezes the
 ~STUArray~ that it returns; and returns that as a ~UArray~.
 
-The ~MArray~ typeclass provides a ~freeze~ function that we could
+The ~MArray~ type class provides a ~freeze~ function that we could
 use instead, but ~runSTUArray~ is both more convenient and more
 efficient. The efficiency lies in the fact that ~freeze~ must copy
 the underlying data from the ~STUArray~ to the new ~UArray~, to
@@ -435,7 +435,7 @@ easyList :: (Hashable a)
 
 Here is a possible "friendlier" way to create a Bloom filter. It
 leaves responsibility for hashing values in the hands of a
-typeclass, Hashable. It lets us configure the Bloom filter based
+type class, Hashable. It lets us configure the Bloom filter based
 on a parameter that is easier to understand, namely the rate of
 false positives that we are willing to tolerate. And it chooses
 the size of the filter for us, based on the desired false positive
@@ -609,7 +609,7 @@ and ~p2~, we only need to ~peek~ the pointer ~sp~ to retrieve the
 computed hash.
 
 We don't want clients of this module to be stuck fiddling with
-low-level details, so we use a typeclass to provide a clean,
+low-level details, so we use a type class to provide a clean,
 high-level interface.
 
 #+CAPTION: BloomFilter/Hash.hs
@@ -624,7 +624,7 @@ hash = hashSalt 0x106fc397cf62f64d3
 #+END_SRC
 
 We also provide a number of useful implementations of this
-typeclass. To hash basic types, we must write a little boilerplate
+type class. To hash basic types, we must write a little boilerplate
 code.
 
 #+CAPTION: BloomFilter/Hash.hs
@@ -638,7 +638,7 @@ instance Hashable Int    where hashSalt = hashStorable
 instance Hashable Double where hashSalt = hashStorable
 #+END_SRC
 
-We might prefer to use the ~Storable~ typeclass to write just one
+We might prefer to use the ~Storable~ type class to write just one
 declaration, as follows:
 
 #+CAPTION: BloomFilter/Hash.hs

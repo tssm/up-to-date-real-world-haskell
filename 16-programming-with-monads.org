@@ -237,7 +237,7 @@ ghci> allBusinessPhones nils
 ["+47-922-12-121","+47-922-25-551"]
 #+END_SRC
 
-Haskell's ~Control.Monad~ module defines a typeclass, ~MonadPlus~,
+Haskell's ~Control.Monad~ module defines a type class, ~MonadPlus~,
 that lets us abstract the common pattern out of our ~case~
 expressions.
 
@@ -343,7 +343,7 @@ Just 1
 
 *** Rules for working with ~MonadPlus~
 
-Instances of the ~MonadPlus~ typeclass must follow a few simple
+Instances of the ~MonadPlus~ type class must follow a few simple
 rules, in addition to the usual monad rules.
 
 An instance must /short circuit/ if ~mzero~ appears on the left of
@@ -364,11 +364,11 @@ of a sequence expression.
 *** Failing safely with ~MonadPlus~
 
 When we introduced the ~fail~ function in
-[[file:15-monads.org::*The Monad typeclass][the section called "The Monad typeclass"]]
+[[file:15-monads.org::*The Monad type class][the section called "The Monad type class"]]
 warn against its use: in many monads, it's implemented as a call
 to ~error~, which has unpleasant consequences.
 
-The ~MonadPlus~ typeclass gives us a gentler way to fail a
+The ~MonadPlus~ type class gives us a gentler way to fail a
 computation, without ~fail~ or ~error~ blowing up in our faces.
 The rules that we introduced above allow us to introduce an
 ~mzero~ into our code wherever we need to, and computation will
@@ -527,12 +527,12 @@ file, before the module header.
 #+END_SRC
 
 Usually, we can only automatically derive instances of a handful
-of standard typeclasses, such as ~Show~ and ~Eq~. As its name
+of standard type classes, such as ~Show~ and ~Eq~. As its name
 suggests, the ~GeneralizedNewtypeDeriving~ extension broadens our
-ability to derive typeclass instances, and it is specific to
+ability to derive type class instances, and it is specific to
 ~newtype~ declarations. If the type we're wrapping is an instance
-of any typeclass, the extensions can automatically make our new
-type an instance of that typeclass as follows.
+of any type class, the extensions can automatically make our new
+type an instance of that type class as follows.
 
 #+CAPTION: Supply.hs
 #+BEGIN_SRC haskell
@@ -546,7 +546,7 @@ derive a ~Monad~ instance for us.
 
 What we gain here is very useful beyond just this example. We can
 use ~newtype~ to wrap any underlying type; we selectively expose
-only those typeclass instances that we want; and we expend almost
+only those type class instances that we want; and we expend almost
 no effort to create these narrower, more specialised types.
 
 Sadly currently GHC is not able to automatically derive the
@@ -683,7 +683,7 @@ ghci> second odd ('a',1)
 #+END_SRC
 
 (Indeed, we already encountered ~second~, in
-[[file:6-using-typeclasses.org::*JSON typeclasses without overlapping instances][the section called "JSON typeclasses without overlapping instances"]]
+[[file:6-using-type classes.org::*JSON type classes without overlapping instances][the section called "JSON type classes without overlapping instances"]]
 We can use ~first~ to golf our definition of ~randomsIO~, turning
 it into a one-liner.
 
@@ -713,7 +713,7 @@ One simple and effective way that we could deal with this is to
 provide ~Supply~ with a better source of random numbers. Let's set
 this idea aside, though, and consider an alternative approach, one
 that is useful in many settings. We will separate the actions we
-can perform with the monad from how it works using a typeclass.
+can perform with the monad from how it works using a type class.
 
 #+CAPTION: SupplyClass.hs
 #+BEGIN_SRC haskell
@@ -727,21 +727,21 @@ class (Monad m) => MonadSupply s m | m -> s where
     next :: m (Maybe s)
 #+END_SRC
 
-This typeclass defines the interface that any supply monad must
+This type class defines the interface that any supply monad must
 implement. It bears careful inspection, since it uses several
 unfamiliar Haskell language extensions. We will cover each one in
 the sections that follow.
 
-*** Multi-parameter typeclasses
+*** Multi-parameter type classes
 
-How should we read the snippet ~MonadSupply s m~ in the typeclass?
+How should we read the snippet ~MonadSupply s m~ in the type class?
 If we add parentheses, an equivalent expression is
 ~(MonadSupply s) m~, which is a little clearer. In other words,
 given some type variable ~m~ that is a monad, we can make it an
-instance of the typeclass ~MonadSupply s~. unlike a regular
-typeclass, this one has a /parameter/.
+instance of the type class ~MonadSupply s~. unlike a regular
+type class, this one has a /parameter/.
 
-As this language extension allows a typeclass to have more than
+As this language extension allows a type class to have more than
 one parameter, its name is ~MultiParamTypeClasses~. The parameter
 ~s~ serves the same purpose as the ~Supply~ type's parameter of
 the same name: it represents the type of the values handed out by
@@ -777,7 +777,7 @@ use with it. If we were to omit the functional dependency, the
 type checker would simply give up with an error message.
 
 It's hard to picture what the relationship between ~m~ and ~s~
-really means, so let's look at an instance of this typeclass.
+really means, so let's look at an instance of this type class.
 
 #+CAPTION: SupplyClass.hs
 #+BEGIN_SRC haskell
@@ -788,7 +788,7 @@ instance MonadSupply s (S.Supply s) where
 Here, the type variable ~m~ is replaced by the type ~S.Supply s~.
 Thanks to our functional dependency, the type checker now knows
 that when it sees a type ~S.Supply s~, the type can be used as an
-instance of the typeclass ~MonadSupply s~.
+instance of the type class ~MonadSupply s~.
 
 If we didn't have a functional dependency, the type checker would
 not be able to figure out the relationship between the type
@@ -802,7 +802,7 @@ To strip away one final layer of abstraction, consider the type
 this an instance of ~MonadSupply s~. However, if we tried to write
 code using this instance, the compiler would not be able to figure
 out that the type's ~Int~ parameter needs to be the same as the
-typeclass's ~s~ parameter, and it would report an error.
+type class's ~s~ parameter, and it would report an error.
 
 Functional dependencies can be tricky to understand, and once we
 move beyond simple uses, they often prove difficult to work with
@@ -812,7 +812,7 @@ little trouble.
 
 *** Rounding out our module
 
-If we save our typeclass and instance in a source file named
+If we save our type class and instance in a source file named
 ~SupplyClass.hs~, we'll need to add a module header such as the
 following.
 
@@ -962,7 +962,7 @@ courtesy of the ~Reader~ monad.
 ** A return to automated deriving
 
 Now that we know about the ~Reader~ monad, let's use it to create
-an instance of our ~MonadSupply~ typeclass. To keep our example
+an instance of our ~MonadSupply~ type class. To keep our example
 simple, we'll violate the spirit of ~MonadSupply~ here: our ~next~
 action will always return the same value, instead of always
 returning a different value.
@@ -974,7 +974,7 @@ sense.
 
 Instead, we create a ~newtype~ based on ~Reader~. The ~newtype~
 hides the fact that we're using ~Reader~ internally. We must now
-make our type an instance of both of the typeclasses we care
+make our type an instance of both of the type classes we care
 about. With the ~GeneralizedNewtypeDeriving~ extension enabled,
 GHC will do most of the hard work for us.
 
@@ -1065,22 +1065,22 @@ ghci> runMS xy 2
 4
 #+END_SRC
 
-Like our ~MonadSupply~ typeclass and ~Supply~ monad, almost all of
+Like our ~MonadSupply~ type class and ~Supply~ monad, almost all of
 the common Haskell monads are built with a split between interface
 and implementation. For example, the ~get~ and ~put~ functions
 that we introduced as "belonging to" the ~State~ monad are
-actually methods of the ~MonadState~ typeclass; the ~State~ type
+actually methods of the ~MonadState~ type class; the ~State~ type
 is an instance of this class.
 
 Similarly, the standard ~Reader~ monad is an instance of the
-~MonadReader~ typeclass, which specifies the ~ask~ method.
+~MonadReader~ type class, which specifies the ~ask~ method.
 
 While the separation of interface and implementation that we've
 discussed above is appealing for its architectural cleanliness, it
 has important practical applications that will become clearer
 later. When we start combining monads in
 [[file:18-monad-transformers.org][Chapter 18, /Monad transformers/]], we will save a lot of effort
-through the use of ~GeneralizedNewtypeDeriving~ and typeclasses.
+through the use of ~GeneralizedNewtypeDeriving~ and type classes.
 
 ** Hiding the ~IO~ monad
 
@@ -1214,7 +1214,7 @@ us to write solid code in the common case, not to make corner
 cases impossible. Let's thus give ourselves a way out.
 
 The ~Control.Monad.Trans~ module defines a "standard escape
-hatch", the ~MonadIO~ typeclass. This defines a single function,
+hatch", the ~MonadIO~ type class. This defines a single function,
 ~liftIO~, which lets us embed an ~IO~ action in another monad.
 
 #+BEGIN_SRC screen
@@ -1227,7 +1227,7 @@ class Monad m => MonadIO (m :: * -> *) where
 instance [safe] MonadIO IO -- Defined in ‘Control.Monad.IO.Class’
 #+END_SRC
 
-Our implementation of this typeclass is trivial: we just wrap ~IO~
+Our implementation of this type class is trivial: we just wrap ~IO~
 with our data constructor.
 
 #+CAPTION: HandleIO.hs
@@ -1257,14 +1257,14 @@ usual strategy. We avoided that here simply to separate the
 presentation of the earlier material from that of ~MonadIO~.
 #+END_TIP
 
-*** Using typeclasses
+*** Using type classes
 
 The disadvantage of hiding ~IO~ in another monad is that we're
 still tied to a concrete implementation. If we want to swap
 ~HandleIO~ for some other monad, we must change the type of every
 action that uses ~HandleIO~.
 
-As an alternative, we can create a typeclass that specifies the
+As an alternative, we can create a type class that specifies the
 interface we want from a monad that manipulates files.
 
 #+CAPTION: MonadHandle.hs
@@ -1343,16 +1343,16 @@ ghci> safeHello "hello to my fans in domestic surveillance"
 ghci> removeFile "hello to my fans in domestic surveillance"
 #+END_SRC
 
-The beauty of the typeclass approach is that we can swap one
+The beauty of the type class approach is that we can swap one
 underlying monad for another without touching much code, as most
 of our code doesn't know or care about the implementation. For
 instance, we could replace ~IO~ with a monad that compresses files
 as it writes them out.
 
-Defining a monad's interface through a typeclass has a further
+Defining a monad's interface through a type class has a further
 benefit. It lets other people hide our implementation in a
 ~newtype~ wrapper, and automatically derive instances of just the
-typeclasses they want to expose.
+type classes they want to expose.
 
 *** Isolation and testing
 
@@ -1387,7 +1387,7 @@ Although we already developed a ~Logger~ type in
 [[file:15-monads.org::*Using a new monad: show your work!][the section called "Using a new monad: show your work!"]]
 we'll use the standard, and more general, ~Writer~ monad. Like
 other ~mtl~ monads, the API provided by ~Writer~ is defined in a
-typeclass, in this case ~MonadWriter~. Its most useful method is
+type class, in this case ~MonadWriter~. Its most useful method is
 ~tell~, which logs a value.
 
 #+BEGIN_SRC screen
@@ -1462,9 +1462,9 @@ type from the ~Data.Sequence~ module, which we introduced in
 
 *** Arbitrary I/O revisited
 
-If we use the typeclass approach to restricting ~IO~, we may still
+If we use the type class approach to restricting ~IO~, we may still
 want to retain the ability to perform arbitrary I/O actions. We
-might try adding ~MonadIO~ as a constraint on our typeclass.
+might try adding ~MonadIO~ as a constraint on our type class.
 
 #+CAPTION: MonadHandleIO.hs
 #+BEGIN_SRC haskell
@@ -1482,7 +1482,7 @@ This approach has a problem, though: the added ~MonadIO~
 constraint loses us the ability to test our code in a pure
 environment, because we can no longer tell whether a test might
 have damaging side effects. The alternative is to move this
-constraint from the typeclass, where it "infects" all functions,
+constraint from the type class, where it "infects" all functions,
 to only those functions that really need to perform I/O.
 
 #+CAPTION: MonadHandleIO.hs
