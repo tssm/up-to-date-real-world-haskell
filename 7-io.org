@@ -75,7 +75,7 @@ store it and nothing will happen. I could say ~writefoo = putStrLn
 ~writefoo~ in the middle of another I/O action, the ~writefoo~
 action will be executed when its parent action is executed –I/O
 actions can be glued together to form bigger I/O actions. The ~()~
-is an empty tuple (pronounced “unit”), indicating that there is no
+is an empty tuple (pronounced "unit"), indicating that there is no
 return value from ~putStrLn~. This is similar to ~void~ in Java or
 C.[fn:2]
 
@@ -379,7 +379,7 @@ used as a filename, and not as regular data.
 
 ~IOMode~ specifies how the file is to be managed. The possible
 values for ~IOMode~ are listed in
-[[Table%C2%A07.2.%C2%A0Possible IOMode Values][Table 7.2, “Possible IOMode Values”]].
+[[Table%C2%A07.2.%C2%A0Possible IOMode Values][Table 7.2, "Possible IOMode Values"]].
 
 #+NAME: Table 7.2. Possible IOMode Values
 #+CAPTION: Table 7.2. Possible IOMode Values

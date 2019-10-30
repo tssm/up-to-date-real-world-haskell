@@ -120,7 +120,7 @@ mathematics and put them to work. Even better, we find that not
 only are these ideas easy to pick up, they have a practical payoff
 in helping us to write more compact, reusable code.
 
-Furthermore, we won't be putting any “brick walls” in your way:
+Furthermore, we won't be putting any "brick walls" in your way:
 there are no especially difficult or gruesome techniques in this
 book that you must master in order to be able to program
 effectively.
@@ -402,7 +402,7 @@ language. After three years of work, the committee published the
 Haskell 1.0 specification in 1990. It named the language after
 Haskell Curry, an influential logician.
 
-Many people are rightfully suspicious of “design by committee”,
+Many people are rightfully suspicious of "design by committee",
 but the work of the Haskell committee is a beautiful example of
 the best work a committee can do. They produced an elegant,
 considered language design, and succeeded in unifying the
@@ -426,7 +426,7 @@ language.
 
 While these basic explorations of the 1990s proceeded, Haskell
 remained firmly an academic affair. The informal slogan of those
-inside the community was to “avoid success at all costs”. Few
+inside the community was to "avoid success at all costs". Few
 outsiders had heard of the language at all. Indeed, functional
 programming as a field was quite obscure.
 

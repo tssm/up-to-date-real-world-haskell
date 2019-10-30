@@ -179,8 +179,8 @@ single more abstract type.
 chain :: m a -> (a -> m b) -> m b
 #+END_SRC
 
-Finally, in each case we have a function that takes a “plain”
-value, and “injects” it into the target type. For ~Maybe~, this
+Finally, in each case we have a function that takes a "plain"
+value, and "injects" it into the target type. For ~Maybe~, this
 function is simply the value constructor ~Just~, but the injector
 for ~Parse~ is more complicated.
 
@@ -191,7 +191,7 @@ identity a = Parse (\s -> Right (a, s))
 #+END_SRC
 
 Again, it's not the details or complexity that we're interested
-in, it's the fact that each of these types has an “injector”
+in, it's the fact that each of these types has an "injector"
 function, which looks like this.
 
 #+BEGIN_SRC haskell
@@ -249,7 +249,7 @@ follow Eugenio Moggi's idea of using monads to structure programs.
 
 Here, ~(>>=)~ is our chaining function. We've already been
 introduced to it in [[file:7-io.org::*Sequencing][the section called "Sequencing"]]
-referred to as “bind”, as it binds the result of the computation
+referred to as "bind", as it binds the result of the computation
 on the left to the parameter of the one on the right.
 
 Our injection function is ~return~. As we noted in
@@ -353,7 +353,7 @@ instance Monad Parse where
 We are going to see ~liftM~ in
 [[file:15-monads.org::*Mixing pure and monadic code][the section called "Mixing pure and monadic code"]]
 [[file:16-programming-with-monads.org::*Generalised lifting][the section called "Generalised lifting"]]
-they are “aliases” to known functions.
+they are "aliases" to known functions.
 
 Notice that ~pure~ is defined as our ~identity~ function and
 ~return~ is defined as ~pure~. You can actually get rid of the
@@ -366,18 +366,18 @@ There are a few terms of jargon around monads that you may not be
 familiar with. These aren't formal terms, but they're in common
 use, so it's helpful to know about them.
 
-- “Monadic” simply means “pertaining to monads”. A monadic /type/
+- "Monadic" simply means "pertaining to monads". A monadic /type/
   is an instance of the ~Monad~ typeclass; a monadic /value/ has a
   monadic type.
-- When we say that a type “is a monad”, this is really a shorthand
+- When we say that a type "is a monad", this is really a shorthand
   way of saying that it's an instance of the ~Monad~ typeclass.
   Being an instance of ~Monad~ gives us the necessary monadic
   triple of type constructor, injection function, and chaining
   function.
-- In the same way, a reference to “the Foo monad” implies that
+- In the same way, a reference to "the Foo monad" implies that
   we're talking about the type named ~Foo~, and that it's an
   instance of ~Monad~.
-- An “action” is another name for a monadic value. This use of the
+- An "action" is another name for a monadic value. This use of the
   word probably originated with the introduction of monads for
   I/O, where a monadic value like ~print "foo"~ can have an
   observable side effect. A function with a monadic return type
@@ -535,7 +535,7 @@ globToRegex cs =
 
 There are a few coding style issues worth mentioning here. The
 body of the function starts on the line after its name. By doing
-this, we gain some horizontal white space. We've also “hung” the
+this, we gain some horizontal white space. We've also "hung" the
 parameter of the anonymous function at the end of the line. This
 is common practice in monadic code.
 
@@ -703,8 +703,8 @@ charClass (c:cs) = (c:) `liftM` charClass cs
 #+END_SRC
 
 As with ~fmap~, we often use ~liftM~ in infix form. An easy way to
-read such an expression is “apply the pure function on the left to
-the result of the monadic action on the right”.
+read such an expression is "apply the pure function on the left to
+the result of the monadic action on the right".
 
 The ~liftM~ function is so useful that ~Control.Monad~ defines
 several variants, which combine longer chains of actions. We can
@@ -742,11 +742,11 @@ addition to ~liftM2~, the variants in ~Control.Monad~ go up to
 We've now seen enough examples of monads in action to have some
 feel for what's going on. Before we continue, there are a few
 oft-repeated myths about monads that we're going to address.
-You're bound to encounter these assertions “in the wild”, so you
+You're bound to encounter these assertions "in the wild", so you
 might as well be prepared with a few good retorts.
 
 - /Monads can be hard to understand./ We've already shown that
-  monads “fall out naturally” from several problems. We've found
+  monads "fall out naturally" from several problems. We've found
   that the best key to understanding them is to explain several
   concrete examples, then talk about what they have in common.
 - /Monads are only useful for I/O and imperative coding./ While we
@@ -889,7 +889,7 @@ of ~Nothing~ values is cheap at runtime, but it's not free.
 *** Executing the Maybe monad
 
 A function suitable for executing the ~Maybe~ monad is ~maybe~.
-(Remember that “executing” a monad involves evaluating it and
+(Remember that "executing" a monad involves evaluating it and
 returning a result that's had the monad's type wrapper removed.)
 
 #+CAPTION: Maybe.hs
@@ -1340,7 +1340,7 @@ instead of layout.
 
 Even though this use of explicit structure is rare, the fact that
 it uses semicolons to separate expressions has given rise to an
-apt slogan: monads are a kind of “programmable semicolon”, because
+apt slogan: monads are a kind of "programmable semicolon", because
 the behaviours of ~(>>)~ and ~(>>=)~ are different in each monad.
 
 *** Why go sugar-free?
@@ -1453,8 +1453,8 @@ returnSt :: a -> SimpleState s a
 returnSt a = \s -> (a, s)
 #+END_SRC
 
-All this does is take the result and the current state, and “tuple
-them up”. You may by now be used to the idea that a Haskell
+All this does is take the result and the current state, and "tuple
+them up". You may by now be used to the idea that a Haskell
 function with multiple parameters is just a chain of
 single-parameter functions, but just in case you're not, here's a
 more familiar way of writing ~returnSt~ that makes it more obvious
@@ -1572,8 +1572,8 @@ bindState m k = State $ \s -> let (a, s') = runState m s
 #+END_SRC
 
 This function differs from our earlier ~bindSt~ only in adding the
-wrapping and unwrapping of a few values. By separating the “real
-work” from the bookkeeping, we've hopefully made it clearer what's
+wrapping and unwrapping of a few values. By separating the "real
+work" from the bookkeeping, we've hopefully made it clearer what's
 really happening.
 
 We modify the functions for reading and modifying the state in the
@@ -1660,7 +1660,7 @@ code, remember, so we can't modify the state of the existing
 generator.
 
 If we forget about immutability and reuse the same generator
-within a function, we get back exactly the same “random” number
+within a function, we get back exactly the same "random" number
 every time.
 
 #+CAPTION: Random.hs
@@ -1866,7 +1866,7 @@ instance Monad [] where
 #+END_SRC
 
 Recall that ~f~ has type ~a -> [a]~. When we call ~map f xs~, we
-get back a value of type ~[[a]]~, which we have to “flatten” using
+get back a value of type ~[[a]]~, which we have to "flatten" using
 ~concat~.
 
 Since ~fmap~ for lists is defined to be ~map~, we could replace
@@ -1875,8 +1875,8 @@ interesting by itself, but suppose we could go further.
 
 The ~concat~ function is of type ~[[a]] -> [a]~: as we mentioned,
 it flattens the nesting of lists. We could generalise this type
-signature from lists to monads, giving us the “remove a level of
-nesting” type ~m (m a) -> m a~. The function that has this type is
+signature from lists to monads, giving us the "remove a level of
+nesting" type ~m (m a) -> m a~. The function that has this type is
 conventionally named ~join~.
 
 If we had definitions of ~join~ and ~fmap~, we wouldn't need to
@@ -1896,7 +1896,7 @@ class Applicative m => AltMonad m where
 xs >>= f = join (fmap f xs)
 #+END_SRC
 
-Neither definition of a monad is “better”, since if we have
+Neither definition of a monad is "better", since if we have
 ~join~ we can write ~(>>=)~, and vice versa, but the different
 perspectives can be refreshing.
 
@@ -1935,8 +1935,8 @@ laws below are referred to as the monad laws. A Haskell
 implementation doesn't enforce these laws: it's up to the author
 of a ~Monad~ instance to follow them.
 
-The monad laws are simply formal ways of saying “a monad shouldn't
-surprise me”. In principle, we could probably get away with
+The monad laws are simply formal ways of saying "a monad shouldn't
+surprise me". In principle, we could probably get away with
 skipping over them entirely. It would be a shame if we did,
 however, because the laws contain gems of wisdom that we might
 otherwise overlook.
@@ -1944,8 +1944,8 @@ otherwise overlook.
 #+BEGIN_TIP
 Reading the laws
 
-You can read each law below as “the expression on the left of
-the ~==~ is equivalent to that on the right.”
+You can read each law below as "the expression on the left of
+the ~==~ is equivalent to that on the right."
 #+END_TIP
 
 The first law states that ~return~ is a /left identity/ for
@@ -2031,7 +2031,7 @@ and leave the third in place, or we can replace the second two and
 leave the first in place.
 
 Even this more complicated law has a practical consequence. In the
-terminology of software refactoring, the “extract method”
+terminology of software refactoring, the "extract method"
 technique is a fancy term for snipping out a piece of inline code,
 turning it into a function, and calling the function from the site
 of the snipped code. This law essentially states that this
@@ -2042,7 +2042,7 @@ into writing better monadic code. The first two laws show us how
 to avoid unnecessary use of ~return~. The third suggests that we
 can safely refactor a complicated action into several simpler
 ones. We can now safely let the details fade, in the knowledge
-that our “do what I mean” intuitions won't be violated when we use
+that our "do what I mean" intuitions won't be violated when we use
 properly written monads.
 
 Incidentally, a Haskell compiler cannot guarantee that a monad

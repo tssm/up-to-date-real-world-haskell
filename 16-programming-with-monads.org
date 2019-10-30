@@ -19,8 +19,8 @@ specification is not clear about whether a key must be followed by
 a value. We can capture this ambiguity by representing a value as
 a ~Maybe String~. If we use ~Nothing~ for a value, then there was
 no value present. If we wrap a string in ~Just~, then there was a
-value. Using ~Maybe~ lets us distinguish between “no value” and
-“empty value”.
+value. Using ~Maybe~ lets us distinguish between "no value" and
+"empty value".
 
 Haskell programmers use the name /association list/ for the type
 ~[(a, b)]~, where we can think of each element as an association
@@ -71,7 +71,7 @@ simpleReview alist =
 It only returns a ~MovieReview~ if the alist contains all of the
 necessary values, and they're all non-empty strings. However, the
 fact that it validates its inputs is its only merit: it suffers
-badly from the “staircasing” that we've learned to be wary of, and
+badly from the "staircasing" that we've learned to be wary of, and
 it knows the intimate details of the representation of an alist.
 
 Since we're now well acquainted with the ~Maybe~ monad, we can
@@ -320,7 +320,7 @@ people's projects.
 
 *** The name ~mplus~ does not imply addition
 
-Even though the ~mplus~ function contains the text “plus”, you
+Even though the ~mplus~ function contains the text "plus", you
 should not think of it as necessarily implying that we're trying
 to add two values.
 
@@ -598,7 +598,7 @@ ghci> runSupply (liftM2 (,) next next) [1]
 If we want to use our ~Supply~ monad as a source of random
 numbers, we have a small difficulty to face. Ideally, we'd like to
 be able to provide it with an infinite stream of random numbers.
-We can get a ~StdGen~ in the ~IO~ monad, but we must “put back” a
+We can get a ~StdGen~ in the ~IO~ monad, but we must "put back" a
 different ~StdGen~ when we're done. If we don't, the next piece of
 code to get a ~StdGen~ will get the same state as we did. This
 means it will generate the same random numbers as we did, which is
@@ -756,8 +756,8 @@ monad.
 
 To revisit a snippet that we ignored earlier, ~| m -> s~ is a
 /functional dependency/, often called a /fundep/. We can read the
-vertical bar ~|~ as “such that”, and the arrow ~->~ as “uniquely
-determines”. Our functional dependency establishes a
+vertical bar ~|~ as "such that", and the arrow ~->~ as "uniquely
+determines". Our functional dependency establishes a
 /relationship/ between ~m~ and ~s~.
 
 The availability of functional dependencies is governed by the
@@ -831,7 +831,7 @@ from this module. It's perfectly legal to export a name from one
 module even though it's defined in another. In our case, it means
 that client code only needs to import the ~SupplyClass~ module,
 without also importing the ~Supply~ module. This reduces the
-number of “moving parts” that a user of our code needs to keep in
+number of "moving parts" that a user of our code needs to keep in
 mind.
 
 *** Programming to a monad's interface
@@ -1068,7 +1068,7 @@ ghci> runMS xy 2
 Like our ~MonadSupply~ typeclass and ~Supply~ monad, almost all of
 the common Haskell monads are built with a split between interface
 and implementation. For example, the ~get~ and ~put~ functions
-that we introduced as “belonging to” the ~State~ monad are
+that we introduced as "belonging to" the ~State~ monad are
 actually methods of the ~MonadState~ typeclass; the ~State~ type
 is an instance of this class.
 
@@ -1213,8 +1213,8 @@ Our purpose in defining a monad like this is to make it easier for
 us to write solid code in the common case, not to make corner
 cases impossible. Let's thus give ourselves a way out.
 
-The ~Control.Monad.Trans~ module defines a “standard escape
-hatch”, the ~MonadIO~ typeclass. This defines a single function,
+The ~Control.Monad.Trans~ module defines a "standard escape
+hatch", the ~MonadIO~ typeclass. This defines a single function,
 ~liftIO~, which lets us embed an ~IO~ action in another monad.
 
 #+BEGIN_SRC screen
@@ -1482,7 +1482,7 @@ This approach has a problem, though: the added ~MonadIO~
 constraint loses us the ability to test our code in a pure
 environment, because we can no longer tell whether a test might
 have damaging side effects. The alternative is to move this
-constraint from the typeclass, where it “infects” all functions,
+constraint from the typeclass, where it "infects" all functions,
 to only those functions that really need to perform I/O.
 
 #+CAPTION: MonadHandleIO.hs

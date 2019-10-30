@@ -676,7 +676,7 @@ p_query = p_pair `sepBy` char '&'
 Notice that in the type signature, we're using ~Maybe~ to
 represent a value: the HTTP specification is unclear about whether
 a key /must/ have an associated value, and we'd like to be able to
-distinguish between “no value” and “empty value”.
+distinguish between "no value" and "empty value".
 
 #+CAPTION: FormParse.hs
 #+BEGIN_SRC haskell
@@ -696,8 +696,8 @@ return a list of at least one element.
 The ~optionMaybe~ function modifies the behaviour of a parser. If
 the parser fails, ~optionMaybe~ doesn't fail: it returns
 ~Nothing~. Otherwise, it wraps the parser's successful result with
-~Just~. This gives us the ability to distinguish between “no
-value” and “empty value”, as we mentioned above.
+~Just~. This gives us the ability to distinguish between "no
+value" and "empty value", as we mentioned above.
 
 Individual characters can be encoded in one of several ways.
 
@@ -736,7 +736,7 @@ blocks.
 ** Supplanting regular expressions for casual parsing
 
 In many popular languages, people tend to put regular expressions
-to work for “casual” parsing. They're notoriously tricky for this
+to work for "casual" parsing. They're notoriously tricky for this
 purpose: hard to write, difficult to debug, nearly
 incomprehensible after a few months of neglect, and provide no
 error messages on failure.
@@ -774,7 +774,7 @@ p_pair_app1 =
 
 This parser has exactly the same type and behaviour as ~p_pair~,
 but it's one line long. Instead of writing our parser in a
-“procedural” style, we've simply switched to a programming style
+"procedural" style, we've simply switched to a programming style
 that emphasises that we're /applying/ parsers and /combining/
 their results.
 
@@ -885,7 +885,7 @@ char '%' *> hexDigit :: (Stream s m Char) => ParsecT s u m Char
 #+END_SRC
 
 The expression ~hexify <$> (char '%' *> hexDigit)~ is a parser
-that matches a “%” character followed by hex digit, and whose
+that matches a "%" character followed by hex digit, and whose
 result is a function.
 
 #+BEGIN_SRC screen
@@ -1088,7 +1088,7 @@ p_escape = choice (zipWith decode "bnfrt\\\"/" "\b\n\f\r\t\\\"/")
 #+END_SRC
 
 Finally, JSON lets us encode a Unicode character in a string as
-“~\u~” followed by four hexadecimal digits.
+"~\u~" followed by four hexadecimal digits.
 
 #+CAPTION: JSONParsec.hs
 #+BEGIN_SRC haskell

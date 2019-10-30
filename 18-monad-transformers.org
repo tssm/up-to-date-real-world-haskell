@@ -669,7 +669,7 @@ instance MonadTrans MaybeT where
 #+END_SRC
 
 The underlying monad starts out with a type parameter of a: we
-“inject” the ~Just~ constructor so it will acquire the type that
+"inject" the ~Just~ constructor so it will acquire the type that
 we need, ~Maybe a~. We then hide the monad with our ~MaybeT~
 constructor.
 
@@ -1016,4 +1016,4 @@ semicolon to give it a new meaning.
 
 ** Footnotes
 
-[fn:1] The name “mtl” stands for “monad transformer library”.
+[fn:1] The name "mtl" stands for "monad transformer library".

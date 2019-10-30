@@ -29,7 +29,7 @@ few more language features along the way.
 In most of this chapter, we will concern ourselves with code that
 has no interaction with the outside world. To maintain our focus
 on practical code, we will begin by developing a gateway between
-our “pure” code and the outside world. Our framework simply reads
+our "pure" code and the outside world. Our framework simply reads
 the contents of one file, applies a function to the file, and
 writes the result to another file.
 
@@ -108,7 +108,7 @@ ghci> lines "foo\n\nbar\n"
 #+END_SRC
 
 While ~lines~ looks useful, it relies on us reading a file in
-“text mode” in order to work. Text mode is a feature common to
+"text mode" in order to work. Text mode is a feature common to
 many programming languages: it provides a special behavior when we
 read and write files on Windows. When we read a file in text mode,
 the file I/O library translates the line ending sequence ~"\r\n"~
@@ -129,7 +129,7 @@ carriage returns dangling at the ends of lines. If we read a
 Windows-generated text file on a Linux or Unix box, we'll get
 trailing carriage returns at the end of each line.
 
-We have comfortably used Python's “universal newline” support for
+We have comfortably used Python's "universal newline" support for
 years: this transparently handles Unix and Windows line ending
 conventions for us. We would like to provide something similar in
 Haskell.
@@ -166,7 +166,7 @@ code. We have presented the important pieces of code first,
 keeping the definition of ~isLineTerminator~ until later. Because
 we have given the helper function a readable name, we can guess
 what it does even before we've read it, which eases the smooth
-“flow” of reading the code.
+"flow" of reading the code.
 
 The prelude defines a function named ~break~ that we can use to
 partition a list into two parts. It takes a function as its first
@@ -196,7 +196,7 @@ string. The prefix is the substring before a line terminator, and
 the suffix is the remainder of the string. The suffix will include
 the line terminator, if any is present.
 
-The “~pre :~” expression tells us that we should add the ~pre~
+The "~pre :~" expression tells us that we should add the ~pre~
 value to the front of the list of lines. We then use a ~case~
 expression to inspect the suffix, so we can decide what to do
 next. The result of the ~case~ expression will be used as the
@@ -430,14 +430,14 @@ indispensable tools, so it's important that we learn them early
 on.
 
 For better or worse, this section is going to read a bit like a
-“laundry list” of functions. Why present so many functions at
+"laundry list" of functions. Why present so many functions at
 once? These functions are both easy to learn and absolutely
 ubiquitous. If we don't have this toolbox at our fingertips, we'll
 end up wasting time by reinventing simple functions that are
 already present in the standard libraries. So bear with us as we
 go through the list; the effort you'll save will be huge.
 
-The ~Data.List~ module is the “real” logical home of all standard
+The ~Data.List~ module is the "real" logical home of all standard
 list functions. The prelude merely re-exports a large subset of
 the functions exported by ~Data.List~. Several useful functions in
 ~Data.List~ are /not/ re-exported by the standard prelude. As we
@@ -597,12 +597,12 @@ names that begin with a prefix such as ~unsafe~, so that they
 can't shoot themselves in the foot accidentally.
 
 It's arguably a deficiency of the standard prelude that it defines
-quite a few “unsafe” partial functions, like ~head~, without also
-providing “safe” total equivalents.
+quite a few "unsafe" partial functions, like ~head~, without also
+providing "safe" total equivalents.
 
 *** More simple list manipulations
 
-Haskell's name for the “append” function is ~(++)~.
+Haskell's name for the "append" function is ~(++)~.
 
 #+BEGIN_SRC screen
 ghci> :type (++)
@@ -734,7 +734,7 @@ ghci> dropWhile even [2,4,6,7,9,10,12]
 [7,9,10,12]
 #+END_SRC
 
-Just as ~splitAt~ “tuples up” the results of ~take~ and ~drop~,
+Just as ~splitAt~ "tuples up" the results of ~take~ and ~drop~,
 the functions ~break~ (which we already saw in
 [[file:4-functional-programming.org::*Warming up: portably splitting lines of text][the section called "Warming up: portably splitting lines of text"]]
 and ~span~ tuple up the results of ~takeWhile~ and ~dropWhile~.
@@ -816,7 +816,7 @@ True
 
 *** Working with several lists at once
 
-The ~zip~ function takes two lists and “zips” them into a single
+The ~zip~ function takes two lists and "zips" them into a single
 list of pairs. The resulting list is the same length as the
 shorter of the two inputs.
 
@@ -870,7 +870,7 @@ ghci> unwords ["jumps", "over", "the", "lazy", "dog"]
 
 *** Exercises
 
-1. Write your own “safe” definitions of the standard partial list
+1. Write your own "safe" definitions of the standard partial list
    functions, but make sure that yours never fail. As a hint, you
    might want to consider using the following types.
 
@@ -967,9 +967,9 @@ consider the empty-list case.
 loop acc [] = acc
 #+END_SRC
 
-An empty list doesn't just mean “the input string is empty”; it's
+An empty list doesn't just mean "the input string is empty"; it's
 also the case we'll encounter when we traverse all the way to the
-end of a non-empty list. So we don't want to “error out” if we see
+end of a non-empty list. So we don't want to "error out" if we see
 an empty list. Instead, we should do something sensible. Here, the
 sensible thing is to terminate the loop, and return our
 accumulated value.
@@ -993,7 +993,7 @@ equivalent to the loop starting another round in C.
 Single quotes in variable names
 
 Remember, a single quote is a legal character to use in a Haskell
-variable name, and is pronounced “prime”. There's a common idiom
+variable name, and is pronounced "prime". There's a common idiom
 in Haskell programs involving a variable, say ~foo~, and another
 variable, say ~foo'~. We can usually assume that ~foo'~ is somehow
 related to ~foo~. It's often a new value for ~foo~, as in our code
@@ -1098,7 +1098,7 @@ square []     = []
 #+END_SRC
 
 Our ~square~ function consists of two pattern matching equations.
-The first “deconstructs” the beginning of a non-empty list, to get
+The first "deconstructs" the beginning of a non-empty list, to get
 its head and tail. It squares the first element, then puts that on
 the front of a new list, which is constructed by calling ~square~
 on the remainder of the empty list. The second equation ensures
@@ -1307,7 +1307,7 @@ mySum xs = helper 0 xs
 
 Our ~helper~ function is tail recursive, and uses an accumulator
 parameter, ~acc~, to hold the current partial sum of the list. As
-we already saw with ~asInt~, this is a “natural” way to represent
+we already saw with ~asInt~, this is a "natural" way to represent
 a loop in a pure functional language.
 
 For something a little more complicated, let's take a look at the
@@ -1359,8 +1359,8 @@ adler32 xs = helper 1 0 xs
 This code isn't exactly easier to follow than the Java code, but
 let's look at what's going on. First of all, we've introduced some
 new functions. The ~shiftL~ function implements a logical shift
-left; ~(.&.)~ provides bitwise “and”; and ~(.|.)~ provides bitwise
-“or”.
+left; ~(.&.)~ provides bitwise "and"; and ~(.|.)~ provides bitwise
+"or".
 
 Once again, our ~helper~ function is tail recursive. We've turned
 the two variables we updated on every loop iteration in Java into
@@ -1385,11 +1385,11 @@ Why would we want to make this seemingly meaningless structural
 change? Because as we've already seen with ~map~ and ~filter~, we
 can extract the common behavior shared by ~mySum~ and
 ~adler32_try2~ into a higher-order function. We can describe this
-behavior as “do something to every element of a list, updating an
+behavior as "do something to every element of a list, updating an
 accumulator as we go, and returning the accumulator when we're
-done”.
+done".
 
-This kind of function is called a /fold/, because it “folds up” a
+This kind of function is called a /fold/, because it "folds up" a
 list. There are two kinds of fold over lists, ~foldl~ for folding
 from the left (the start) and ~foldr~ for folding from the right
 (the end).
@@ -1406,14 +1406,14 @@ foldl step zero (x:xs) = foldl step (step zero x) xs
 foldl _    zero []     = zero
 #+END_SRC
 
-The ~foldl~ function takes a “step” function, an initial value for
-its accumulator, and a list. The “step” takes an accumulator and
+The ~foldl~ function takes a "step" function, an initial value for
+its accumulator, and a list. The "step" takes an accumulator and
 an element from the list, and returns a new accumulator value. All
-~foldl~ does is call the “stepper” on the current accumulator and
+~foldl~ does is call the "stepper" on the current accumulator and
 an element of the list, and passes the new accumulator value to
 itself recursively to consume the rest of the list.
 
-We refer to ~foldl~ as a “left fold” because it consumes the list
+We refer to ~foldl~ as a "left fold" because it consumes the list
 from left (the head) to right.
 
 Here's a rewrite of ~mySum~ using ~foldl~.
@@ -1468,7 +1468,7 @@ adler32_foldl xs = let (a, b) = foldl step (1, 0) xs
 
 Here, our accumulator is a pair, so the result of ~foldl~ will be,
 too. We pull the final accumulator apart when ~foldl~ returns, and
-bit-twiddle it into a “proper” checksum.
+bit-twiddle it into a "proper" checksum.
 
 *** Why use folds, maps, and filters?
 
@@ -1519,7 +1519,7 @@ foldr (+) 0 (1:2:3:[])
 #+END_SRC
 
 The difference between ~foldl~ and ~foldr~ should be clear from
-looking at where the parentheses and the “empty list” elements
+looking at where the parentheses and the "empty list" elements
 show up. With ~foldl~, the empty list element is on the left, and
 all the parentheses group to the left. With ~foldr~, the ~zero~
 value is on the right, and the parentheses group to the right.
@@ -1612,11 +1612,11 @@ If you get stuck, you may find the task easier after reading
 
 Returning to our earlier intuitive explanation of what ~foldr~
 does, another useful way to think about it is that it /transforms/
-its input list. Its first two arguments are “what to do with each
-head/tail element of the list”, and “what to substitute for the
-end of the list”.
+its input list. Its first two arguments are "what to do with each
+head/tail element of the list", and "what to substitute for the
+end of the list".
 
-The “identity” transformation with ~foldr~ thus replaces the empty
+The "identity" transformation with ~foldr~ thus replaces the empty
 list with itself, and applies the list constructor to each
 head/tail pair:
 
@@ -1854,7 +1854,7 @@ isInAny needle haystack = any inSequence haystack
 
 Haskell lets us write completely anonymous functions, which we can
 use to avoid the need to give names to our helper functions.
-Anonymous functions are often called “lambda” functions, in a nod
+Anonymous functions are often called "lambda" functions, in a nod
 to their heritage in the lambda calculus. We introduce an
 anonymous function with a backslash character, ~\~, pronounced
 /lambda/[fn:2]. This is followed by the function's arguments
@@ -1919,7 +1919,7 @@ Another thing to notice about the ~isInAny~ and ~isInAny2~
 functions we showed above is that the first version, using a
 helper function that has a name, is a little easier to read than
 the version that plops an anonymous function into the middle. The
-named helper function doesn't disrupt the “flow” of the function
+named helper function doesn't disrupt the "flow" of the function
 in which it's used, and the judiciously chosen name gives us a
 little bit of information about what the function is expected to
 do.
@@ -1937,7 +1937,7 @@ a partially applied function is yet? Read on!
 We don't intend these caveats to suggest that lambdas are useless,
 merely that we ought to be mindful of the potential pitfalls when
 we're thinking of using them. In later chapters, we will see that
-they are often invaluable as “glue”.
+they are often invaluable as "glue".
 
 ** Partial function application and currying
 
@@ -1977,7 +1977,7 @@ higher order function.
     ["a","f","e"]
 #+END_SRC
 
-Every time we supply an argument to a function, we can “chop” an
+Every time we supply an argument to a function, we can "chop" an
 element off the front of its type signature. Let's take ~zip3~ as
 an example to see what we mean; this is a function that zips three
 lists into a list of three-tuples.
@@ -2043,7 +2043,7 @@ isInAny3 needle haystack = any (isInfixOf needle) haystack
 #+END_SRC
 
 Here, the expression ~isInfixOf needle~ is the partially applied
-function. We're taking the function ~isInfixOf~, and “fixing” its
+function. We're taking the function ~isInfixOf~, and "fixing" its
 first argument to be the ~needle~ variable from our parameter
 list. This gives us a partially applied function that has exactly
 the same type and behavior as the helper and lambda in our earlier
@@ -2130,7 +2130,7 @@ isInAny4 needle haystack = any (needle `isInfixOf`) haystack
 
 Haskell's ~tails~ function, in the ~Data.List~ module, generalises
 the ~tail~ function we introduced earlier. Instead of returning
-one “tail” of a list, it returns /all/ of them.
+one "tail" of a list, it returns /all/ of them.
 
 #+BEGIN_SRC screen
 ghci> :m +Data.List
@@ -2164,10 +2164,10 @@ suffixes _ = []
 #+END_SRC
 
 The pattern ~xs @ (_ : xs')~ is called an /as-pattern/, and it
-means “bind the variable ~xs~ to the value that matches the right
-side of the ~@~ symbol”.
+means "bind the variable ~xs~ to the value that matches the right
+side of the ~@~ symbol".
 
-In our example, if the pattern after the “@” matches, ~xs~ will be
+In our example, if the pattern after the "@" matches, ~xs~ will be
 bound to the entire list that matched, and ~xs'~ to all but the
 head of the list (we used the wild card ~_~ pattern to indicate
 that we're not interested in the value of the head of the list).
@@ -2234,7 +2234,7 @@ compose :: (b -> c) -> (a -> b) -> a -> c
 compose f g x = f (g x)
 #+END_SRC
 
-We now have a function, ~compose~, that we can use to “glue” two
+We now have a function, ~compose~, that we can use to "glue" two
 other functions together.
 
 #+CAPTION: SuffixTree.hs
@@ -2452,7 +2452,7 @@ general rule, don't use a fold if you can compose some library
 functions, but otherwise try to use a fold in preference to a
 hand-rolled a tail recursive loop.
 
-As for anonymous functions, they tend to interrupt the “flow” of
+As for anonymous functions, they tend to interrupt the "flow" of
 reading a piece of code. It is very often as easy to write a local
 function definition in a ~let~ or ~where~ clause, and use that, as
 it is to put an anonymous function into place. The relative
@@ -2472,7 +2472,7 @@ problematic, and how to solve the difficulties that can arise.
 Do you need to know all of this right now?
 
 It is perfectly reasonable to skip this section until you
-encounter a space leak “in the wild”. Provided you use ~foldr~ if
+encounter a space leak "in the wild". Provided you use ~foldr~ if
 you are generating a list, and ~foldl'~ instead of ~foldl~
 otherwise, space leaks are unlikely to bother you in practice for
 a while.

@@ -312,7 +312,7 @@ For instance, our new ~sellItem~ function will retry indefinitely
 as long as we are missing either the item or enough money, but we
 might prefer to just try the sale once.
 
-The ~orElse~ combinator lets us perform a “backup” action if the
+The ~orElse~ combinator lets us perform a "backup" action if the
 main one fails.
 
 #+BEGIN_SRC screen
@@ -605,7 +605,7 @@ forkTimes k alive act =
 #+END_EXAMPLE
 
 The ~forkTimes~ function starts a number of identical worker
-threads, and decreases the “alive” count each time a thread exits.
+threads, and decreases the "alive" count each time a thread exits.
 We use a ~finally~ combinator to ensure that the count is always
 decremented, no matter how the thread terminates.
 
@@ -681,7 +681,7 @@ endless redirect loops. To determine whether a URL is valid, we
 use the HTTP standard's HEAD verb, which uses less bandwidth than
 a full GET.
 
-This code has the classic “marching off the left of the screen”
+This code has the classic "marching off the left of the screen"
 style that we have learned to be wary of. Here is a rewrite that
 offers greater clarity via the ~ErrorT~ monad transformer and a
 few generally useful functions.
@@ -810,7 +810,7 @@ sendJobs js = do
 
 Our ~extractLinks~ function doesn't attempt to properly parse a
 HTML or text file. Instead, it looks for strings that appear to be
-URLs, and treats them as “good enough”.
+URLs, and treats them as "good enough".
 
 #+CAPTION: Check.hs
 #+BEGIN_EXAMPLE
@@ -933,7 +933,7 @@ testme_noguards x xs = case lookup x xs of
                          _              -> 0
 #+END_EXAMPLE
 
-Pattern guards let us “collapse” a collection of guards and ~case~
+Pattern guards let us "collapse" a collection of guards and ~case~
 expressions into a single guard, allowing us to write more
 succinct and descriptive guards.
 
