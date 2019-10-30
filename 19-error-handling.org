@@ -816,7 +816,7 @@ data SqlError = SqlError {seState :: String,
                 deriving (Eq, Show, Read, Typeable)
 #+END_EXAMPLE
 
-By deriving the ~Typeable~ typeclass, we've made this type
+By deriving the ~Typeable~ type class, we've made this type
 available for dynamically typed programming. In order for GHC to
 automatically generate a ~Typeable~ instance, we had to enable the
 ~DeriveDataTypeable~ language extension[fn:5].
@@ -964,7 +964,7 @@ bounced out to the ~IO~ monad.
 #+END_NOTE
 
 As with other ~mtl~ monads, the interface that ~ErrorT~ provides
-is defined by a typeclass.
+is defined by a type class.
 
 #+CAPTION: MonadError.hs
 #+BEGIN_EXAMPLE
@@ -979,7 +979,7 @@ class (Monad m) => MonadError e m | m -> e where
 
 The type variable ~e~ represents the error type we want to use.
 Whatever our error type is, we must make it an instance of the
-~Error~ typeclass.
+~Error~ type class.
 
 #+CAPTION: MonadError.hs
 #+BEGIN_EXAMPLE
@@ -994,7 +994,7 @@ class Error a where
 The ~strMsg~ function is used by ~ErrorT~'s implementation of
 ~fail~. It throws ~strMsg~ as an exception, passing it the string
 argument it received. As for ~noMsg~, it is used to provide an
-~mzero~ implementation for the ~MonadPlus~ typeclass.
+~mzero~ implementation for the ~MonadPlus~ type class.
 
 To support the ~strMsg~ and ~noMsg~ functions, our ~ParseError~
 type will have a ~Chatty~ constructor. This will be used as the

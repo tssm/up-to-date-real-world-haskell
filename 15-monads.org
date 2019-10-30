@@ -224,11 +224,11 @@ programming patterns have a monadic structure: passing around
 implicit data, or short-circuiting a chain of evaluations if one
 fails, to choose but two.
 
-** The Monad typeclass
+** The Monad type class
 
 We can capture the notions of chaining and injection, and the
-types that we want them to have, in a Haskell typeclass. The
-standard ~Prelude~ already defines just such a typeclass, named
+types that we want them to have, in a Haskell type class. The
+standard ~Prelude~ already defines just such a type class, named
 ~Monad~.
 
 #+BEGIN_SRC haskell
@@ -263,7 +263,7 @@ behavior to its name is that it /returns/ a pure value (of type
 ~a~) into a monad (of type ~m a~).
 
 While ~(>>=)~ and ~return~ are the core functions of the ~Monad~
-typeclass, it also defines two other functions. The first is
+type class, it also defines two other functions. The first is
 ~(>>)~. Like ~(>>=)~, it performs chaining, but it ignores the
 value on the left.
 
@@ -367,10 +367,10 @@ familiar with. These aren't formal terms, but they're in common
 use, so it's helpful to know about them.
 
 - "Monadic" simply means "pertaining to monads". A monadic /type/
-  is an instance of the ~Monad~ typeclass; a monadic /value/ has a
+  is an instance of the ~Monad~ type class; a monadic /value/ has a
   monadic type.
 - When we say that a type "is a monad", this is really a shorthand
-  way of saying that it's an instance of the ~Monad~ typeclass.
+  way of saying that it's an instance of the ~Monad~ type class.
   Being an instance of ~Monad~ gives us the necessary monadic
   triple of type constructor, injection function, and chaining
   function.
@@ -388,7 +388,7 @@ use, so it's helpful to know about them.
 
 In our introduction to monads, we showed how some pre-existing
 code was already monadic in form. Now that we are beginning to
-grasp what a monad is, and we've seen the ~Monad~ typeclass, let's
+grasp what a monad is, and we've seen the ~Monad~ type class, let's
 build a monad with foreknowledge of what we're doing. We'll start
 out by defining its interface, then we'll put it to use. Once we
 have those out of the way, we'll finally build it.
@@ -461,7 +461,7 @@ runLogger :: Logger a -> (a, Log)
 
 *** Controlled escape
 
-The ~Monad~ typeclass doesn't provide any means for values to
+The ~Monad~ type class doesn't provide any means for values to
 escape their monadic shackles. We can inject a value into a monad
 using ~return~. We can extract a value from a monad using ~(>>=)~
 but the function on the right, which can see an unwrapped value,
@@ -658,7 +658,7 @@ functor, calling the function on it, and rewrapping the result
 with the same constructor.
 
 We do exactly the same thing with a monad. Because the ~Monad~
-typeclass already provides the ~(>>=)~ and ~return~ functions that
+type class already provides the ~(>>=)~ and ~return~ functions that
 know how to unwrap and wrap a value, the ~liftM~ function doesn't
 need to know any details of a monad's implementation.
 
@@ -670,7 +670,7 @@ liftM f m = m >>= \i ->
 #+END_SRC
 
 When we declare a type to be an instance of the ~Functor~
-typeclass, we have to write our own version of ~fmap~ specially
+type class, we have to write our own version of ~fmap~ specially
 tailored to that type. By contrast, ~liftM~ doesn't need to know
 anything of a monad's internals, because they're abstracted by
 ~(>>=)~ and ~return~. We only need to write it once, with the
@@ -849,7 +849,7 @@ flavours, each with different levels of strictness.
 Our ~Logger~ monad is a specialised version of the standard
 ~Writer~ monad, which can be found in the ~Control.Monad.Writer~
 module of the ~mtl~ package. We will present a ~Writer~ example in
-[[file:16-programming-with-monads.org::*Using typeclasses][the section called "Using typeclasses"]]
+[[file:16-programming-with-monads.org::*Using type classes][the section called "Using type classes"]]
 
 ** The Maybe monad
 
@@ -1631,14 +1631,14 @@ rand = getStdRandom (randomR (0, maxBound))
 (The ~randomR~ function takes an inclusive range within which the
 generated random value should lie.)
 
-The ~System.Random~ module provides a typeclass, ~RandomGen~, that
+The ~System.Random~ module provides a type class, ~RandomGen~, that
 lets us define new sources of random ~Int~ values. The type
 ~StdGen~ is the standard ~RandomGen~ instance. It generates
 pseudorandom values. If we had an external source of truly random
 data, we could make it an instance of ~RandomGen~ and get truly
 random, instead of merely pseudorandom, values.
 
-Another typeclass, ~Random~, indicates how to generate random
+Another type class, ~Random~, indicates how to generate random
 values of a particular type. The module defines ~Random~ instances
 for all of the usual simple types.
 
@@ -1882,7 +1882,7 @@ conventionally named ~join~.
 If we had definitions of ~join~ and ~fmap~, we wouldn't need to
 write a definition of ~(>>=)~ for every monad, because it would be
 completely generic. Here's what an alternative definition of the
-~Monad~ typeclass might look like, along with a definition of
+~Monad~ type class might look like, along with a definition of
 ~(>>=)~.
 
 #+BEGIN_SRC haskell

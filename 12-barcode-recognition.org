@@ -559,7 +559,7 @@ luminance (r,g,b) = round (r' * 0.30 + g' * 0.59 + b' * 0.11)
           b' = fromIntegral b
 #+END_SRC
 
-Haskell arrays are members of the ~Functor~ typeclass, so we can
+Haskell arrays are members of the ~Functor~ type class, so we can
 simply use ~fmap~ to turn an entire image, or a single scanline,
 from colour into greyscale.
 

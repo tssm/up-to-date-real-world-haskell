@@ -88,7 +88,7 @@ you will call anything from a backend driver module directly.
 The database connection function will return a database handle.
 The precise type of this handle may vary from one driver to the
 next, but it will always be an instance of the ~IConnection~
-typeclass. All of the functions you will use to operate on
+type class. All of the functions you will use to operate on
 databases will work with any type that is an instance of
 ~IConnection~. When you're done talking to the database, call the
 ~disconnect~ function. It will disconnect you from the database.

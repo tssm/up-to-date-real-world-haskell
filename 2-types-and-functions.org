@@ -141,8 +141,8 @@ Static typing can occasionally make it difficult to write some
 useful kinds of code. In languages like Python, "duck typing" is
 common, where an object acts enough like another to be used as a
 substitute for it[fn:1]. Fortunately, Haskell's system of
-/typeclasses/, which we will cover in
-[[file:6-using-typeclasses.org][Chapter 6, /Using Typeclasses/]], provides almost all of the
+/type classes/, which we will cover in
+[[file:6-using-typeclasses.org][Chapter 6, Using Type Classes]], provides almost all of the
 benefits of dynamic typing, in a safe and convenient form. Haskell
 has some support for programming with truly dynamic types, though
 it is not quite as easy as in a language that wholeheartedly
@@ -1277,7 +1277,7 @@ point numbers. Haskell deliberately avoids even this kind of
 simple automatic coercion.
 
 This is not the whole story of polymorphism in Haskell: we'll
-return to the subject in [[file:6-using-typeclasses.org][Chapter 6, /Using Typeclasses/]].
+return to the subject in [[file:6-using-typeclasses.org][Chapter 6, Using Type Classes]].
 
 *** Reasoning about polymorphic functions
 

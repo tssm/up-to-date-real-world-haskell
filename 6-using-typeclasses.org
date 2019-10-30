@@ -1,13 +1,13 @@
-* Chapter 6: Using Typeclasses
+* Chapter 6: Using Type Classes
 
-Typeclasses are among the most powerful features in Haskell. They
+Type classes are among the most powerful features in Haskell. They
 allow you to define generic interfaces that provide a common
-feature set over a wide variety of types. Typeclasses are at the
+feature set over a wide variety of types. Type classes are at the
 heart of some basic language features such as equality testing and
-numeric operators. Before we talk about what exactly typeclasses
+numeric operators. Before we talk about what exactly type classes
 are, though, we'd like to explain the need for them.
 
-** The need for typeclasses
+** The need for type classes
 
 Let's imagine that for some unfathomable reason, the designers of
 the Haskell language neglected to implement the equality test
@@ -70,21 +70,21 @@ things, then it ought to be able to accept any data type that the
 compiler knows how to compare. And, what's more, if new data types
 are added later, the existing code shouldn't have to be modified.
 
-Haskell's typeclasses are designed to address all of these things.
+Haskell's type classes are designed to address all of these things.
 
-** What are typeclasses?
+** What are type classes?
 
-Typeclasses define a set of functions that can have different
+Type classes define a set of functions that can have different
 implementations depending on the type of data they are given.
-Typeclasses may look like the objects of object-oriented
+Type classes may look like the objects of object-oriented
 programming, but they are truly quite different.
 
-Let's use typeclasses to solve our equality dilemma from earlier
-in the chapter. To begin with, we must define the typeclass
+Let's use type classes to solve our equality dilemma from earlier
+in the chapter. To begin with, we must define the type class
 itself. We want a function that takes two parameters, both the
 same type, and returns a ~Bool~ indicating whether or not they are
 equal. We don't care what that type is, but we just want two items
-of that type. Here's our first definition of a typeclass:
+of that type. Here's our first definition of a type class:
 
 #+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
@@ -92,17 +92,17 @@ class BasicEq a where
     isEqual :: a -> a -> Bool
 #+END_SRC
 
-This says that we are declaring a typeclass named ~BasicEq~, and
+This says that we are declaring a type class named ~BasicEq~, and
 we'll refer to instance types with the letter ~a~. An instance
-type of this typeclass is any type that implements the functions
-defined in the typeclass. This typeclass defines one function.
+type of this type class is any type that implements the functions
+defined in the type class. This type class defines one function.
 That function takes two parameters–both corresponding to instance
 types–and returns a ~Bool~.
 
 #+BEGIN_NOTE
 When is a class not a class?
 
-The keywoard to define a typeclass in Haskell is ~class~.
+The keywoard to define a type class in Haskell is ~class~.
 Unfortunately, this may be confusing for those of you coming from
 an object-oriented background, as we are not really defining the
 same thing.
@@ -161,10 +161,10 @@ that we could fix the problem by defining an instance of ~BasicEq~
 for ~[Char]~, which is the same as ~String~.
 
 We'll go into more detail on defining instances in
-[[file:6-using-typeclasses.org::*Declaring typeclass instances][the section called "Declaring typeclass instances"]]
-let's continue to look at ways to define typeclasses. In this
+[[file:6-using-typeclasses.org::*Declaring type class instances][the section called "Declaring type class instances"]]
+let's continue to look at ways to define type classes. In this
 example, a not-equal-to function might be useful. Here's what we
-might say to define a typeclass with two functions:
+might say to define a type class with two functions:
 
 #+CAPTION: EqClasses.hs
 #+BEGIN_SRC haskell
@@ -180,7 +180,7 @@ While our definition of ~BasicEq2~ is fine, it seems that we're
 making extra work for ourselves. Logically speaking, if we know
 what ~isEqual~ or ~isNotEqual~ would return, we know how to figure
 out what the other function would return, for all types. Rather
-than making users of the typeclass define both functions for all
+than making users of the type class define both functions for all
 types, we can provide default implementations for them. Then,
 users will only have to implement one function.[fn:1] Here's an
 example that shows how to do this.
@@ -205,11 +205,11 @@ function must always be implemented.
 
 With ~BasicEq3~, we have provided a class that does very much the
 same thing as Haskell's built-in ~==~ and ~/=~ operators. In fact,
-these operators are defined by a typeclass that looks almost
+these operators are defined by a type class that looks almost
 identical to ~BasicEq3~. The Haskell 2010 Report defines a
-typeclass that implements equality comparison. Here is the code
-for the built-in ~Eq~ typeclass. Note how similar it is to our
-~BasicEq3~ typeclass.
+type class that implements equality comparison. Here is the code
+for the built-in ~Eq~ type class. Note how similar it is to our
+~BasicEq3~ type class.
 
 #+BEGIN_SRC haskell
 class Eq a where
@@ -220,15 +220,15 @@ class Eq a where
     x == y = not (x /= y)
 #+END_SRC
 
-** Declaring typeclass instances
+** Declaring type class instances
 
-Now that you know how to define typeclasses, it's time to learn
-how to define instances of typeclasses. Recall that types are made
-instances of a particular typeclass by implementing the functions
-necessary for that typeclass.
+Now that you know how to define type classes, it's time to learn
+how to define instances of type classes. Recall that types are made
+instances of a particular type class by implementing the functions
+necessary for that type class.
 
 Recall our attempt to create a test for equality over a ~Color~
-type back in [[file:6-using-typeclasses.org::*The need for typeclasses][the section called "The need for typeclasses"]]
+type back in [[file:6-using-typeclasses.org::*The need for type classes][the section called "The need for type classes"]]
 let's see how we could make that same ~Color~ type a member of the
 ~BasicEq3~ class.
 
@@ -244,7 +244,7 @@ instance BasicEq3 Color where
 #+END_SRC
 
 Notice that we provide essentially the same function as we used
-back in [[file:6-using-typeclasses.org::*The need for typeclasses][the section called "The need for typeclasses"]]
+back in [[file:6-using-typeclasses.org::*The need for type classes][the section called "The need for type classes"]]
 the implementation is identical. However, in this case, we can use
 ~isEqual3~ on /any/ type that we declare is an instance of
 ~BasicEq3~, not just this one color type. We could define equality
@@ -261,21 +261,21 @@ in ~BasicEq3~. Since we didn't explicitly define ~isNotEqual3~,
 the compiler automatically uses the default implementation given
 in the ~BasicEq3~ declaration.
 
-** Important Built-In Typeclasses
+** Important Built-In Type Classes
 
-Now that we've discussed defining your own typeclasses and making
-your types instances of typeclasses, it's time to introduce you to
-typeclasses that are a standard part of the Haskell prelude. As we
-mentioned at the beginning of this chapter, typeclasses are at the
+Now that we've discussed defining your own type classes and making
+your types instances of type classes, it's time to introduce you to
+type classes that are a standard part of the Haskell prelude. As we
+mentioned at the beginning of this chapter, type classes are at the
 core of some important aspects of the language. We'll cover the
 most common ones here. For more details, the Haskell library
 reference is a good resource. It will give you a description of
-the typeclasses, and usually also will tell you which functions
+the type classes, and usually also will tell you which functions
 you must implement to have a complete definition.
 
 *** Show
 
-The ~Show~ typeclass is used to convert values to ~String~s. It is
+The ~Show~ type class is used to convert values to ~String~s. It is
 perhaps most commonly used to convert numbers to ~String~s, but it
 is defined for so many types that it can be used to convert quite
 a bit more. If you have defined your own types, making them
@@ -351,12 +351,12 @@ instance Show Color where
 #+END_SRC
 
 This example defines an instance of ~Show~ for our type ~Color~
-(see [[file:6-using-typeclasses.org::*The need for typeclasses][the section called "The need for typeclasses"]]
+(see [[file:6-using-typeclasses.org::*The need for type classes][the section called "The need for type classes"]]
 implementation is simple: we define a function ~show~ and that's
 all that's needed.
 
 #+BEGIN_NOTE
-The Show typeclass
+The Show type class
 
 ~Show~ is usually used to define a ~String~ representation for
 data that is useful for a machine to parse back with ~Read~.
@@ -367,7 +367,7 @@ representation would be different than expected via ~Show~.
 
 *** Read
 
-The ~Read~ typeclass is essentially the opposite of ~Show~: it
+The ~Read~ type class is essentially the opposite of ~Show~: it
 defines functions that will take a ~String~, parse it, and return
 data in any type that is a member of ~Read~. The most useful
 function in ~Read~ is ~read~. You can ask ~ghci~ for its type like
@@ -506,7 +506,7 @@ leading spaces, which is common practice in Haskell programs.
 Read is not widely used
 
 While it is possible to build sophisticated parsers using the
-~Read~ typeclass, many people find it easier to do so using
+~Read~ type class, many people find it easier to do so using
 Parsec, and rely on ~Read~ only for simpler tasks. Parsec is
 covered in detail in [[file:14-using-parsec.org][Chapter 16, /Using Parsec/]].
 #+END_TIP
@@ -595,11 +595,11 @@ Haskell has a powerful set of numeric types. You can use
 everything from fast 32-bit or 64-bit integers to
 arbitrary-precision rational numbers. You probably know that
 operators such as ~+~ can work with just about all of these. This
-feature is implemented using typeclasses. As a side benefit, it
+feature is implemented using type classes. As a side benefit, it
 allows you to define your own numeric types and make them
 first-class citizens in Haskell.
 
-Let's begin our discussion of the typeclasses surrounding numeric
+Let's begin our discussion of the type classes surrounding numeric
 types with an examination of the types themselves.
 [[Table%C2%A06.1.%C2%A0Selected Numeric Types][Table 6.1, "Selected Numeric Types"]] describes the most
 commonly-used numeric types in Haskell. Note that there are also
@@ -630,8 +630,8 @@ operations, such as addition, that work with all of them. There
 are others, such as ~asin~, that only apply to floating-point
 types. [[Table%C2%A06.2.%C2%A0Selected Numeric Functions and Constants][Table 6.2, "Selected Numeric Functions and Constants"]]
 summarizes the different functions that operate on numeric types,
-and [[Table%C2%A06.3.%C2%A0Typeclass Instances for Numeric Types][Table 6.3, "Typeclass Instances for Numeric Types"]] matches the
-types with their respective typeclasses. As you read that table,
+and [[Table%C2%A06.3.%C2%A0Type Class Instances for Numeric Types][Table 6.3, "Type Class Instances for Numeric Types"]] matches the
+types with their respective type classes. As you read that table,
 keep in mind that Haskell operators are just functions: you can
 say either ~(+) 2 3~ or ~2 + 3~ with the same result. By
 convention, when referring to an operator as a function, it is
@@ -677,8 +677,8 @@ written in parenthesis as seen in this table.
 | ~truncate~       | ~(RealFrac a, Integral b) ~> a -> b~        | ~Prelude~    | Truncates number towards zero                                                          |
 | ~xor~            | ~Bits a ~> a -> a -> a~                     | ~Data.Bits~  | Bitwise exclusive or                                                                   |
 
-#+NAME: Table 6.3. Typeclass Instances for Numeric Types
-#+CAPTION: Table 6.3. Typeclass Instances for Numeric Types
+#+NAME: Table 6.3. Type Class Instances for Numeric Types
+#+CAPTION: Table 6.3. Type Class Instances for Numeric Types
 | Type                      | ~Bits~ | ~Bounded~ | ~Floating~ | ~Fractional~ | ~Integral~ | ~Num~ | ~Real~ | ~RealFrac~ |
 |---------------------------+--------+-----------+------------+--------------+------------+-------+--------+------------|
 | ~Double~                  |        |           | X          | X            |            | X     | X      | X          |
@@ -714,7 +714,7 @@ on converting between different types.
 | ~Rational~        | ~fromRational~              | ~truncate~[fn:3] | ~truncate~[fn:3] | N/A            |
 
 For an extended example demonstrating the use of these numeric
-typeclasses, see
+type classes, see
 [[file:13-data-structures.org::*Extended example: Numeric Types][the section called "Extended example: Numeric Types"]]
 
 *** Equality, Ordering, and Comparisons
@@ -726,8 +726,8 @@ obvious, of course, are the equality tests: ~==~ and ~/=~. These
 operators are defined in the ~Eq~ class.
 
 There are also comparison operators such as ~>=~ and ~<=~. These
-are declared by the ~Ord~ typeclass. These are in a separate
-typeclass because there are some types, such as ~Handle~, where an
+are declared by the ~Ord~ type class. These are in a separate
+type class because there are some types, such as ~Handle~, where an
 equality test makes sense, but there is no way to express a
 particular ordering. Anything that is an instance of ~Ord~ can be
 sorted by ~Data.List.sort~.
@@ -760,8 +760,8 @@ data Color = Red | Green | Blue
 Which types can be automatically derived?
 
 The Haskell standard requires compilers to be able to
-automatically derive instances of these specific typeclasses. This
-automation is not available for other typeclasses.
+automatically derive instances of these specific type classes. This
+automation is not available for other type classes.
 #+END_NOTE
 
 Let's take a look at how these derived instances work for us:
@@ -794,9 +794,9 @@ will not be able to derive an instance of ~Show~ because it
 doesn't know how to render a function. We will get a compilation
 error in such a situation.
 
-When we automatically derive an instance of some typeclass, the
+When we automatically derive an instance of some type class, the
 types that we refer to in our ~data~ declaration must also be
-instances of that typeclass (manually or automatically).
+instances of that type class (manually or automatically).
 
 #+CAPTION: AutomaticDerivation.hs
 #+BEGIN_SRC haskell
@@ -815,7 +815,7 @@ data ThisWorks = ThisWorks OK
                  deriving (Show)
 #+END_SRC
 
-** Typeclasses at work: making JSON easier to use
+** Type classes at work: making JSON easier to use
 
 The ~JValue~ type that we introduced in
 [[file:5-writing-a-library.org::*Representing JSON data in Haskell][the section called "Representing JSON data in Haskell"]]
@@ -871,7 +871,7 @@ we want to change the number ~3920~ to a string ~"3,920"~, we must
 change the constructor that we use to wrap it from ~JNumber~ to
 ~JString~.
 
-Haskell's typeclasses offer a tempting solution to this problem.
+Haskell's type classes offer a tempting solution to this problem.
 
 #+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
@@ -922,7 +922,7 @@ data Either a b = Left a
 Quite often, the type we use for the ~a~ parameter value is
 ~String~, so we can provide a useful description if something goes
 wrong. To see how we use the ~Either~ type in practice, let's look
-at a simple instance of our typeclass.
+at a simple instance of our type class.
 
 #+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
@@ -1013,8 +1013,8 @@ because it is implied by ~FlexibleInstances~.
 
 ** Living in an open world
 
-Haskell's typeclasses are intentionally designed to let us create
-new instances of a typeclass whenever we see fit.
+Haskell's type classes are intentionally designed to let us create
+new instances of a type class whenever we see fit.
 
 #+CAPTION: JSONClass.hs
 #+BEGIN_SRC haskell
@@ -1036,10 +1036,10 @@ instance JSON Double where
 #+END_SRC
 
 We can add new instances anywhere; they are not confined to the
-module where we define a typeclass. This feature of the typeclass
+module where we define a type class. This feature of the type class
 system is referred to as its /open world assumption/. If we had a
 way to express a notion of "the following are the only instances
-of this typeclass that can exist", we would have a /closed/ world.
+of this type class that can exist", we would have a /closed/ world.
 
 We would like to be able to turn a list into what JSON calls an
 array. We won't worry about implementation details just yet, so
@@ -1121,7 +1121,7 @@ instance (Borked a, Borked b) => Borked (a, b) where
     bork (a, b) = ">>" ++ bork a ++ " " ++ bork b ++ "<<"
 #+END_SRC
 
-We have two instances of the typeclass ~Borked~ for pairs: one for
+We have two instances of the type class ~Borked~ for pairs: one for
 a pair of ~Int~s and another for a pair of anything else that's
 ~Borked~.
 
@@ -1137,10 +1137,10 @@ report an error if we try to use ~bork~.
 #+BEGIN_NOTE
 When do overlapping instances matter?
 
-As we mentioned earlier, we can scatter instances of a typeclass
+As we mentioned earlier, we can scatter instances of a type class
 across several modules. GHC does not complain about the mere
 existence of overlapping instances. Instead, it only complains
-when we try to use a method of the affected typeclass, when it is
+when we try to use a method of the affected type class, when it is
 forced to make a decision about which instance to use.
 #+END_NOTE
 
@@ -1185,7 +1185,7 @@ specified for ~[a]~.
 
 These language extensions are specific to GHC, and by definition
 were not present in Haskell 2010. However, the familiar ~Show~
-typeclass from Haskell 2010 somehow renders a list of ~Char~
+type class from Haskell 2010 somehow renders a list of ~Char~
 differently from a list of ~Int~. It achieves this via a clever,
 but simple, trick.
 
@@ -1250,7 +1250,7 @@ identifier; we cannot see that it is implemented as an ~Int~.
 #+END_NOTE
 
 When we declare a ~newtype~, we must choose which of the
-underlying type's typeclass instances we want to expose. Here,
+underlying type's type class instances we want to expose. Here,
 we've elected to make ~NewtypeInt~ provide ~Int~'s instances for
 ~Eq~, ~Ord~ and ~Show~. As a result, we can compare and print
 values of type ~NewtypeInt~.
@@ -1278,8 +1278,8 @@ constructor to create a new value, or to pattern match on an
 existing value.
 
 If a ~newtype~ does not use automatic deriving to expose the
-underlying type's implementation of a typeclass, we are free to
-either write a new instance or leave the typeclass unimplemented.
+underlying type's implementation of a type class, we are free to
+either write a new instance or leave the type class unimplemented.
 
 *** Differences between data and newtype declarations
 
@@ -1412,14 +1412,14 @@ names for types.
   identity. The original type and the new type are /not/
   interchangeable.
 
-** JSON typeclasses without overlapping instances
+** JSON type classes without overlapping instances
 
 Enabling GHC's support for overlapping instances is an effective
 and quick way to make our JSON code happy. In more complex cases,
 we will occasionally be faced with several equally good instances
-for some typeclass, in which case overlapping instances will not
+for some type class, in which case overlapping instances will not
 help us and we will need to put some ~newtype~ declarations into
-place. To see what's involved, let's rework our JSON typeclass
+place. To see what's involved, let's rework our JSON type class
 instances to use ~newtype~s instead of overlapping instances.
 
 Our first task, then, is to help the compiler to distinguish
@@ -1525,7 +1525,7 @@ module JSONClass
     ) where
 #+END_SRC
 
-This change doesn't affect the instances of the JSON typeclass
+This change doesn't affect the instances of the JSON type class
 that we've already written, but we will want to write instances
 for our new ~JAry~ and ~JObj~ types.
 
@@ -1687,7 +1687,7 @@ sometimes forces a declaration to be less polymorphic than we
 would expect.
 
 We mention the monomorphism restriction here because although it
-isn't specifically related to typeclasses, they usually provide
+isn't specifically related to type classes, they usually provide
 the circumstances in which it crops up.
 
 #+BEGIN_TIP
@@ -1741,11 +1741,11 @@ language extension.
 
 ** Conclusion
 
-In this chapter, you learned about the need for typeclasses and
-how to use them. We talked about defining our own typeclasses and
-then covered some of the important typeclasses that are defined in
+In this chapter, you learned about the need for type classes and
+how to use them. We talked about defining our own type classes and
+then covered some of the important type classes that are defined in
 the Haskell library. Finally, we showed how to have the Haskell
-compiler automatically derive instances of certain typeclasses for
+compiler automatically derive instances of certain type classes for
 your types.
 
 ** Footnotes
