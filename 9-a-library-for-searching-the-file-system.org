@@ -640,7 +640,7 @@ betterFind (sizeP `equalP` 1024) :: FilePath -> IO [FilePath]
 #+END_SRC
 
 Notice that we're not actually calling ~betterFind~, we're merely
-making sure that our expression typechecks. We now have a more
+making sure that our expression type-checks. We now have a more
 expressive way to list all files that are exactly some size. Our
 success gives us enough confidence to continue.
 

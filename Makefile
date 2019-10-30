@@ -21,3 +21,7 @@ typeclass:
 	sed -i 's/Typeclass/Type class/g' *.org
 	sed -i 's/typeclass/type class/g' *.org
 	sed -i 's/6-using-type classes.org/6-using-typeclasses.org/g' *.org
+
+typecheck:
+	# No instances of "Typecheck"
+	sed -i 's/typecheck/type-check/g' *.org
