@@ -66,7 +66,7 @@ their type and value constructors have different names.
 Deriving what?
 
 We'll explain the full meaning of ~deriving (Show)~ later, in
-[[file:using-typeclasses.html#typeclasses.wellknown.show][the section called “Show”]]. For now, it's enough to know that we
+[[file:6-using-typeclasses.org::*Show][the section called "Show"]]
 need to tack this onto a type declaration so that ~ghci~ will
 automatically know how to print a value of this type.
 #+END_NOTE
@@ -430,9 +430,9 @@ By /positional/, we mean that the section number is in the first
 field of the Haskell type, and the title is in the second. We
 refer to them by location, not by name.
 
-In [[file:defining-types-streamlining-functions.html#deftypes.pattern][the section called “Pattern matching”]], we'll see how to access
+In [[file:3-defining-types-streamlining-functions.org::*Pattern matching][the section called "Pattern matching"]]
 the fields of a ~BookStore~ value. In
-[[file:defining-types-streamlining-functions.html#deftypes.record][the section called “Record syntax”]], we'll introduce an alternate
+[[file:3-defining-types-streamlining-functions.org::*Record syntax][the section called "Record syntax"]]
 syntax for defining data types that looks a little more C-like.
 
 **** The enumeration
@@ -556,7 +556,7 @@ data Shape = Circle Vector Double
 If we create a ~Shape~ value using the ~Circle~ constructor, the
 fact that we created a ~Circle~ is stored. When we later use a
 ~Circle~, we can't accidentally treat it as a ~Square~. We will
-see why in [[file:defining-types-streamlining-functions.html#deftypes.pattern][the section called “Pattern matching”]]
+see why in [[file:3-defining-types-streamlining-functions.org::*Pattern matching][the section called "Pattern matching"]]
 
 #+BEGIN_TIP
 A few notes
@@ -737,7 +737,7 @@ ghci> complicated (False, 1, [1,2,3], 5)
 #+END_SRC
 
 For an explanation of this error message, skip forward a little,
-to [[file:defining-types-streamlining-functions.html#deftypes.patterns.nonexhaustive][the section called “Exhaustive patterns and wild cards”]].
+to [[file:3-defining-types-streamlining-functions.org::*Exhaustive patterns and wild cards][the section called "Exhaustive patterns and wild cards"]]
 
 We can pattern match on an algebraic data type using its value
 constructors. Recall the ~BookInfo~ type we defined earlier: we
@@ -1355,7 +1355,7 @@ bound the variable in a ~let~ block.
 
 Also, our use of white space here is important. We'll talk in more
 detail about the layout rules in
-[[file:defining-types-streamlining-functions.html#deftypes.offside][the section called “The offside rule and white space in an expression”]].
+[[file:3-defining-types-streamlining-functions.org::*The offside rule and white space in an expression][the section called "The offside rule and white space in an expression"]]
 #+END_NOTE
 
 We can use the names of a variable in a ~let~ block both within
@@ -1446,7 +1446,7 @@ yourself missing ~where~ clauses in languages that lack them.
 
 As with ~let~ expressions, white space is significant in ~where~
 clauses. We will talk more about the layout rules shortly, in
-[[file:defining-types-streamlining-functions.html#deftypes.offside][the section called “The offside rule and white space in an expression”]].
+[[file:3-defining-types-streamlining-functions.org::*The offside rule and white space in an expression][the section called "The offside rule and white space in an expression"]]
 
 *** Local functions, global variables
 
@@ -1818,7 +1818,7 @@ variable bound to the value ~True~, to aid readability.
 We can use guards anywhere that we can use patterns. Writing a
 function as a series of equations using pattern matching and
 guards can make it much clearer. Remember the ~myDrop~ function we
-defined in [[file:types-and-functions.html#funcstypes.if][the section called “Conditional evaluation”]]?
+defined in [[file:2-types-and-functions.org::*Conditional evaluation][the section called "Conditional evaluation"]]
 
 #+CAPTION: myDrop.hs
 #+BEGIN_SRC haskell

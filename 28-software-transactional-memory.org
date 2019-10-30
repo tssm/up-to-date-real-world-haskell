@@ -644,7 +644,7 @@ waitFor alive = atomically $ do
 
 Here is a naive function to check the state of a link. This
 code is similar to the podcatcher that we developed in
-[[file:extended-example-web-client-programming.html][Chapter 22, /Extended Example: Web Client Programming/]],
+[[file:22-web-client-programming.org][Chapter 22, /Extended Example: Web Client Programming/]],
 with a few small differences.
 
 #+CAPTION: Check.hs

@@ -42,7 +42,7 @@ of many language bindings available for GTK+.
 
 In this chapter, we are going to develop a GUI for the podcast
 downloader we first developed in
-[[file:extended-example-web-client-programming.html][Chapter 22, /Extended Example: Web Client Programming/]]. Our first
+[[file:22-web-client-programming.org][Chapter 22, /Extended Example: Web Client Programming/]]. Our first
 task is to design the user interface in Glade. Once we have
 accomplished that, we will write the Haskell code to integrate it
 with the application.
@@ -130,7 +130,7 @@ a timely manner.
 Therefore, we will be using multithreading to handle these
 long-running tasks. More information on multithreading can be
 found in
-[[file:concurrent-and-multicore-programming.html][Chapter 24, /Concurrent and multicore programming/]]. For now, just know that
+[[file:24-concurrent-and-multicore-programming.org][Chapter 24, /Concurrent and multicore programming/]]. For now, just know that
 we will use ~forkIO~ to create new threads for long-running tasks
 such as downloading podcast feeds and episodes. For very quick
 tasks, such as adding a new podcast to the database, we will not
@@ -141,7 +141,7 @@ the user will never notice.
 
 Our first steps are going to involve initializing the GUI for our
 program. For reasons that we'll explain in
-[[file:gui-programming-with-gtk-hs.html#gui.cabal][the section called “Using Cabal”]], we're going to have a small
+[[file:23-gui-programming-with-gtk2hs.org::*Using Cabal][the section called "Using Cabal"]]
 file called ~PodLocalMain.hs~ that loads ~PodMain~ and passes to
 it the path to ~podresources.glade~, the XML file saved by Glade
 that gives the information about our GUI widgets.
@@ -157,7 +157,7 @@ main = PodMainGUI.main "podresources.glade"
 
 Now, let's consider ~PodMainGUI.hs~. This file is the only
 Haskell source file that we had to modify from the example in
-[[file:extended-example-web-client-programming.html][Chapter 22, /Extended Example: Web Client Programming/]] to make it work as a GUI.
+[[file:22-web-client-programming.org][Chapter 22, /Extended Example: Web Client Programming/]] to make it work as a GUI.
 Let's start by looking at the start of our new ~PodMainGUI.hs~
 file—we've renamed it from ~PodMain.hs~ for clarity.
 
@@ -575,7 +575,7 @@ Here's what the final result looks like after running an update:
 
 We presented a Cabal file to build this project for the
 command-line version in
-[[file:extended-example-web-client-programming.html#webclient.main][the section called “Main Program”]]. We need to make a few tweaks
+[[file:22-web-client-programming.org::*Main Program][the section called "Main Program"]]
 for it to work with our GUI version. First, there's the obvious
 need to add the gtk2hs packages to the list of build dependencies.
 There is also the matter of the Glade XML file.

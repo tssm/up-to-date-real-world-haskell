@@ -161,7 +161,7 @@ that we could fix the problem by defining an instance of ~BasicEq~
 for ~[Char]~, which is the same as ~String~.
 
 We'll go into more detail on defining instances in
-[[file:using-typeclasses.html#typeclasses.instances][the section called “Declaring typeclass instances”]]. First, though,
+[[file:6-using-typeclasses.org::*Declaring typeclass instances][the section called "Declaring typeclass instances"]]
 let's continue to look at ways to define typeclasses. In this
 example, a not-equal-to function might be useful. Here's what we
 might say to define a typeclass with two functions:
@@ -228,7 +228,7 @@ instances of a particular typeclass by implementing the functions
 necessary for that typeclass.
 
 Recall our attempt to create a test for equality over a ~Color~
-type back in [[file:using-typeclasses.html#typeclasses.need][the section called “The need for typeclasses”]]. Now
+type back in [[file:6-using-typeclasses.org::*The need for typeclasses][the section called "The need for typeclasses"]]
 let's see how we could make that same ~Color~ type a member of the
 ~BasicEq3~ class.
 
@@ -244,13 +244,13 @@ instance BasicEq3 Color where
 #+END_SRC
 
 Notice that we provide essentially the same function as we used
-back in [[file:using-typeclasses.html#typeclasses.need][the section called “The need for typeclasses”]]. In fact,
+back in [[file:6-using-typeclasses.org::*The need for typeclasses][the section called "The need for typeclasses"]]
 the implementation is identical. However, in this case, we can use
 ~isEqual3~ on /any/ type that we declare is an instance of
 ~BasicEq3~, not just this one color type. We could define equality
 tests for anything from numbers to graphics using the same basic
 pattern. In fact, as you will see in
-[[file:using-typeclasses.html#typeclasses.wellknown.equality][the section called “Equality, Ordering, and Comparisons”]], this is
+[[file:6-using-typeclasses.org::*Equality, Ordering, and Comparisons][the section called "Equality, Ordering, and Comparisons"]]
 exactly how you can make Haskell's ~==~ operator work for your own
 custom types.
 
@@ -351,7 +351,7 @@ instance Show Color where
 #+END_SRC
 
 This example defines an instance of ~Show~ for our type ~Color~
-(see [[file:using-typeclasses.html#typeclasses.need][the section called “The need for typeclasses”]]). The
+(see [[file:6-using-typeclasses.org::*The need for typeclasses][the section called "The need for typeclasses"]]
 implementation is simple: we define a function ~show~ and that's
 all that's needed.
 
@@ -508,7 +508,7 @@ Read is not widely used
 While it is possible to build sophisticated parsers using the
 ~Read~ typeclass, many people find it easier to do so using
 Parsec, and rely on ~Read~ only for simpler tasks. Parsec is
-covered in detail in [[file:using-parsec.html][Chapter 16, /Using Parsec/]].
+covered in detail in [[file:14-using-parsec.org][Chapter 16, /Using Parsec/]].
 #+END_TIP
 
 *** Serialization with Read and Show
@@ -531,7 +531,7 @@ String handling in Haskell is normally lazy, so ~read~ and ~show~
 can be used on quite large data structures without incident. The
 built-in ~read~ and ~show~ instances in Haskell are efficient and
 implemented in pure Haskell. For information on how to handle
-parsing exceptions, refer to [[file:error-handling.html][Chapter 19, /Error handling/]].
+parsing exceptions, refer to [[file:19-error-handling.org][Chapter 19, /Error handling/]].
 #+END_TIP
 
 Let's try it out in ~ghci~:
@@ -574,7 +574,7 @@ True
 
 Since so many different types are instances of ~Read~ and ~Show~
 by default (and others can be made instances easily; see
-[[file:using-typeclasses.html#typeclasses.auto.derivation][the section called “Automatic Derivation”]]), you can use it for
+[[file:6-using-typeclasses.org::*Automatic Derivation][the section called "Automatic Derivation"]]
 some really complex data structures. Here are a few examples of
 slightly more complex data structures:
 
@@ -711,7 +711,7 @@ on converting between different types.
 
 For an extended example demonstrating the use of these numeric
 typeclasses, see
-[[file:data-structures.html#data.num][the section called “Extended example: Numeric Types”]].
+[[file:13-data-structures.org::*Extended example: Numeric Types][the section called "Extended example: Numeric Types"]]
 
 *** Equality, Ordering, and Comparisons
 
@@ -814,7 +814,7 @@ data ThisWorks = ThisWorks OK
 ** Typeclasses at work: making JSON easier to use
 
 The ~JValue~ type that we introduced in
-[[file:writing-a-library-working-with-json-data.html#library.jvalue][the section called “Representing JSON data in Haskell”]] is not
+[[file:5-writing-a-library.org::*Representing JSON data in Haskell][the section called "Representing JSON data in Haskell"]]
 especially easy to work with. Here is a truncated and tidied
 snippet of some real JSON data, produced by a well known search
 engine.
@@ -1753,7 +1753,7 @@ function, which would have forced users to implement the other
 every time. As it is, users can implement one or both, as they see
 fit.
 
-[fn:2] As you will see in [[file:io.html#io.lazy][the section called “Lazy I/O”]], Haskell
+[fn:2] As you will see in [[file:7-io.org::*Lazy I/O][the section called "Lazy I/O"]]
 doesn't actually read the entire file at this point. But for the
 purposes of this example, we can ignore that distinction.
 

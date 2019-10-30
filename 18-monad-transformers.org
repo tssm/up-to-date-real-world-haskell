@@ -8,7 +8,7 @@ thing. In real code, we often need to be able to use several
 effects at once.
 
 Recall the ~Parse~ type that we developed in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]], for
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]], for
 instance. When we introduced monads, we mentioned that this type
 was a state monad in disguise. Our monad is more complex than the
 standard ~State~ monad, because it uses the ~Either~ type to allow
@@ -601,7 +601,7 @@ bindMT :: (Monad m) => MaybeT m a -> (a -> MaybeT m b) -> MaybeT m b
 
 To understand this type signature, hark back to our discussion
 of multi-parameter typeclasses in
-[[file:programming-with-monads.html#monadcase.mptc][the section called “Multi-parameter typeclasses”]]. The thing that we
+[[file:16-programming-with-monads.org::*Multi-parameter typeclasses][the section called "Multi-parameter typeclasses"]]
 intend to make a ~Monad~ instance is the /partial type/
 ~MaybeT m~: this has the usual single type parameter, ~a~, that
 satisfies the requirements of the ~Monad~ typeclass.
@@ -717,7 +717,7 @@ be a good investment.
 Now that we have developed a monad transformer that can exit
 early, we can use it to bail if, for example, a parse fails
 partway through. We could thus replace the ~Parse~ type that we
-developed in [[file:code-case-study-parsing-a-binary-data-format.html#binary.implicit][the section called “Implicit state”]] with a monad
+developed in [[file:10-parsing-a-binary-data-format.org::*Implicit state][the section called "Implicit state"]]
 customised to our needs.
 
 #+CAPTION: MaybeTParse.hs

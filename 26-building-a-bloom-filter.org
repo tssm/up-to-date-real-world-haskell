@@ -161,7 +161,7 @@ elements into each byte, so this type is perfect for our needs.
 
 ** The ~ST~ monad
 
-Back in [[file:barcode-recognition.html#barcode.array.mutable][the section called “Modifying array elements”]], we
+Back in [[file:12-barcode-recognition.org::*Modifying array elements][the section called "Modifying array elements"]]
 mentioned that modifying an immutable array is prohibitively
 expensive, as it requires copying the entire array. Using a
 ~UArray~ does not change this, so what can we do to reduce the
@@ -1448,7 +1448,7 @@ instance NFData (B.Bloom a) where
 #+END_SRC
 
 We borrow the ~rnf~ function that we introduced in
-[[file:concurrent-and-multicore-programming.html#concurrent.strategies][the section called “Separating algorithm from evaluation”]] to
+[[file:24-concurrent-and-multicore-programming.org::*Separating algorithm from evaluation][the section called "Separating algorithm from evaluation"]]
 develop a simple timing harness. Out ~timed~ action ensures that a
 value is evaluated to normal form in order to accurately capture
 the cost of evaluating it.

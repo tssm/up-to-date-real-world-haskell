@@ -2,7 +2,7 @@
 
 ** Introduction
 
-In [[file:io.html][Chapter 7, /I/O/]] and [[file:parsec.html][Chapter 14, /Using Parsec/]] we talked about
+In [[file:7-io.org][Chapter 7, /I/O/]] and [[file:14-using-parsec.org][Chapter 14, Using Parsec]] we talked about
 the ~IO~ and ~GenParser~ monads respectively, but we intentionally
 kept the discussion narrowly focused on how to use them. We didn't
 discuss what a monad /is/.
@@ -18,7 +18,7 @@ in this chapter, to show how easy it is.
 *** Maybe chaining
 
 Let's take another look at the ~parseP5~ function that we wrote
-in [[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]].
+in [[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]].
 
 #+CAPTION: PNM.hs
 #+BEGIN_SRC haskell
@@ -248,12 +248,12 @@ of its authors, suggested in his paper [[https://www.cambridge.org/core/journals
 follow Eugenio Moggi's idea of using monads to structure programs.
 
 Here, ~(>>=)~ is our chaining function. We've already been
-introduced to it in [[file:io.html#io.bind][the section called “Sequencing”]]. It's often
+introduced to it in [[file:7-io.org::*Sequencing][the section called "Sequencing"]]
 referred to as “bind”, as it binds the result of the computation
 on the left to the parameter of the one on the right.
 
 Our injection function is ~return~. As we noted in
-[[file:io.html#io.return][the section called “The True Nature of Return”]], the choice of the
+[[file:7-io.org::*The True Nature of Return][the section called "The True Nature of Return"]]
 name ~return~ is a little unfortunate. That name is widely used in
 imperative languages, where it has a fairly well understood
 meaning. In Haskell, its behaviour is much less constrained. In
@@ -332,7 +332,7 @@ might be dangerous in its new context.
 #+END_WARNING
 
 To revisit the parser that we developed in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]], here
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]], here
 is its ~Monad~ instance.
 
 #+CAPTION: Parse.hs
@@ -351,8 +351,8 @@ instance Monad Parse where
 #+END_SRC
 
 We are going to see ~liftM~ in
-[[file:monads.html#monads.liftM][the section called “Mixing pure and monadic code”]] and ~ap~ in
-[[file:programming-with-monads.html#monadcase.ap][the section called “Generalised lifting”]] but you already can see
+[[file:15-monads.org::*Mixing pure and monadic code][the section called "Mixing pure and monadic code"]]
+[[file:16-programming-with-monads.org::*Generalised lifting][the section called "Generalised lifting"]]
 they are “aliases” to known functions.
 
 Notice that ~pure~ is defined as our ~identity~ function and
@@ -399,7 +399,7 @@ decisions we made, without writing log information to a file.
 Let's develop a small library to help with this.
 
 Recall the ~globToRegex~ function that we developed in
-[[file:efficient-file-processing-regular-expressions-and-file-name-matching.html#glob.translate][the section called “Translating a glob pattern into a regular expression”]].
+[[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org::*Translating a glob pattern into a regular expression][the section called "Translating a glob pattern into a regular expression"]]
 We will modify it so that it keeps a record of each of the special
 pattern sequences that it translates. We are revisiting familiar
 territory for a reason: it lets us compare non-monadic and monadic
@@ -578,7 +578,7 @@ on the left. We know that the result of ~record~ will always be
 ~()~, so there's no point in capturing it.
 
 We can use ~do~ notation, which we first encountered in
-[[file:io.html#io.bind][the section called “Sequencing”]], to somewhat tidy up our code.
+[[file:7-io.org::*Sequencing][the section called "Sequencing"]]
 
 #+CAPTION: Logger.hs
 #+BEGIN_SRC haskell
@@ -593,7 +593,7 @@ functions is mostly a matter of taste, though almost everyone's
 taste is to use ~do~ notation for anything longer than about two
 lines. There is one significant difference between the two styles,
 though, which we'll return to in
-[[file:monads.html#monads.do][the section called “Desugaring of do blocks”]].
+[[file:15-monads.org::*Desugaring of do blocks][the section called "Desugaring of do blocks"]]
 
 Parsing a character class mostly follows the same pattern that
 we've already seen.
@@ -652,7 +652,7 @@ function that calls ~length~ and rewraps the result using
 This need crops up often in Haskell code. We won't be surprised to
 learn that a shorthand already exists: we use the /lifting/
 technique that we introduced for functors in
-[[file:code-case-study-parsing-a-binary-data-format.html#binary.functor][the section called “Introducing functors”]]. Lifting a pure function
+[[file:10-parsing-a-binary-data-format.org::*Introducing functors][the section called "Introducing functors"]]
 into a functor usually involves unwrapping the value inside the
 functor, calling the function on it, and rewrapping the result
 with the same constructor.
@@ -849,7 +849,7 @@ flavours, each with different levels of strictness.
 Our ~Logger~ monad is a specialised version of the standard
 ~Writer~ monad, which can be found in the ~Control.Monad.Writer~
 module of the ~mtl~ package. We will present a ~Writer~ example in
-[[file:programming-with-monads.html#monadcase.io.class][the section called “Using typeclasses”]].
+[[file:16-programming-with-monads.org::*Using typeclasses][the section called "Using typeclasses"]]
 
 ** The Maybe monad
 
@@ -977,7 +977,7 @@ variation2a person phoneMap carrierMap addressMap = do
 #+END_SRC
 
 When we introduced maps, we mentioned in
-[[file:barcode-recognition.html#barcode.map.partial][the section called “Partial application awkwardness”]] that the type
+[[file:12-barcode-recognition.org::*Partial application awkwardness][the section called "Partial application awkwardness"]]
 signatures of functions in the ~Data.Map~ module often make them
 awkward to partially apply. The ~lookup~ function is a good
 example. If we ~flip~ its arguments, we can write the function
@@ -1323,7 +1323,7 @@ be lined up with the ~let~ keyword.
 
 *** Monads as a programmable semicolon
 
-Back in [[file:defining-types-streamlining-functions.html#deftypes.block][the section called “The offside rule is not mandatory”]], we
+Back in [[file:3-defining-types-streamlining-functions.org::*The offside rule is not mandatory][the section called "The offside rule is not mandatory"]]
 mentioned that layout is the norm in Haskell, but it's not
 /required/. We can write a ~do~ block using explicit structure
 instead of layout.
@@ -1384,7 +1384,7 @@ wordCount = print . length . words =<< getContents
 ** The state monad
 
 We discovered earlier in this chapter that the ~Parse~ from
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]] was a
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]] was a
 monad. It has two logically distinct aspects. One is the idea of a
 parse failing, and providing a message with the details: we
 represented this using the ~Either~ type. The other involves
@@ -1922,7 +1922,7 @@ ghci> join [[1],[2,3]]
 
 ** The monad laws, and good coding style
 
-In [[file:code-case-study-parsing-a-binary-data-format.html#binary.functor.laws][the section called “Thinking more about functors”]], we
+In [[file:10-parsing-a-binary-data-format.org::*Thinking more about functors][the section called "Thinking more about functors"]]
 introduced two rules for how functors should always behave.
 
 #+BEGIN_SRC haskell
