@@ -4,7 +4,7 @@ import re
 data_file = 'data/chapter_links.txt'
 
 with open(data_file, 'r') as f:
-    html_files = [line.strip() for line in f.readlines()]
+    html_files = list(set([line.strip() for line in f.readlines()]))
 
 # Sort so that longest file names are first
 html_files = sorted(html_files, key=lambda x: -len(x))
@@ -21,6 +21,9 @@ mapping = {'advanced-library-design-building-a-bloom-filter.html': '26-building-
            'code-case-study-parsing-a-binary-data-format.html': '10-parsing-a-binary-data-format.org',
            'extended-example-web-client-programming.html': '22-web-client-programming.org',
            'interfacing-with-c-the-ffi.html': '17-interfacing-with-c.org',
+           'writing-a-library-working-with-json-data.html': '5-writing-a-library.org',
+           'io-case-study-a-library-for-searching-the-filesystem.html': '9-a-library-for-searching-the-file-system.org',
+           'gui-programming-with-gtk-hs.html': '23-gui-programming-with-gtk2hs.org',
            }
 
 for f_raw in html_files:
