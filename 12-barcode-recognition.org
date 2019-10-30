@@ -422,11 +422,11 @@ will we sharpen images taken from too near to the subject, which
 causes narrow bars to fade out; or from too far, which causes
 adjacent bars to blur together.
 
-[[file:figs/ch12-bad-angled.jpg]]
+[[./ch12-bad-angled.jpg]]
 
-[[file:figs/ch12-bad-too-near.jpg]]
+[[./ch12-bad-too-near.jpg]]
 
-[[file:figs/ch12-bad-too-far.jpg]]
+[[./ch12-bad-too-far.jpg]]
 
 ** Divide and conquer
 
