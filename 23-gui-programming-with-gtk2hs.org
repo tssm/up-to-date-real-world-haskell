@@ -141,7 +141,7 @@ the user will never notice.
 
 Our first steps are going to involve initializing the GUI for our
 program. For reasons that we'll explain in
-[[file:gui-programming-with-gtk-hs.html#gui.cabal][the section called “Using Cabal”]], we're going to have a small
+[[file:23-gui-programming-with-gtk2hs.org::*Using Cabal][the section called "Using Cabal"]]
 file called ~PodLocalMain.hs~ that loads ~PodMain~ and passes to
 it the path to ~podresources.glade~, the XML file saved by Glade
 that gives the information about our GUI widgets.
@@ -575,7 +575,7 @@ Here's what the final result looks like after running an update:
 
 We presented a Cabal file to build this project for the
 command-line version in
-[[file:extended-example-web-client-programming.html#webclient.main][the section called “Main Program”]]. We need to make a few tweaks
+[[file:22-web-client-programming.org::*Main Program][the section called "Main Program"]]
 for it to work with our GUI version. First, there's the obvious
 need to add the gtk2hs packages to the list of build dependencies.
 There is also the matter of the Glade XML file.

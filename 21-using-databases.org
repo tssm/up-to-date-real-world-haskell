@@ -438,7 +438,7 @@ ghci> query 2
 
 *** Reading with Statements
 
-As we discussed in [[file:using-databases.html#databases.statements][the section called “Prepared Statements”]],
+As we discussed in [[file:21-using-databases.org::*Prepared Statements][the section called "Prepared Statements"]]
 you can use statements for reading. There are a number of ways of
 reading data from statements that can be useful in certain
 situations. Like ~run~, ~quickQuery'~ is a convenience function
@@ -454,7 +454,7 @@ which converts every column's data to a ~Maybe String~ before
 returning it. Finally, there is ~fetchAllRowsAL'~, which returns
 ~(String, SqlValue)~ pairs for each column. The ~String~ is the
 column name as returned by the database; see
-[[file:using-databases.html#databases.metadata][the section called “Database Metadata”]] for other ways to obtain column names.
+[[file:21-using-databases.org::*Database Metadata][the section called "Database Metadata"]]
 
 You can also read data one row at a time by calling ~fetchRow~,
 which returns ~IO (Maybe [SqlValue])~. It will be ~Nothing~ if all
@@ -462,7 +462,7 @@ the results have already been read, or one row otherwise.
 
 *** Lazy Reading
 
-Back in [[file:io.html#io.lazy][the section called “Lazy I/O”]], we talked about lazy I/O
+Back in [[file:7-io.org::*Lazy I/O][the section called "Lazy I/O"]]
 from files. It is also possible to read data lazily from
 databases. This can be particularly useful when dealing with
 queries that return an exceptionally large amount of data. By
@@ -620,7 +620,7 @@ may be useful if you don't have experience wiht SQL.
 [fn:2] This assumes you restrict yourself to using standard SQL.
 
 [fn:3] For more information on installing Haskell software, please
-refer to [[file:installing-ghc-and-haskell-libraries.html#installing.haskell.software][the section called “Installing Haskell software”]].
+refer to [[file:installing-ghc-and-haskell-libraries.org::*Installing Haskell software][the section called "Installing Haskell software"]]
 
 [fn:4] HDBC emulates this behavior for databases that do not
 provide it, providing programmers a unified API for running

@@ -3,7 +3,7 @@
 The task of parsing a file, or data of various types, is a common
 one for programmers. We already learned about Haskell's support
 for regular expressions back in
-[[file:efficient-file-processing-regular-expressions-and-file-name-matching.html#glob.regex][the section called “Regular expressions in Haskell”]]. Regular
+[[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org::*Regular expressions in Haskell][the section called "Regular expressions in Haskell"]]
 expressions are nice for many tasks, but they rapidly become
 unwieldy, or cannot be used at all, when dealing with a complex
 data format. For instance, we cannot use regular expressions to
@@ -645,7 +645,7 @@ $ runhaskell csv7.hs < test.csv
 
 Parsec's ~GenParser~ monad is an instance of the ~MonadPlus~
 typeclass that we introduced in
-[[file:programming-with-monads.html#monadcase.monadplus][the section called “Looking for alternatives”]]. The value ~mzero~
+[[file:16-programming-with-monads.org::*Looking for alternatives][the section called "Looking for alternatives"]]
 represents a parse failure, while ~mplus~ combines two alternative
 parses into one, using ~(<|>)~.
 
@@ -1252,4 +1252,4 @@ resistant to even the most basic denial of service attacks.
 ** Footnotes
 
 [fn:1] For information on dealing with choices that may consume
-some input before failing, see [[file:using-parsec.html#parsec.lookahead][the section called “Lookahead”]].
+some input before failing, see [[file:14-using-parsec.org::*Lookahead][the section called "Lookahead"]]

@@ -404,7 +404,7 @@ plainHandler addr msg =
 #+END_EXAMPLE
 
 For our ~SyslogTypes~ implementation, see
-[[file:sockets-and-syslog.html#sockets.udp.client][the section called “UDP Client Example: syslog”]].
+[[file:27-sockets-and-syslog.org::*UDP Client Example: syslog][the section called "UDP Client Example: syslog"]]
 
 Let's look at this code. Our main loop is in ~procRequests~, where
 we loop forever waiting for new connections from clients. The

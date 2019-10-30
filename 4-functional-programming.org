@@ -688,7 +688,7 @@ False
 *** Working with sublists
 
 The ~take~ function, which we already met in
-[[file:types-and-functions.html#funcstypes.calling][the section called “Function application”]], returns a sublist
+[[file:2-types-and-functions.org::*Function application][the section called "Function application"]]
 consisting of the first /k/ elements from a list. Its converse,
 ~drop~, drops /k/ elements from the start of the list.
 
@@ -736,7 +736,7 @@ ghci> dropWhile even [2,4,6,7,9,10,12]
 
 Just as ~splitAt~ “tuples up” the results of ~take~ and ~drop~,
 the functions ~break~ (which we already saw in
-[[file:functional-programming.html#fp.splitlines][the section called “Warming up: portably splitting lines of text”]])
+[[file:4-functional-programming.org::*Warming up: portably splitting lines of text][the section called "Warming up: portably splitting lines of text"]]
 and ~span~ tuple up the results of ~takeWhile~ and ~dropWhile~.
 
 Each function takes a predicate; ~break~ consumes its input while
@@ -846,7 +846,7 @@ and so on up to ~zip7~ and ~zipWith7~.
 *** Special string-handling functions
 
 We've already encountered the standard ~lines~ function in
-[[file:functional-programming.html#fp.splitlines][the section called “Warming up: portably splitting lines of text”]],
+[[file:4-functional-programming.org::*Warming up: portably splitting lines of text][the section called "Warming up: portably splitting lines of text"]]
 and its standard counterpart, ~unlines~. Notice that ~unlines~
 always places a newline on the end of its result.
 
@@ -893,7 +893,7 @@ ghci> unwords ["jumps", "over", "the", "lazy", "dog"]
    #+END_SRC
 
 3. Using the command framework from
-   [[file:functional-programming.html#fp.framework][the section called “A simple command line framework”]], write a
+   [[file:4-functional-programming.org::*A simple command line framework][the section called "A simple command line framework"]]
    program that prints the first word of each line of its input.
 4. Write a program that transposes the text in a file. For
    instance, it should convert ~"hello\nworld\n"~ to
@@ -1290,7 +1290,7 @@ ghci> filter odd [3,1,4,1,5,9,2,6,5]
 The ~filter~ function takes a predicate and applies it to every
 element in its input list, returning a list of only those for
 which the predicate evaluates to ~True~. We'll revisit ~filter~
-again soon, in [[file:functional-programming.html#fp.foldr.filter][the section called “Folding from the right”]].
+again soon, in [[file:4-functional-programming.org::*Folding from the right][the section called "Folding from the right"]]
 
 *** Computing one answer over a collection
 
@@ -1507,7 +1507,7 @@ foldr _    zero []     = zero
 
 Let's follow the same manual evaluation process with
 ~foldr (+) 0 [1,2,3]~ as we did with ~niceSum~ in
-[[file:functional-programming.html#fp.foldl][the section called “The left fold”]].
+[[file:4-functional-programming.org::*The left fold][the section called "The left fold"]]
 
 #+CAPTION: Fold.hs
 #+BEGIN_SRC haskell
@@ -1537,7 +1537,7 @@ constructor in the list with an application of the step function.
 At first glance, ~foldr~ might seem less useful than ~foldl~: what
 use is a function that folds from the right? But consider the
 prelude's ~filter~ function, which we last encountered in
-[[file:functional-programming.html#fp.filter][the section called “Selecting pieces of input”]]. If we write
+[[file:4-functional-programming.org::*Selecting pieces of input][the section called "Selecting pieces of input"]]
 ~filter~ using explicit recursion, it will look something like
 this.
 
@@ -1607,7 +1607,7 @@ out what the ~id~ function does), and a pencil and paper.
 You will want to follow the same manual evaluation process as we
 outlined above to see what ~foldl~ and ~foldr~ were really doing.
 If you get stuck, you may find the task easier after reading
-[[file:functional-programming.html#fp.partialapp][the section called “Partial function application and currying”]].
+[[file:4-functional-programming.org::*Partial function application and currying][the section called "Partial function application and currying"]]
 #+END_TIP
 
 Returning to our earlier intuitive explanation of what ~foldr~
@@ -1665,7 +1665,7 @@ to append onto the end of our first list.
 As our extended treatment of folds should indicate, the ~foldr~
 function is nearly as important a member of our list-programming
 toolbox as the more basic list functions we saw in
-[[file:functional-programming.html#fp.lists][the section called “Working with lists”]]. It can consume and
+[[file:4-functional-programming.org::*Working with lists][the section called "Working with lists"]]
 produce a list incrementally, which makes it useful for writing
 lazy data processing code.
 
@@ -1750,7 +1750,7 @@ use ~foldl'~.
 
 1. Use a fold (choosing the appropriate fold will make your code
    much simpler) to rewrite and improve upon the ~asInt~ function
-   from [[file:functional-programming.html#fp.tailrecursion][the section called “Explicit recursion”]].
+   from [[file:4-functional-programming.org::*Explicit recursion][the section called "Explicit recursion"]]
 
    #+CAPTION: exercises.hs
    #+BEGIN_SRC haskell
@@ -2031,7 +2031,7 @@ ghci> zip3foobar [1,2]
 Partial function application lets us avoid writing tiresome
 throwaway functions. It's often more useful for this purpose than
 the anonymous functions we introduced in
-[[file:functional-programming.html#fp.anonymous][the section called “Anonymous (lambda) functions”]]. Looking back at
+[[file:4-functional-programming.org::*Anonymous (lambda) functions][the section called "Anonymous (lambda) functions"]]
 the ~isInAny~ function we defined there, here's how we'd use a
 partially applied function instead of a named helper function or a
 lambda.
@@ -2053,7 +2053,7 @@ logician Haskell Curry (for whom the Haskell language is named).
 
 As another example of currying in use, let's return to the
 list-summing function we wrote in
-[[file:functional-programming.html#fp.foldl][the section called “The left fold”]].
+[[file:4-functional-programming.org::*The left fold][the section called "The left fold"]]
 
 #+CAPTION: Sum.hs
 #+BEGIN_SRC haskell
@@ -2207,7 +2207,7 @@ does almost the same thing as the existing ~tails~ function.
 Surely we can do better?
 
 Recall the ~init~ function we introduced in
-[[file:functional-programming.html#fp.lists][the section called “Working with lists”]]: it returns all but the
+[[file:4-functional-programming.org::*Working with lists][the section called "Working with lists"]]
 last element of a list.
 
 #+CAPTION: SuffixTree.hs
@@ -2399,7 +2399,7 @@ ghci> (head . tail . words) "#define DLT_CHAOS    5"
 *** Use your head wisely
 
 After warning against unsafe list functions in
-[[file:functional-programming.html#fp.lists.safe][the section called “Safely and sanely working with crashy functions”]],
+[[file:4-functional-programming.org::*Safely and sanely working with crashy functions][the section called "Safely and sanely working with crashy functions"]]
 here we are calling both ~head~ and ~tail~, two of those unsafe
 list functions. What gives?
 

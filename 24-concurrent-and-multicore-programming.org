@@ -575,7 +575,7 @@ and ~Chan~ types.
 The ~!~ pattern above is simple to use, but it is not always
 sufficient to ensure that our data is evaluated. For a more
 complete approach, see
-[[file:concurrent-and-multicore-programming.html#concurrent.strategies][the section called “Separating algorithm from evaluation”]]
+[[file:24-concurrent-and-multicore-programming.org::*Separating algorithm from evaluation][the section called "Separating algorithm from evaluation"]]
 below.
 
 *** Chan is unbounded
@@ -661,7 +661,7 @@ will be expensive to evaluate, and take it out of the ~MVar~ in a
 thread that otherwise looks like it /ought/ to be cheap, that
 thread could suddenly become computationally expensive if it has
 to evaluate the thunk. This makes the advice we gave in
-[[file:concurrent-and-multicore-programming.html#concurrent.useful.nonstrict][the section called “MVar and Chan are non-strict”]] particularly relevant.
+[[file:24-concurrent-and-multicore-programming.org::*MVar and Chan are non-strict][the section called "MVar and Chan are non-strict"]]
 
 *** Is there any hope?
 
@@ -1605,7 +1605,7 @@ cannot cause problems in unexpected parts of your code.
 Processing chunks via a fold
 
 We can adapt the fold-with-early-termination technique from
-[[file:io-case-study-a-library-for-searching-the-filesystem.html#find.fold][the section called “Another way of looking at traversal”]] to
+[[file:9-a-library-for-searching-the-file-system.org::*Another way of looking at traversal][the section called "Another way of looking at traversal"]]
 stream-based file processing. While this requires more work than
 the lazy I/O approach, it nicely avoids the above problems.
 #+END_TIP

@@ -125,7 +125,7 @@ Is the ~filter (`notElem` [".", ".."])~ part confusing? That
 could got also be written as
 ~filter (\c -> not $ elem c [".", ".."])~. The backticks in this
 case effectively let us pass the second argument to ~notElem~; see
-[[file:functional-programming.html#fp.infix][the section called “Infix functions”]] for more information on backticks.
+[[file:4-functional-programming.org::*Infix functions][the section called "Infix functions"]]
 #+END_TIP
 
 You can also query the system about the location of certain
@@ -317,7 +317,7 @@ highlighted:
   and ~Show~ typeclasses. In addition, ~Month~ and ~Day~ are
   declared as members of the ~Enum~ and ~Bounded~ typeclasses. For
   more information on these typeclasses, refer to
-  [[file:using-typeclasses.html#typeclasses.wellknown][the section called “Important Built-In Typeclasses”]].
+  [[file:6-using-typeclasses.org::*Important Built-In Typeclasses][the section called "Important Built-In Typeclasses"]]
 
   You can generate ~CalendarTime~ values several ways. You could
   start by converting a ~ClockTime~ to a ~CalendarTime~ such as

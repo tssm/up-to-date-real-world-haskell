@@ -223,7 +223,7 @@ often justify different handling of the results.
 
 **** Usage of the ~Maybe~ Monad
 
-Back in [[file:error-handling.html#errors.maybe][the section called “Use of Maybe”]], we had an example
+Back in [[file:19-error-handling.org::*Use of Maybe][the section called "Use of Maybe"]]
 program named ~divby2.hs~. This example didn't preserve laziness,
 but returned a value of type ~Maybe [a]~. The exact same algorithm
 could be expressed using a monadic style. For more information and
@@ -402,7 +402,7 @@ with an exercise question at the end of this chapter.
 
 **** Monadic Use of ~Either~
 
-Back in [[file:error-handling.html#errors.maybe.monad][the section called “Usage of the Maybe Monad”]], we showed you
+Back in [[file:19-error-handling.org::*Usage of the Maybe Monad][the section called "Usage of the Maybe Monad"]]
 how to use ~Maybe~ in a monad. ~Either~ can be used in a monad
 too, but can be slightly more complicated. The reason is that
 ~fail~ is hard-coded to accept only a ~String~ as the failure
@@ -710,7 +710,7 @@ is /not/ the one you will get by default. #+END_WARNING
 
 Let's take a look at one approach to using exceptions in the I/O
 system to our benefit. Back in
-[[file:io.html#io.files][the section called “Working With Files and Handles”]], we presented a
+[[file:7-io.org::*Working With Files and Handles][the section called "Working With Files and Handles"]]
 program that used an imperative style to read lines from a file
 one by one. Although we subsequently demonstrated more compact,
 "Haskelly" ways to solve that problem, let's revisit that example
@@ -936,7 +936,7 @@ we'll get bounced out to the ~IO~ monad. This is almost never what
 we would actually like.
 
 We defined a ~MaybeT~ transformer in
-[[file:monad-transformers.html#monadtrans.maybet][the section called “Understanding monad transformers by building one”]],
+[[file:18-monad-transformers.org::*Understanding monad transformers by building one][the section called "Understanding monad transformers by building one"]]
 but it is more useful as an aid to understanding than a
 programming tool. Fortunately, a dedicated—and more useful—monad
 transformer already exists: ~ErrorT~, which is defined in the
@@ -1125,10 +1125,10 @@ in this example because division by zero with a ~Double~ produces
 the special value ~Infinity~ rather than an error.
 
 [fn:2] For an introduction to ~Maybe~, refer to
-[[file:defining-types-streamlining-functions.html#deftypes.morecontrolled][the section called “A more controlled approach”]].
+[[file:3-defining-types-streamlining-functions.org::*A more controlled approach][the section called "A more controlled approach"]]
 
 [fn:3] For more information on ~Either~, refer to
-[[file:efficient-file-processing-regular-expressions-and-file-name-matching.html#glob.errapi][the section called “Handling errors through API design”]].
+[[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org::*Handling errors through API design][the section called "Handling errors through API design"]]
 
 [fn:4] In some other languages, throwing an exception is referred
 to as /raising/ it.

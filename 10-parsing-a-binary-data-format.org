@@ -252,7 +252,7 @@ removing the boilerplate ~case~ expressions, we've made the code
 easier to follow.
 
 While we warned against overuse of anonymous functions in
-[[file:functional-programming.html#fp.anonymous][the section called “Anonymous (lambda) functions”]], we use several
+[[file:4-functional-programming.org::*Anonymous (lambda) functions][the section called "Anonymous (lambda) functions"]]
 in our chain of functions here. Because these functions are so
 small, we wouldn't improve readability by giving them names.
 
@@ -665,7 +665,7 @@ class Functor f where
 
 We can think of ~fmap~ as a kind of /lifting/ function, as we
 introduced in
-[[file:io-case-study-a-library-for-searching-the-filesystem.html#find.predicate.lift][the section called “Avoiding boilerplate with lifting”]]. It takes a
+[[file:9-a-library-for-searching-the-file-system.org::*Avoiding boilerplate with lifting][the section called "Avoiding boilerplate with lifting"]]
 function over ordinary values ~a -> b~ and lifts it to become a
 function over a type whose constructor takes one type parameter
 ~f a -> f b~, where ~f~ is the type.

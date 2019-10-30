@@ -965,7 +965,7 @@ throughout this book.
 #+END_TIP
 
 Our ~hcat~ and ~fsep~ functions concatenate a list of ~Doc~ values
-into one. In [[file:functional-programming.html#fp.fold.exercises][the section called “Exercises”]], we mentioned that we
+into one. In [[file:4-functional-programming.org::*Exercises][the section called "Exercises"]]
 could define concatenation for lists using ~foldr~.
 
 #+CAPTION: Concat.hs

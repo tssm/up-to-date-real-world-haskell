@@ -102,7 +102,7 @@ We'll use HDBC (see [[file:21-using-databases.org][Chapter 21, /Using Databases
 to interact with a Sqlite database. Sqlite is lightweight and
 self-contained, which makes it perfect for this project. For
 information on installing HDBC and Sqlite, consult
-[[file:using-databases.html#databases.hdbc.install][the section called “Installing HDBC and Drivers”]].
+[[file:21-using-databases.org::*Installing HDBC and Drivers][the section called "Installing HDBC and Drivers"]]
 
 #+CAPTION: PodDB.hs
 #+BEGIN_SRC haskell
@@ -642,7 +642,7 @@ ghc --make -O2 -o pod -package HTTP -package HaXml -package network \
 #+END_SRC
 
 Alternatively, you could use a Cabal file as documented in
-[[file:writing-a-library-working-with-json-data.html#library.package][the section called “Creating a package”]] to build this project:
+[[file:5-writing-a-library.org::*Creating a package][the section called "Creating a package"]]
 
 #+CAPTION: pod.cabal
 #+BEGIN_SRC
