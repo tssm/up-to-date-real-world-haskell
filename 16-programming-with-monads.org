@@ -683,7 +683,7 @@ ghci> second odd ('a',1)
 #+END_SRC
 
 (Indeed, we already encountered ~second~, in
-[[file:6-using-type classes.org::*JSON type classes without overlapping instances][the section called "JSON type classes without overlapping instances"]]
+[[file:6-using-typeclasses.org::*JSON type classes without overlapping instances][the section called "JSON type classes without overlapping instances"]]
 We can use ~first~ to golf our definition of ~randomsIO~, turning
 it into a one-liner.
 

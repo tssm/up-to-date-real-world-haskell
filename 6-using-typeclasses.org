@@ -161,7 +161,7 @@ that we could fix the problem by defining an instance of ~BasicEq~
 for ~[Char]~, which is the same as ~String~.
 
 We'll go into more detail on defining instances in
-[[file:6-using-type classes.org::*Declaring type class instances][the section called "Declaring type class instances"]]
+[[file:6-using-typeclasses.org::*Declaring type class instances][the section called "Declaring type class instances"]]
 let's continue to look at ways to define type classes. In this
 example, a not-equal-to function might be useful. Here's what we
 might say to define a type class with two functions:
@@ -228,7 +228,7 @@ instances of a particular type class by implementing the functions
 necessary for that type class.
 
 Recall our attempt to create a test for equality over a ~Color~
-type back in [[file:6-using-type classes.org::*The need for type classes][the section called "The need for type classes"]]
+type back in [[file:6-using-typeclasses.org::*The need for type classes][the section called "The need for type classes"]]
 let's see how we could make that same ~Color~ type a member of the
 ~BasicEq3~ class.
 
@@ -244,13 +244,13 @@ instance BasicEq3 Color where
 #+END_SRC
 
 Notice that we provide essentially the same function as we used
-back in [[file:6-using-type classes.org::*The need for type classes][the section called "The need for type classes"]]
+back in [[file:6-using-typeclasses.org::*The need for type classes][the section called "The need for type classes"]]
 the implementation is identical. However, in this case, we can use
 ~isEqual3~ on /any/ type that we declare is an instance of
 ~BasicEq3~, not just this one color type. We could define equality
 tests for anything from numbers to graphics using the same basic
 pattern. In fact, as you will see in
-[[file:6-using-type classes.org::*Equality, Ordering, and Comparisons][the section called "Equality, Ordering, and Comparisons"]]
+[[file:6-using-typeclasses.org::*Equality, Ordering, and Comparisons][the section called "Equality, Ordering, and Comparisons"]]
 exactly how you can make Haskell's ~==~ operator work for your own
 custom types.
 
@@ -351,7 +351,7 @@ instance Show Color where
 #+END_SRC
 
 This example defines an instance of ~Show~ for our type ~Color~
-(see [[file:6-using-type classes.org::*The need for type classes][the section called "The need for type classes"]]
+(see [[file:6-using-typeclasses.org::*The need for type classes][the section called "The need for type classes"]]
 implementation is simple: we define a function ~show~ and that's
 all that's needed.
 
@@ -574,7 +574,7 @@ True
 
 Since so many different types are instances of ~Read~ and ~Show~
 by default (and others can be made instances easily; see
-[[file:6-using-type classes.org::*Automatic Derivation][the section called "Automatic Derivation"]]
+[[file:6-using-typeclasses.org::*Automatic Derivation][the section called "Automatic Derivation"]]
 some really complex data structures. Here are a few examples of
 slightly more complex data structures:
 

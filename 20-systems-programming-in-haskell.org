@@ -317,7 +317,7 @@ highlighted:
   and ~Show~ type classes. In addition, ~Month~ and ~Day~ are
   declared as members of the ~Enum~ and ~Bounded~ type classes. For
   more information on these type classes, refer to
-  [[file:6-using-type classes.org::*Important%20Built-In%20Type%20Classes][the section called "Important Built-In Type Classes"]]
+  [[file:6-using-typeclasses.org::*Important%20Built-In%20Type%20Classes][the section called "Important Built-In Type Classes"]]
 
   You can generate ~CalendarTime~ values several ways. You could
   start by converting a ~ClockTime~ to a ~CalendarTime~ such as

@@ -906,7 +906,7 @@ second case, we ask ~ghci~ to print the type of the expression
 without actually evaluating it, so it does not have to be so
 specific. It answers, in effect, "its type is numeric". We will
 see more of this style of type annotation in
-[[file:6-using-type classes.org][Chapter 6, Using Type Classes]].
+[[file:6-using-typeclasses.org][Chapter 6, Using Type Classes]].
 
 ** A simple program
 

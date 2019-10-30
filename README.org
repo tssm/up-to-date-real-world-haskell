@@ -13,7 +13,7 @@ changes listed as /enhancements/ in the issue tracker.
 4. DONE [[file:3-defining-types-streamlining-functions.org][Defining Types, Streamlining Functions]]
 5. DONE [[file:4-functional-programming.org][Functional programming]]
 6. DONE [[file:5-writing-a-library.org][Writing a library]]
-7. DONE [[file:6-using-type classes.org][Using type classes]]
+7. DONE [[file:6-using-typeclasses.org][Using type classes]]
 8. DONE [[file:7-io.org][I/O]]
 9. DONE [[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org][Effiient file processing]]
 10. DONE [[file:9-a-library-for-searching-the-file-system.org][A library for searching the file system]]
