@@ -1317,7 +1317,7 @@ module DList
 
 In abstract algebra, there exists a simple abstract structure
 called a /monoid/. Many mathematical objects are monoids, because
-the “bar to entry” is very low. In order to be considered a
+the "bar to entry" is very low. In order to be considered a
 monoid, an object must have two properties.
 
 - An associative binary operator. Let's call it ~(*)~: the
@@ -1521,7 +1521,7 @@ fromList [1,2]
 #+END_SRC
 
 A useful way to remember the ~(<|)~ and ~(|>)~ functions is that
-the “arrow” points to the element we're adding to the ~Seq~. The
+the "arrow" points to the element we're adding to the ~Seq~. The
 element will be added on the side to which the arrow points:
 ~(<|)~ adds on the left, ~(|>)~ on the right.
 

@@ -7,16 +7,16 @@ example, the value ~True~ has the type ~Bool~, while the value
 ~"foo"~ has the type String. The type of a value indicates that it
 shares certain properties with other values of the same type. For
 example, we can add numbers, and we can concatenate lists; these
-are properties of those types. We say an expression “has type
-~X~”, or “is of type ~X~”.
+are properties of those types. We say an expression "has type
+~X~", or "is of type ~X~".
 
 Before we launch into a deeper discussion of Haskell's type
 system, let's talk about why we should care about types at all:
 what are they even /for/? At the lowest level, a computer is
 concerned with bytes, with barely any additional structure. What a
 type system gives us is /abstraction/. A type adds meaning to
-plain bytes: it lets us say “these bytes are text”, “those bytes
-are an airline reservation”, and so on. Usually, a type system
+plain bytes: it lets us say "these bytes are text", "those bytes
+are an airline reservation", and so on. Usually, a type system
 goes beyond this to prevent us from accidentally mixing types up:
 for example, a type system usually won't let us treat a hotel
 reservation as a car rental receipt.
@@ -87,11 +87,11 @@ an integer is expected.
 Weaker and stronger types
 
 It is useful to be aware that many language communities have their
-own definitions of a “strong type”. Nevertheless, we will speak
+own definitions of a "strong type". Nevertheless, we will speak
 briefly and in broad terms about the notion of strength in type
 systems.
 
-In academic computer science, the meanings of “strong” and “weak”
+In academic computer science, the meanings of "strong" and "weak"
 have a narrowly technical meaning: strength refers to /how
 permissive/ a type system is. A weaker type system treats more
 expressions as valid than a stronger type system.
@@ -105,7 +105,7 @@ it is weaker under this narrow technical interpretation.
 
 The fireworks around type systems have their roots in ordinary
 English, where people attach notions of /value/ to the words
-“weak” and “strong”: we usually think of strength as better than
+"weak" and "strong": we usually think of strength as better than
 weakness. Many more programmers speak plain English than academic
 jargon, and quite often academics /really are/ throwing brickbats
 at whatever type system doesn't suit their fancy. The result is
@@ -138,7 +138,7 @@ actual type of ~"false"~ does not match the required type, the
 compiler rejects this expression as ill typed.
 
 Static typing can occasionally make it difficult to write some
-useful kinds of code. In languages like Python, “duck typing” is
+useful kinds of code. In languages like Python, "duck typing" is
 common, where an object acts enough like another to be used as a
 substitute for it[fn:1]. Fortunately, Haskell's system of
 /typeclasses/, which we will cover in
@@ -150,7 +150,7 @@ embraces the notion.
 
 Haskell's combination of strong and static typing makes it
 impossible for type errors to occur at runtime. While this means
-that we need to do a little more thinking “up front”, it also
+that we need to do a little more thinking "up front", it also
 eliminates many simple errors that can otherwise be devilishly
 hard to find. It's a truism within the Haskell community that once
 code compiles, it's more likely to work correctly than in other
@@ -168,7 +168,7 @@ In Haskell, the compiler proves the absence of type errors for us:
 a Haskell program that compiles will not suffer from type errors
 when it runs. Refactoring is usually a matter of moving code
 around, then recompiling and tidying up a few times until the
-compiler gives us the “all clear”.
+compiler gives us the "all clear".
 
 A helpful analogy to understand the value of static typing is to
 look at it as putting pieces into a jigsaw puzzle. In Haskell, if
@@ -212,7 +212,7 @@ stumble across problems at runtime.
 
 Furthermore, because Haskell can infer the types of your
 expressions and functions, you gain the benefits of static typing
-/without/ the added burden of “finger typing” imposed by less
+/without/ the added burden of "finger typing" imposed by less
 powerful statically typed languages. In other languages, the type
 system serves the needs of the compiler. In Haskell, it serves
 /you/. The tradeoff is that you have to learn to work within the
@@ -234,7 +234,7 @@ few types. Here are several more of the most common base types.
   values of type ~Bool~ are ~True~ and ~False~.
 - The ~Int~ type is used for signed, fixed-width integer values.
   The exact range of values representable as ~Int~ depends on the
-  system's longest “native” integer: on a 32-bit machine, an ~Int~
+  system's longest "native" integer: on a 32-bit machine, an ~Int~
   is usually 32 bits wide, while on a 64-bit machine, it is
   usually 64 bits wide. The Haskell standard only guarantees a
   range of -229 to (229 - 1) (There exist numeric types that are
@@ -341,7 +341,7 @@ common composite data types in Haskell are lists and tuples.
 We've already seen the list type mentioned in
 [[file:1-getting-started.org::*Strings and characters][the section called "Strings and characters"]]
 Haskell represents a text string as a list of ~Char~ values, and
-that the type “list of ~Char~” is written ~[Char]~.
+that the type "list of ~Char~" is written ~[Char]~.
 
 The ~head~ function returns the first element of a list.
 
@@ -379,9 +379,9 @@ type, we use a /type variable/, which must begin with a lowercase
 letter. A type variable is a placeholder, where eventually we'll
 substitute a real type.
 
-We can write the type “list of ~a~” by enclosing the type variable
-in square brackets: ~[a]~. This amounts to saying “I don't care
-what type I have; I can make a list with it”.
+We can write the type "list of ~a~" by enclosing the type variable
+in square brackets: ~[a]~. This amounts to saying "I don't care
+what type I have; I can make a list with it".
 
 #+BEGIN_NOTE
 Distinguishing type names and type variables
@@ -409,7 +409,7 @@ The type of this expression is a list of lists of ~Bool~.
 #+BEGIN_NOTE
 Lists are special
 
-Lists are the “bread and butter” of Haskell collections. In an
+Lists are the "bread and butter" of Haskell collections. In an
 imperative language, we might perform a task many items by
 iterating through a loop. This is something that we often do in
 Haskell by traversing a list, either by recursing or using a
@@ -448,13 +448,13 @@ ghci> (4, ['a', 'm'], (16, True))
 
 There's a special type, ~()~, that acts as a tuple of zero
 elements. This type has only one value, also written ~()~. Both
-the type and the value are usually pronounced “unit”. If you are
+the type and the value are usually pronounced "unit". If you are
 familiar with C, ~()~ is somewhat similar to void.
 
 Haskell doesn't have a notion of a one-element tuple. Tuples are
 often referred to using the number of elements as a prefix. A
 2-tuple has two elements, and is usually called a /pair/. A
-“3-tuple” (sometimes called a /triple/) has three elements; a
+"3-tuple" (sometimes called a /triple/) has three elements; a
 5-tuple has five; and so on. In practice, working with tuples that
 contain more than a handful of elements makes code unwieldy, so
 tuples of more than a few elements are rarely used.
@@ -547,8 +547,8 @@ unfamiliar linguistic territory.
 As an illustration, take a look at the type signatures of ~fst~
 and ~snd~: they're defined /only/ for pairs, and can't be used
 with tuples of other sizes. Haskell's type system makes it tricky
-to write a generalised “get the second element from any tuple, no
-matter how wide” function.
+to write a generalised "get the second element from any tuple, no
+matter how wide" function.
 #+END_NOTE
 
 *** Passing an expression to a function
@@ -564,8 +564,8 @@ ghci> head (drop 4 "azerty")
 't'
 #+END_SRC
 
-We can read this as “pass the expression ~drop 4 "azerty"~ as the
-argument to ~head~”. If we were to leave out the parentheses, the
+We can read this as "pass the expression ~drop 4 "azerty"~ as the
+argument to ~head~". If we were to leave out the parentheses, the
 offending expression would be similar to passing three arguments
 to ~head~. Compilation would fail with a type error, as ~head~
 requires a single argument, a list.
@@ -579,9 +579,9 @@ ghci> :type lines
 lines :: String -> [String]
 #+END_SRC
 
-We can read the ~->~ above as “to”, which loosely translates to
-“returns”. The signature as a whole thus reads as “~lines~ has the
-type ~String~ to list-of-~String~”. Let's try applying the
+We can read the ~->~ above as "to", which loosely translates to
+"returns". The signature as a whole thus reads as "~lines~ has the
+type ~String~ to list-of-~String~". Let's try applying the
 function.
 
 #+BEGIN_SRC screen
@@ -676,7 +676,7 @@ or relative to ~ghci~'s current directory.
 
 When we apply ~add~ to the values ~1~ and ~2~, the variables ~a~
 and ~b~ on the left hand side of our definition are given (or
-“bound to”) the values ~1~ and ~2~, so the result is the
+"bound to") the values ~1~ and ~2~, so the result is the
 expression ~1 + 2~.
 
 Haskell doesn't have a ~return~ keyword, as a function is a single
@@ -686,7 +686,7 @@ function called ~return~, but we won't discuss it for a while; it
 has a different meaning than in imperative languages.)
 
 When you see an ~=~ symbol in Haskell code, it represents
-“meaning”: the name on the left is defined to be the expression on
+"meaning": the name on the left is defined to be the expression on
 the right.
 
 *** Just what is a variable, anyway?
@@ -787,8 +787,8 @@ indentation!
 
 You might wonder where the variable name ~xs~ comes from in the
 Haskell function. This is a common naming pattern for lists: you
-can read the ~s~ as a suffix, so the name is essentially “plural
-of ~x~”.
+can read the ~s~ as a suffix, so the name is essentially "plural
+of ~x~".
 
 Let's save our Haskell function in a file named ~myDrop.hs~, then
 load it into ~ghci~.
@@ -830,7 +830,7 @@ has three components.
   the predicate evaluates to ~False~.
 
 We'll refer to the expressions after the ~then~ and ~else~
-keywords as “branches”. The branches must have the same types; the
+keywords as "branches". The branches must have the same types; the
 ~if~ expression will also have this type. An expression such as
 ~if True then 1 else "foo"~ has different types for its branches,
 so it is ill typed and will be rejected by a compiler or
@@ -845,7 +845,7 @@ predicate evaluated to ~False~, so it would be nonsensical.
 
 Our predicate contains a few more novelties. The ~null~ function
 indicates whether a list is empty, while the ~(||)~ operator
-performs a logical “or” of its Bool-typed arguments.
+performs a logical "or" of its Bool-typed arguments.
 
 #+BEGIN_SRC screen
 ghci> :type null
@@ -858,10 +858,10 @@ ghci> :type (||)
 Operators are not special
 
 Notice that we were able to find the type of ~(||)~ by wrapping it
-in parentheses. The ~(||)~ operator isn't “built into” the
+in parentheses. The ~(||)~ operator isn't "built into" the
 language: it's an ordinary function.
 
-The ~(||)~ operator “short circuits”: if its left operand
+The ~(||)~ operator "short circuits": if its left operand
 evaluates to ~True~, it doesn't evaluate its right operand. In
 most languages, short-circuit evaluation requires special support,
 but not in Haskell. We'll see why shortly.
@@ -937,7 +937,7 @@ function are evaluated before the function is applied. Haskell
 chooses another path: /non-strict/ evaluation.
 
 In Haskell, the subexpression ~1 + 2~ is /not/ reduced to the
-value ~3~. Instead, we create a “promise” that when the value of
+value ~3~. Instead, we create a "promise" that when the value of
 the expression ~isOdd (1 + 2)~ is needed, we'll be able to compute
 it. The record that we use to track an unevaluated expression is
 referred to as a /thunk/. This is /all/ that happens: we create a
@@ -1201,8 +1201,8 @@ last :: [a] -> a
 #+END_SRC
 
 Here, ~a~ is the type variable. We can read the signature as
-“takes a list, all of whose elements have some type ~a~, and
-returns a value of the same type ~a~”.
+"takes a list, all of whose elements have some type ~a~, and
+returns a value of the same type ~a~".
 
 #+BEGIN_TIP
 Identifying a type variable
@@ -1248,7 +1248,7 @@ code doesn't care what the actual type is. However, we can make a
 stronger statement: /it has no way to find out what the real type
 is/, or to manipulate a value of that type. It can't create a
 value; neither can it inspect one. All it can do is treat it as a
-fully abstract “black box”. We'll cover one reason that this is
+fully abstract "black box". We'll cover one reason that this is
 important soon.
 
 Parametric polymorphism is the most visible kind of polymorphism
@@ -1403,7 +1403,7 @@ A non-obvious consequence of purity being the default is that
 working with /impure/ code becomes easier. Haskell encourages a
 style of programming in which we separate code that /must/ have
 side effects from code that doesn't need them. In this style,
-impure code tends to be simple, with the “heavy lifting” performed
+impure code tends to be simple, with the "heavy lifting" performed
 in pure code.
 
 Much of the risk in software lies in talking to the outside world,
@@ -1411,7 +1411,7 @@ be it coping with bad or missing data, or handling malicious
 attacks. Because Haskell's type system tells us exactly which
 parts of our code have side effects, we can be appropriately on
 our guard. Because our favoured coding style keeps impure code
-isolated and simple, our “attack surface” is small.
+isolated and simple, our "attack surface" is small.
 
 ** Conclusion
 
@@ -1428,8 +1428,8 @@ Haskell.
 
 ** Footnotes
 
-[fn:1] “If it walks like a duck, and quacks like a duck, then
-let's call it a duck.”
+[fn:1] "If it walks like a duck, and quacks like a duck, then
+let's call it a duck."
 
 [fn:2] Occasionally, we need to give the compiler a little
 information to help it to make a choice in understanding our code.
@@ -1442,6 +1442,6 @@ monad. In [[file:7-io.org][Chapter 7, /I/O/]], we will cover the IO
 monad in depth, and the seemingly arbitrary restrictions that
 ~ghci~ places on us will make more sense.
 
-[fn:5] The terms “non-strict” and “lazy” have slightly different
+[fn:5] The terms "non-strict" and "lazy" have slightly different
 technical meanings, but we won't go into the details of the
 distinction here.

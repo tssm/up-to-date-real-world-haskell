@@ -601,7 +601,7 @@ first-class citizens in Haskell.
 
 Let's begin our discussion of the typeclasses surrounding numeric
 types with an examination of the types themselves.
-[[Table%C2%A06.1.%C2%A0Selected Numeric Types][Table 6.1, “Selected Numeric Types”]] describes the most
+[[Table%C2%A06.1.%C2%A0Selected Numeric Types][Table 6.1, "Selected Numeric Types"]] describes the most
 commonly-used numeric types in Haskell. Note that there are also
 many more numeric types available for specific purposes such as
 interfacing to C.
@@ -628,9 +628,9 @@ interfacing to C.
 These are quite a few different numeric types. There are some
 operations, such as addition, that work with all of them. There
 are others, such as ~asin~, that only apply to floating-point
-types. [[Table%C2%A06.2.%C2%A0Selected Numeric Functions and Constants][Table 6.2, “Selected Numeric Functions and Constants”]]
+types. [[Table%C2%A06.2.%C2%A0Selected Numeric Functions and Constants][Table 6.2, "Selected Numeric Functions and Constants"]]
 summarizes the different functions that operate on numeric types,
-and [[Table%C2%A06.3.%C2%A0Typeclass Instances for Numeric Types][Table 6.3, “Typeclass Instances for Numeric Types”]] matches the
+and [[Table%C2%A06.3.%C2%A0Typeclass Instances for Numeric Types][Table 6.3, "Typeclass Instances for Numeric Types"]] matches the
 types with their respective typeclasses. As you read that table,
 keep in mind that Haskell operators are just functions: you can
 say either ~(+) 2 3~ or ~2 + 3~ with the same result. By
@@ -695,11 +695,11 @@ written in parenthesis as seen in this table.
 | ~Word64~                  | X      | X         |            |              | X          | X     | X      |            |
 
 Converting between numeric types is another common need.
-[[Table%C2%A06.2.%C2%A0Selected Numeric Functions and Constants][Table 6.2, “Selected Numeric Functions and Constants”]] listed many
+[[Table%C2%A06.2.%C2%A0Selected Numeric Functions and Constants][Table 6.2, "Selected Numeric Functions and Constants"]] listed many
 functions that can be used for conversion. However, it is not
 always obvious how to apply them to convert between two arbitrary
 types. To help you out,
-[[Table%C2%A06.4.%C2%A0Conversion Between Numeric Types][Table 6.4, “Conversion Between Numeric Types”]] provides information
+[[Table%C2%A06.4.%C2%A0Conversion Between Numeric Types][Table 6.4, "Conversion Between Numeric Types"]] provides information
 on converting between different types.
 
 #+NAME: Table 6.4. Conversion Between Numeric Types
@@ -905,7 +905,7 @@ often use it to represent a computation that could fail.
 While ~Maybe~ is useful for this purpose, it gives us no
 information if a failure occurs: we literally have ~Nothing~. The
 ~Either~ type has a similar structure, but instead of ~Nothing~,
-the “something bad happened” constructor is named ~Left~, and it
+the "something bad happened" constructor is named ~Left~, and it
 takes a parameter.
 
 #+CAPTION: DataEither.hs
@@ -1038,8 +1038,8 @@ instance JSON Double where
 We can add new instances anywhere; they are not confined to the
 module where we define a typeclass. This feature of the typeclass
 system is referred to as its /open world assumption/. If we had a
-way to express a notion of “the following are the only instances
-of this typeclass that can exist”, we would have a /closed/ world.
+way to express a notion of "the following are the only instances
+of this typeclass that can exist", we would have a /closed/ world.
 
 We would like to be able to turn a list into what JSON calls an
 array. We won't worry about implementation details just yet, so
@@ -1387,7 +1387,7 @@ Another perspective on newtype constructors
 
 Even though we use the value constructor for a ~newtype~ in the
 same way as that of a type defined using the ~data~ keyword, all
-it does is coerce a value between its “normal” type and its
+it does is coerce a value between its "normal" type and its
 ~newtype~ type.
 
 In other words, when we apply the ~N~ constructor in an
@@ -1447,8 +1447,8 @@ module JSONClass
     ) where
 #+END_SRC
 
-The “~(..)~” following the ~JAry~ name means “export all details
-of this type”.
+The "~(..)~" following the ~JAry~ name means "export all details
+of this type".
 
 #+BEGIN_NOTE
 A slight deviation from normal use
@@ -1679,7 +1679,7 @@ Monomorphism.hs:1:10: error:
 Failed, no modules loaded.
 #+END_SRC
 
-The “monomorphism restriction” to which the error message refers
+The "monomorphism restriction" to which the error message refers
 is a part of the Haskell 2010 standard. /Monomorphism/ is simply
 the opposite of polymorphism: it indicates that an expression has
 exactly one type. The /restriction/ lies in the fact that Haskell

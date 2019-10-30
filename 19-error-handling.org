@@ -321,7 +321,7 @@ for returning error information.
 
 The ~Either~ type is similar to the ~Maybe~ type, with one key
 difference: it can carry attached data both for an error and a
-success (“the ~Right~ answer”).[fn:3] Although the language
+success ("the ~Right~ answer").[fn:3] Although the language
 imposes no restrictions, by convention, a function returning an
 ~Either~ uses a ~Left~ return value to indicate an error, and
 ~Right~ to indicate success. If it helps you remember, you can

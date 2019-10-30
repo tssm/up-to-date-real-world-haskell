@@ -73,7 +73,7 @@ We will segregate the mutable and immutable APIs that we publish
 by placing them in different modules: ~BloomFilter~ for the
 immutable code, and ~BloomFilter.Mutable~ for the mutable code.
 
-In addition, we will create several “helper” modules that won't
+In addition, we will create several "helper" modules that won't
 provide parts of the public API, but will keep the internal code
 cleaner.
 
@@ -118,7 +118,7 @@ Unlike other Haskell arrays, a ~UArray~ contains /unboxed/ values.
 
 For a normal Haskell type, a value can be either fully evaluated,
 an unevaluated thunk, or the special value ⊥, pronounced (and
-sometimes written) “bottom”. The value ⊥ is a placeholder for a
+sometimes written) "bottom". The value ⊥ is a placeholder for a
 computation that does not succeed. Such a computation could take
 any of several forms. It could be an infinite loop; an application
 of ~error~; or the special value ~undefined~.
@@ -257,7 +257,7 @@ While we could export the fully qualified name
 ~BloomFilter.Mutable.length~ to eliminate the ambiguity, that
 seems uglier in this case. This decision has no consequences for
 someone using our module, just for ourselves as the authors of
-what ought to be a “black box”, so there is little chance of
+what ought to be a "black box", so there is little chance of
 confusion here.
 
 ** Creating a mutable Bloom filter
@@ -433,7 +433,7 @@ easyList :: (Hashable a)
          -> Either String (B.Bloom a)
 #+END_SRC
 
-Here is a possible “friendlier” way to create a Bloom filter. It
+Here is a possible "friendlier" way to create a Bloom filter. It
 leaves responsibility for hashing values in the hands of a
 typeclass, Hashable. It lets us configure the Bloom filter based
 on a parameter that is easier to understand, namely the rate of
@@ -461,7 +461,7 @@ try to use ~length~, GHC will issue an error about ambiguity,
 because the Prelude also makes the name ~length~ available.
 
 The Haskell standard requires an implementation to be able to tell
-when several names refer to the same “thing”. For instance, the
+when several names refer to the same "thing". For instance, the
 Bloom type is exported by ~BloomFilter~ and ~BloomFilter.Easy~. If
 we import both modules and try to use Bloom, GHC will be able to
 see that the Bloom re-exported from ~BloomFilter.Easy~ is the same
@@ -529,7 +529,7 @@ void hashlittle2(const void *key,   /* array of bytes */
 #endif /* _lookup3_h */
 #+END_SRC
 
-A “salt” is a value that perturbs the hash value that the function
+A "salt" is a value that perturbs the hash value that the function
 computes. If we hash the same value with two different salts, we
 will get two different hashes. Since these functions compute two
 hashes, they accept two salts.
@@ -887,7 +887,7 @@ Setup sdist~ to create a source tarball for redistribution.
 #+BEGIN_TIP
 Property names are case insensitive
 
-When reading a property (the text before a “~:~” character), Cabal
+When reading a property (the text before a "~:~" character), Cabal
 ignores case, so it treats ~extra-source-files~ and
 ~Extra-Source-Files~ as the same.
 #+END_TIP
@@ -1561,7 +1561,7 @@ and memory sink.
 Always profile before—and while—you tune!
 
 Before our first profiling run, we did not expect ~doubleHash~ to
-even appear in the top ten of “hot” functions, much less to
+even appear in the top ten of "hot" functions, much less to
 dominate it. Without this knowledge, we would probably have
 started tuning something entirely irrelevant.
 #+END_TIP
@@ -1788,7 +1788,7 @@ result for such a small change.
 
 ** Footnotes
 
-[fn:1] The name ~ST~ is an acronym of “state transformer”.
+[fn:1] The name ~ST~ is an acronym of "state transformer".
 
 [fn:2] Jenkins's hash functions have /much/ better mixing
 properties than some other popular non-cryptographic hash

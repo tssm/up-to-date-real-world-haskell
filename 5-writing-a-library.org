@@ -514,7 +514,7 @@ program is to write placeholder, or /stub/ versions of types and
 functions. For instance, we mentioned above that our ~string~,
 ~text~ and ~double~ functions would be provided by our ~Prettify~
 module. If we don't provide definitions for those functions or the
-~Doc~ type, our attempts to “compile early, compile often” with
+~Doc~ type, our attempts to "compile early, compile often" with
 our JSON renderer will fail, as the compiler won't know anything
 about those functions. To avoid this problem, we write stub code
 that doesn't do anything.
@@ -575,13 +575,13 @@ Point-free style
 
 This style of writing a definition exclusively as a composition of
 other functions is called /point-free style/. The use of the word
-“point” is not related to the “~.~” character used for function
+"point" is not related to the "~.~" character used for function
 composition. The term /point/ is roughly synonymous (in Haskell)
 with /value/, so a /point-free/ expression makes no mention of the
 values that it operates on.
 
 Contrast the point-free definition of ~string~ above with this
-“pointy” version, which uses a variable ~s~ to refer to the value
+"pointy" version, which uses a variable ~s~ to refer to the value
 on which it operates.
 
 #+CAPTION: PrettyJSON.hs
@@ -658,7 +658,7 @@ required do we emit the plain character. To be conservative, the
 only unescaped characters we emit are printable ASCII characters.
 
 The more complicated escaping involves turning a character into
-the string “~\u~” followed by a four-character sequence of
+the string "~\u~" followed by a four-character sequence of
 hexadecimal digits representing the numeric value of the Unicode
 character.
 
@@ -1488,8 +1488,8 @@ tool, you can download, build, and install it in one step with
 
 ** Footnotes
 
-[fn:1] Memory aid: ~-o~ stands for “output” or “object file”.
+[fn:1] Memory aid: ~-o~ stands for "output" or "object file".
 
-[fn:2] The “3” in ~BSD3~ refers to the number of clauses in the
+[fn:2] The "3" in ~BSD3~ refers to the number of clauses in the
 license. An older version of the BSD license contained 4 clauses,
 but it is no longer used.

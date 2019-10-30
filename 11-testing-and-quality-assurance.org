@@ -20,7 +20,7 @@ that just doesn't go wrong.
 Testing plays a key role in keeping code on the
 straight-and-narrow path. The main testing mechanisms in Haskell
 are traditional unit testing (via the HUnit library), and its more
-powerful descendant: type-based “property” testing, with
+powerful descendant: type-based "property" testing, with
 QuickCheck, an open source testing framework for Haskell.
 Property-based testing encourages a high level approach to testing
 in the form of abstract invariants functions should satisfy

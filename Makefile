@@ -11,3 +11,7 @@ htmlLinks:
 	# grep '\[file:[^ ]*.html#' *.org
 
 	grep -n file *.org | grep '\.html' | grep -v 'bibliography.html'
+
+quote_marks:
+	sed -i 's/“/"/g' *.org
+	sed -i 's/”/"/g' *.org
