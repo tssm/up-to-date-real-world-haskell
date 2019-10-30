@@ -59,7 +59,7 @@ bit ~1~ in the bit array. It is set, as is bit ~3~, so we say that
 positive.
 
 For a survey of some of the uses of Bloom filters in networking,
-see [[[file:bibliography.org::*Broder02][Broder02]]].
+see [[[file:bibliography.org::Broder02][Broder02]]].
 
 ** Use cases and package layout
 

@@ -1307,7 +1307,7 @@ return the first element of the pair.
 There is a deep mathematical sense in which any non-pathological
 function of type (a,b) -> a must do exactly what ~fst~ does.
 Moreover, this line of reasoning extends to more complicated
-polymorphic functions. The paper [[[file:bibliography.org#bib.wadler89][Wadler89]]] covers this procedure
+polymorphic functions. The paper [[[file:bibliography.org::Wadler89][Wadler89]]] covers this procedure
 in depth.
 
 ** The type of a function of more than one argument
