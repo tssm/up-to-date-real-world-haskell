@@ -500,7 +500,7 @@ that could cause spurious failures elsewhere in our program.
 
 #+CAPTION: BetterPredicate.hs
 #+BEGIN_SRC haskell
-getFileSize path = handle (\_ -> return Nothing) $
+getFileSize path = handle (\_ -> return Nothing) :: IOError -> IO (Maybe Integer)) $
   bracket (openFile path ReadMode) hClose $ \h -> do
     size <- hFileSize h
     return (Just size)
