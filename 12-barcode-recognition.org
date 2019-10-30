@@ -342,7 +342,7 @@ arrays.
    should return the leftmost element of the tuple. With an
    argument of one, it should return the next element. And so on.
    What restrictions do you have to put on the types of the
-   arguments in order to write a function that typechecks
+   arguments in order to write a function that type-checks
    correctly?
 2. Write a similar function that takes a six-tuple as its first
    argument.

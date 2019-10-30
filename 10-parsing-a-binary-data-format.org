@@ -805,7 +805,7 @@ push a s = Item a s
 #+END_SRC
 
 Try removing that ~Ord~ constraint above, and the definition of
-~push~ will fail to typecheck.
+~push~ will fail to type-check.
 
 This is why our attempt to write a ~Functor~ instance for ~Bar~
 failed earlier: it would have required an ~Eq~ constraint to

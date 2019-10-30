@@ -433,7 +433,7 @@ works becomes more accurate.
 #+BEGIN_TIP
 Explicit types, undefined values, and error
 
-The special value ~undefined~ will happily typecheck no matter
+The special value ~undefined~ will happily type-check no matter
 where we use it, as will an expression like ~error "argh!"~. It is
 especially important that we write type signatures when we use
 these. Suppose we use ~undefined~ or ~error "write me"~ to act as
@@ -536,7 +536,7 @@ double num = undefined
 #+END_SRC
 
 The special value ~undefined~ has the type ~a~, so it always
-typechecks, no matter where we use it. If we attempt to evaluate
+type-checks, no matter where we use it. If we attempt to evaluate
 it, it will cause our program to crash.
 
 #+BEGIN_SRC screen

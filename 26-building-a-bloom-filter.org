@@ -1054,7 +1054,7 @@ The value of ~-fvia-C~ with the FFI
 Compiling with ~-fvia-C~ has a useful safety benefit when we write
 FFI bindings. If we mention a header file in an FFI declaration
 (e.g. ~foreign import "string.h memcpy")~, the C compiler will
-typecheck the generated Haskell code and ensure that its
+type-check the generated Haskell code and ensure that its
 invocation of the C function is consistent with the C function's
 prototype in the header file.
 

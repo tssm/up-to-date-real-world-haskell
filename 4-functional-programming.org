@@ -1910,7 +1910,7 @@ ghci> unsafeHead []
 *** Exception: Lambda.hs:7:13-23: Non-exhaustive patterns in lambda
 #+END_SRC
 
-The definition typechecks, so it will compile, so the error will
+The definition type-checks, so it will compile, so the error will
 occur at runtime. The moral of this story is to be careful in how
 you use patterns when defining an anonymous function: make sure
 your patterns can't fail!
