@@ -1,4 +1,4 @@
-Real World Haskell by Bryan O'Sullivan, Don Stewart and John
+[[http://book.realworldhaskell.org/][Real World Haskell]] by Bryan O'Sullivan, Don Stewart and John
 Goerzen is an old book (2008) that approach teaching Haskell by
 building small programs. Sadly the language and libraries have
 changed enough to make several of the examples useless so I am
