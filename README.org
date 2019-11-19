@@ -15,7 +15,7 @@ changes listed as /enhancements/ in the issue tracker.
 6. DONE [[file:5-writing-a-library.org][Writing a library]]
 7. DONE [[file:6-using-typeclasses.org][Using type classes]]
 8. DONE [[file:7-io.org][I/O]]
-9. DONE [[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org][Effiient file processing]]
+9. DONE [[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org][Efficient file processing]]
 10. DONE [[file:9-a-library-for-searching-the-file-system.org][A library for searching the file system]]
 11. DONE [[file:10-parsing-a-binary-data-format.org][Parsing a binary data format]]
 12. DONE [[file:11-testing-and-quality-assurance.org][Testing and quality assurance]]
