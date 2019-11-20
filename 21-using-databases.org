@@ -615,7 +615,7 @@ handling, refer to [[file:19-error-handling.org][Chapter 19, /Error handling/]]
 ** Footnotes
 
 [fn:1] The O'Reilly books /Learning SQL/ and /SQL in a Nutshell/
-may be useful if you don't have experience wiht SQL.
+may be useful if you don't have experience with SQL.
 
 [fn:2] This assumes you restrict yourself to using standard SQL.
 

@@ -131,7 +131,7 @@ Having said all that, ~Maybe~ is often a fine choice. In this
 particular case, we don't know whether there will be a problem
 until we get into evaluating the entire input. Sometimes we know
 of a problem up front, for instance, that ~tail []~ in ~ghci~
-produces an exception. We could easly write an infinite-capable
+produces an exception. We could easily write an infinite-capable
 ~tail~ that doesn't have this problem:
 
 #+CAPTION: safetail.hs

@@ -172,7 +172,7 @@ ghci> quickCheck (prop_minimum :: [Integer] -> Bool)
 #+END_SRC
 
 The property failed when sorting an empty list–for which ~head~
-and ~minimum~ are't defined, as we can see from their definition:
+and ~minimum~ aren't defined, as we can see from their definition:
 
 #+CAPTION: minimum.hs
 #+BEGIN_SRC haskell
@@ -632,7 +632,7 @@ main = do
 
     runTests "complex" options
         [ run prop_hcat
-        , run prop_puncutate
+        , run prop_punctuate
         ]
 #+END_SRC
 

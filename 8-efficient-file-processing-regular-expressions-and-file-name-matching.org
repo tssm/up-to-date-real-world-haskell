@@ -294,7 +294,7 @@ probably already know them, but we'll quickly recap here.
   class, so we can write a class containing the ~]~ character as
   ~[]aeiou]~. The pattern ~pic[0-9].[pP][nN][gG]~ will match a
   name consisting of the string ~pic~, followed by a single digit,
-  followed by any capitalization of the strig ~.png~.
+  followed by any capitalization of the string ~.png~.
 
 While Haskell doesn't provide a way to match glob patterns among
 its standard libraries, it provides a good regular expression
@@ -350,7 +350,7 @@ would like. In real code, it may be able to infer the right type,
 due to the way we subsequently use the result. But such cues are
 often lacking when we're exploring with ~ghci~. If we omit a
 specific type for the result, we'll get an error from the
-interpreter, as it does not have enough information to successfuly
+interpreter, as it does not have enough information to successfully
 infer the result type.
 
 When ~ghci~ can't infer the ~target~ type, we tell it what we'd
