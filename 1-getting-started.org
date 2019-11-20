@@ -104,7 +104,7 @@ leave little visual room on a single line for our input.
 For brevity and consistency, we have replaced ~ghci~'s default
 prompts throughout this book with the prompt string ~ghci>~.
 
-If you want to do this youself, use ~ghci~'s ~:set prompt~
+If you want to do this yourself, use ~ghci~'s ~:set prompt~
 directive, as follows.
 
 #+BEGIN_SRC screen

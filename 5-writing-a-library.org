@@ -750,7 +750,7 @@ of values of type ~a~, and it returns a value of type ~Doc~.
 Notice that although our type signature mentions four parameters,
 we have only listed three in the definition of the function. We
 are simply following the same rule that lets us simplify a
-definiton like ~myLength xs = length xs~ to ~myLength = length~.
+definition like ~myLength xs = length xs~ to ~myLength = length~.
 
 We have already written ~enclose~, which wraps a ~Doc~ value in
 opening and closing characters. The ~fsep~ function will live in

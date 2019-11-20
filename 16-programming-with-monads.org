@@ -550,7 +550,7 @@ only those type class instances that we want; and we expend almost
 no effort to create these narrower, more specialised types.
 
 Sadly currently GHC is not able to automatically derive the
-required functor and appliative instance of our monad so we still
+required functor and applicative instance of our monad so we still
 need a little bit of boilerplate:
 
 #+CAPTION: Supply.hs

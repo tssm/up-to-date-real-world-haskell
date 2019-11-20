@@ -1386,7 +1386,7 @@ express.
 #+BEGIN_TIP
 Tip
 
-If we need compatiblity with GHC prior to version 8.4 we can
+If we need compatibility with GHC prior to version 8.4 we can
 [[https://prime.haskell.org/wiki/Libraries/Proposals/SemigroupMonoid#Writingcompatiblecode][write compatible code]].
 #+END_TIP
 

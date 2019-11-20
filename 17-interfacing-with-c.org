@@ -686,7 +686,7 @@ are "safe", but in practice it is rare for C code to call back
 into Haskell, so for efficiency we mostly use "unsafe" calls.
 #+END_NOTE
 
-We can increase safety in the binding futher by using a "typed"
+We can increase safety in the binding further by using a "typed"
 pointer, instead of using the ~()~ type. That is, a unique type,
 distinct from the unit type, that has no meaningful runtime
 representation. A type for which no data can be constructed,

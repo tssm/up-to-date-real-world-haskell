@@ -952,7 +952,7 @@ on the left hand side of ~par~ or ~pseq~, we don't need to return
 a meaningful value.
 
 Of course, in many cases we will need to force the evaluation of
-individual elements of the list, too. Below, we will discuess a
+individual elements of the list, too. Below, we will discuss a
 type class-based solution to this problem.
 
 *** What promises does par make?
@@ -1041,7 +1041,7 @@ problems that we specifically work to avoid in our driver program.
 
 - /Invisible data dependencies./ When we generate the list of
   random numbers, simply printing the length of the list would not
-  perform enough evaluation. This wouls evaluate the /spine/ of
+  perform enough evaluation. This would evaluate the /spine/ of
   the list, but not its elements. The actual random numbers would
   not be evaluated until the sort compares them.
 
