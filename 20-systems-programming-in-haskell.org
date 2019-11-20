@@ -740,7 +740,7 @@ removeCloseFDs closefds removethem =
     procfdlist fdlist [] = fdlist
     procfdlist fdlist (x:xs) = procfdlist (removefd fdlist x) xs
 
-    -- We want to remove only the first occurance ot any given fd
+    -- We want to remove only the first occurrence ot any given fd
     removefd [] _ = []
     removefd (x:xs) fd
         | fd == x = xs
@@ -1051,7 +1051,7 @@ removeCloseFDs closefds removethem =
     procfdlist fdlist [] = fdlist
     procfdlist fdlist (x:xs) = procfdlist (removefd fdlist x) xs
 
-    -- We want to remove only the first occurance ot any given fd
+    -- We want to remove only the first occurrence ot any given fd
     removefd [] _ = []
     removefd (x:xs) fd
         | fd == x = xs
