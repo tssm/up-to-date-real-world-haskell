@@ -555,7 +555,7 @@ ghci> 5 / 2
 ghci> (units 5 "m") / (units 2 "s")
 2.5_m/s
 ghci> (units 5 "m") + (units 2 "s")
-*** Exception: Mis-matched units in add or substract
+*** Exception: Mis-matched units in add or subtract
 CallStack (from HasCallStack):
   error, called at num.hs:109:19 in main:Main
 ghci> (units 5 "m") + (units 2 "m")
