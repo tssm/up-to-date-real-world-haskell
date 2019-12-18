@@ -1040,7 +1040,7 @@ handling.
 #+BEGIN_EXAMPLE
 newtype Parser a = P {
       runP :: ErrorT ParseError (State B.ByteString) a
-    } deriving (Monad, MonadError ParseError)
+    } deriving (Functor, Applicative, Monad, MonadError ParseError)
 #+END_EXAMPLE
 
 As usual, we have wrapped our monad stack in a ~newtype~. This
