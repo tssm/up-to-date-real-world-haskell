@@ -638,7 +638,7 @@ image when we converted it from colour to monochrome. Here's an
 image captured from a VGA-resolution camera. All we've done is
 crop it down to the barcode.
 
-[[file:figs/ch12-barcode-photo.jpg]]
+[[file:ch12-barcode-photo.jpg]]
 
 The encoded digit string, 9780132114677, is printed below the
 barcode. The left group encodes the digits 780132, with 9 encoded
@@ -647,14 +647,14 @@ the final 7 is the check digit. Here's a clean encoding of this
 barcode, from one of the many web sites that offer barcode image
 generation for free.
 
-[[file:figs/ch12-barcode-generated.png]]
+[[file:ch12-barcode-generated.png]]
 
 We've chosen a row from the captured image, and stretched it out
 vertically to make it easier to see. We've superimposed this on
 top of the perfect image, and stretched it out so that the two are
 aligned.
 
-[[file:figs/ch12-barcode-example.png]]
+[[file:ch12-barcode-example.png]]
 
 The luminance-converted row from the photo is in the dark grey
 band. It is low in contrast and poor in quality, with plenty of
