@@ -374,7 +374,7 @@ serveLog port handlerfunc = withSocketsDo $
           procRequests lock mastersock =
               do (connsock, clientaddr) <- accept mastersock
                  handle lock clientaddr
-                    "syslogtcpserver.hs: client connnected"
+                    "syslogtcpserver.hs: client connected"
                  forkIO $ procMessages lock connsock clientaddr
                  procRequests lock mastersock
 
@@ -404,7 +404,7 @@ plainHandler addr msg =
 #+END_EXAMPLE
 
 For our ~SyslogTypes~ implementation, see
-[[file:sockets-and-syslog.html#sockets.udp.client][the section called “UDP Client Example: syslog”]].
+[[file:27-sockets-and-syslog.org::*UDP Client Example: syslog][the section called "UDP Client Example: syslog"]]
 
 Let's look at this code. Our main loop is in ~procRequests~, where
 we loop forever waiting for new connections from clients. The
@@ -461,7 +461,7 @@ Meanwhile, in our other terminal running the TCP server, you'll
 see something like this:
 
 #+BEGIN_SRC screen
-From 127.0.0.1:38790: syslogtcpserver.hs: client connnected
+From 127.0.0.1:38790: syslogtcpserver.hs: client connected
 From 127.0.0.1:38790: Test message
 From 127.0.0.1:38790: syslogtcpserver.hs: client disconnected
 #+END_SRC
@@ -574,7 +574,7 @@ ghci> closelog sl
 Over on the server, you'll see something like this:
 
 #+BEGIN_SRC screen
-From 127.0.0.1:46319: syslogtcpserver.hs: client connnected
+From 127.0.0.1:46319: syslogtcpserver.hs: client connected
 From 127.0.0.1:46319: <9>tcptest: This is my TCP message
 From 127.0.0.1:46319: <9>tcptest: This is my TCP message again
 From 127.0.0.1:46319: syslogtcpserver.hs: client disconnected

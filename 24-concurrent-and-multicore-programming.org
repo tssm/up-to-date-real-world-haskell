@@ -269,7 +269,7 @@ newManager = Mgr `fmap` newMVar M.empty
 #+END_SRC
 
 We have two levels of ~MVar~ use here. We keep the ~Map~ in an
-~MVar~. This lets us “modify” the map by replacing it with a new
+~MVar~. This lets us "modify" the map by replacing it with a new
 version. We also ensure that any thread that uses the Map will see
 a consistent view of it.
 
@@ -575,7 +575,7 @@ and ~Chan~ types.
 The ~!~ pattern above is simple to use, but it is not always
 sufficient to ensure that our data is evaluated. For a more
 complete approach, see
-[[file:concurrent-and-multicore-programming.html#concurrent.strategies][the section called “Separating algorithm from evaluation”]]
+[[file:24-concurrent-and-multicore-programming.org::*Separating algorithm from evaluation][the section called "Separating algorithm from evaluation"]]
 below.
 
 *** Chan is unbounded
@@ -648,7 +648,7 @@ reproduce, never mind isolate and fix.
 *** Starvation
 
 Concurrent software is also prone to /starvation/, in which one
-thread “hogs” a shared resource, preventing another from using it.
+thread "hogs" a shared resource, preventing another from using it.
 It's easy to imagine how this might occur: one thread calls
 ~modifyMVar~ with a body that executes for 100 milliseconds, while
 another calls ~modifyMVar~ on the same ~MVar~ with a body that
@@ -661,7 +661,7 @@ will be expensive to evaluate, and take it out of the ~MVar~ in a
 thread that otherwise looks like it /ought/ to be cheap, that
 thread could suddenly become computationally expensive if it has
 to evaluate the thunk. This makes the advice we gave in
-[[file:concurrent-and-multicore-programming.html#concurrent.useful.nonstrict][the section called “MVar and Chan are non-strict”]] particularly relevant.
+[[file:24-concurrent-and-multicore-programming.org::*MVar and Chan are non-strict][the section called "MVar and Chan are non-strict"]]
 
 *** Is there any hope?
 
@@ -669,7 +669,7 @@ Fortunately, the APIs for concurrency that we have covered here
 are by no means the end of the story. A more recent addition to
 Haskell, Software Transactional Memory, is both easier and safer
 to work with. We will discuss it in chapter
-[[file:software-transactional-memory.html][Chapter 28, /Software transactional memory/]].
+[[file:28-software-transactional-memory.org][Chapter 28, /Software transactional memory/]].
 
 ** Exercises
 
@@ -695,10 +695,10 @@ when we write explicitly concurrent code. To use multiple cores,
 we must explicitly choose to do so. We make this choice at /link
 time/, when we are generating an executable program.
 
-- The “non-threaded” runtime library runs all Haskell threads in a
+- The "non-threaded" runtime library runs all Haskell threads in a
   single operating system thread. This runtime is highly efficient
   for creating threads and passing data around in ~MVars~.
-- The “threaded” runtime library uses multiple operating system
+- The "threaded" runtime library uses multiple operating system
   threads to run Haskell threads. It has somewhat more overhead
   for creating threads and using ~MVars~.
 
@@ -813,7 +813,7 @@ transformations to it, and have it evaluated in parallel.
 
 The familiar ~seq~ function evaluates an expression to what we
 call /head normal form/ (abbreviated HNF). It stops once it
-reaches the outermost constructor (the “head”). This is distinct
+reaches the outermost constructor (the "head"). This is distinct
 from /normal form/ (NF), in which an expression is completely
 evaluated.
 
@@ -952,21 +952,21 @@ on the left hand side of ~par~ or ~pseq~, we don't need to return
 a meaningful value.
 
 Of course, in many cases we will need to force the evaluation of
-individual elements of the list, too. Below, we will discuess a
-typeclass-based solution to this problem.
+individual elements of the list, too. Below, we will discuss a
+type class-based solution to this problem.
 
 *** What promises does par make?
 
 The ~par~ function does not actually promise to evaluate an
 expression in parallel with another. Instead, it undertakes to do
-so if it “makes sense”. This wishy-washy non-promise is actually
+so if it "makes sense". This wishy-washy non-promise is actually
 more useful than a guarantee to always evaluate an expression in
 parallel. It gives the runtime system the freedom to act
 intelligently when it encounters a use of ~par~.
 
 For instance, the runtime could decide that an expression is too
 cheap to be worth evaluating in parallel. Or it might notice that
-all cores are currently busy, so that “sparking” a new parallel
+all cores are currently busy, so that "sparking" a new parallel
 evaluation will lead to there being more runnable threads than
 there are cores available to execute them.
 
@@ -1041,7 +1041,7 @@ problems that we specifically work to avoid in our driver program.
 
 - /Invisible data dependencies./ When we generate the list of
   random numbers, simply printing the length of the list would not
-  perform enough evaluation. This wouls evaluate the /spine/ of
+  perform enough evaluation. This would evaluate the /spine/ of
   the list, but not its elements. The actual random numbers would
   not be evaluated until the sort compares them.
 
@@ -1049,8 +1049,8 @@ problems that we specifically work to avoid in our driver program.
   a random number depends on the value of the preceding random
   number in the list, but we have scattered the list elements
   randomly among our processor cores. If we did not evaluate the
-  list elements prior to sorting, we would suffer a terrible “ping
-  pong” effect: not only would evaluation bounce from one core to
+  list elements prior to sorting, we would suffer a terrible "ping
+  pong" effect: not only would evaluation bounce from one core to
   another, performance would suffer.
 
   Try snipping out the application of ~force~ from the body of
@@ -1243,13 +1243,13 @@ about solving a /class/ of problems instead of a single one, we
 may end up with more widely applicable code.
 
 When we develop a parallel program, we are always faced with a few
-“bad penny” problems, which turn up no matter what the underlying
+"bad penny" problems, which turn up no matter what the underlying
 programming language is.
 
 - Our algorithm quickly becomes obscured by the details of
   partitioning and communication. This makes it difficult to
   understand code, which in turn makes modifying it risky.
-- Choosing a “grain size”—the smallest unit of work parceled out
+- Choosing a "grain size"—the smallest unit of work parceled out
   to a core—can be difficult. If the grain size is too small,
   cores spend so much of their time on book-keeping that a
   parallel program can easily become slower than a serial
@@ -1346,7 +1346,7 @@ rwhnf x = x `seq` ()
 #+END_SRC
 
 To evaluate a value to normal form, the module provides a
-typeclass with a method named ~rnf~.
+type class with a method named ~rnf~.
 
 #+CAPTION: Strat.hs
 #+BEGIN_SRC haskell
@@ -1360,13 +1360,13 @@ Remembering those names
 
 If the names of these functions and types are not sticking in your
 head, look at them as acronyms. The name ~rwhnf~ expands to
-“reduce to weak head normal form”; NFData becomes “normal form
-data”; and so on.
+"reduce to weak head normal form"; NFData becomes "normal form
+data"; and so on.
 #+END_TIP
 
 For the basic types, such as ~Int~, weak head normal form and
 normal form are the same thing, which is why the ~NFData~
-typeclass uses ~rwhnf~ as the default implementation of ~rnf~. For
+type class uses ~rwhnf~ as the default implementation of ~rnf~. For
 many common types, the ~Control.Parallel.Strategies~ module
 provides instances of ~NFData~.
 
@@ -1568,7 +1568,7 @@ avoid.
 
 On top of these well-known risks, we cannot use a single file
 handle to supply data to multiple threads. A file handle has a
-single “seek pointer” that tracks the position from which it
+single "seek pointer" that tracks the position from which it
 should be reading, but when we want to read multiple chunks, each
 needs to consume data from a different position in the file.
 
@@ -1598,14 +1598,14 @@ computation having a file handle closed behind its back. We use
 ~rnf~ to force all of our processing to complete before we return
 from ~withChunks~. We can then close our file handles explicitly,
 as they should no longer be read from. If you must use lazy I/O in
-a program, it is often best to “firewall” it like this, so that it
+a program, it is often best to "firewall" it like this, so that it
 cannot cause problems in unexpected parts of your code.
 
 #+BEGIN_TIP
 Processing chunks via a fold
 
 We can adapt the fold-with-early-termination technique from
-[[file:io-case-study-a-library-for-searching-the-filesystem.html#find.fold][the section called “Another way of looking at traversal”]] to
+[[file:9-a-library-for-searching-the-file-system.org::*Another way of looking at traversal][the section called "Another way of looking at traversal"]]
 stream-based file processing. While this requires more work than
 the lazy I/O approach, it nicely avoids the above problems.
 #+END_TIP
@@ -1683,7 +1683,7 @@ main = do
 #+END_SRC
 
 If we compile this program with ~ghc -O2 --make -threaded~, it
-should perform well after an initial run to “warm” the filesystem
+should perform well after an initial run to "warm" the filesystem
 cache. On a dual core laptop, processing a log file 248 megabytes
 (1.1 million lines) in size, this program runs in 0.576 seconds
 using a single core, and 0.361 with two (using ~+RTS -N2~).
@@ -1691,7 +1691,7 @@ using a single core, and 0.361 with two (using ~+RTS -N2~).
 *** Finding the most popular URLs
 
 In this example, we count the number of times each URL is
-accessed. This example comes from [[[file:bibliography.html#bib.google08][Google08]]], Google's original
+accessed. This example comes from [[[file:bibliography.org::Google08][Google08]]], Google's original
 paper discussing MapReduce. In the /map/ phase, for each chunk, we
 create a ~Map~ from URL to the number of times it was accessed. In
 the /reduce/ phase, we union-merge these maps into one.
@@ -1725,7 +1725,7 @@ countURLs = mapReduce rwhnf (foldl' augment M.empty . L.lines)
 
 To pick a URL out of a line of the log file, we use the
 bindings to the PCRE regular expression library that we developed
-in [[file:interfacing-with-c-the-ffi.html][Chapter 17, /Interfacing with C: the FFI/]].
+in [[file:17-interfacing-with-c.org][Chapter 17, /Interfacing with C: the FFI/]].
 
 Our driver function prints the ten most popular URLs. As with the
 line counting example, this program runs about 1.8 times faster
@@ -1735,7 +1735,7 @@ log file containing 1.1 million entries.
 *** Conclusions
 
 Given a problem that fits its model well, the MapReduce
-programming model lets us write “casual” parallel programs in
+programming model lets us write "casual" parallel programs in
 Haskell with good performance, and minimal additional effort. We
 can easily extend the idea to use other data sources, such as
 collections of files, or data sourced over the network.

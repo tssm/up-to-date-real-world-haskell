@@ -433,7 +433,7 @@ works becomes more accurate.
 #+BEGIN_TIP
 Explicit types, undefined values, and error
 
-The special value ~undefined~ will happily typecheck no matter
+The special value ~undefined~ will happily type-check no matter
 where we use it, as will an expression like ~error "argh!"~. It is
 especially important that we write type signatures when we use
 these. Suppose we use ~undefined~ or ~error "write me"~ to act as
@@ -514,7 +514,7 @@ program is to write placeholder, or /stub/ versions of types and
 functions. For instance, we mentioned above that our ~string~,
 ~text~ and ~double~ functions would be provided by our ~Prettify~
 module. If we don't provide definitions for those functions or the
-~Doc~ type, our attempts to “compile early, compile often” with
+~Doc~ type, our attempts to "compile early, compile often" with
 our JSON renderer will fail, as the compiler won't know anything
 about those functions. To avoid this problem, we write stub code
 that doesn't do anything.
@@ -536,7 +536,7 @@ double num = undefined
 #+END_SRC
 
 The special value ~undefined~ has the type ~a~, so it always
-typechecks, no matter where we use it. If we attempt to evaluate
+type-checks, no matter where we use it. If we attempt to evaluate
 it, it will cause our program to crash.
 
 #+BEGIN_SRC screen
@@ -575,13 +575,13 @@ Point-free style
 
 This style of writing a definition exclusively as a composition of
 other functions is called /point-free style/. The use of the word
-“point” is not related to the “~.~” character used for function
+"point" is not related to the "~.~" character used for function
 composition. The term /point/ is roughly synonymous (in Haskell)
 with /value/, so a /point-free/ expression makes no mention of the
 values that it operates on.
 
 Contrast the point-free definition of ~string~ above with this
-“pointy” version, which uses a variable ~s~ to refer to the value
+"pointy" version, which uses a variable ~s~ to refer to the value
 on which it operates.
 
 #+CAPTION: PrettyJSON.hs
@@ -658,7 +658,7 @@ required do we emit the plain character. To be conservative, the
 only unescaped characters we emit are printable ASCII characters.
 
 The more complicated escaping involves turning a character into
-the string “~\u~” followed by a four-character sequence of
+the string "~\u~" followed by a four-character sequence of
 hexadecimal digits representing the numeric value of the Unicode
 character.
 
@@ -750,7 +750,7 @@ of values of type ~a~, and it returns a value of type ~Doc~.
 Notice that although our type signature mentions four parameters,
 we have only listed three in the definition of the function. We
 are simply following the same rule that lets us simplify a
-definiton like ~myLength xs = length xs~ to ~myLength = length~.
+definition like ~myLength xs = length xs~ to ~myLength = length~.
 
 We have already written ~enclose~, which wraps a ~Doc~ value in
 opening and closing characters. The ~fsep~ function will live in
@@ -965,7 +965,7 @@ throughout this book.
 #+END_TIP
 
 Our ~hcat~ and ~fsep~ functions concatenate a list of ~Doc~ values
-into one. In [[file:functional-programming.html#fp.fold.exercises][the section called “Exercises”]], we mentioned that we
+into one. In [[file:4-functional-programming.org::*Exercises][the section called "Exercises"]]
 could define concatenation for lists using ~foldr~.
 
 #+CAPTION: Concat.hs
@@ -1474,13 +1474,13 @@ example, but a much richer and more useful set of pretty printing
 functions. We recommend using it, rather than writing your own.
 
 The design of the ~HughesPJ~ pretty printer was introduced by John
-Hughes in [[[file:bibliography.html#bib.hughes95][Hughes95]]]. The library was subsequently improved by
+Hughes in [[[file:bibliography.org::Hughes95][Hughes95]]]. The library was subsequently improved by
 Simon Peyton Jones, hence the name. Hughes's paper is long, but
 well worth reading for his discussion of how to design a library
 in Haskell.
 
 In this chapter, our pretty printing library is based on a simpler
-system described by Philip Wadler in [[[file:bibliography.html#bib.wadler98][Wadler98]]]. His library was
+system described by Philip Wadler in [[[file:bibliography.org::Wadler98][Wadler98]]]. His library was
 extended by Daan Leijen; this version is available for download
 from Hackage as ~wl-pprint~. If you use the ~cabal~ command line
 tool, you can download, build, and install it in one step with
@@ -1488,8 +1488,8 @@ tool, you can download, build, and install it in one step with
 
 ** Footnotes
 
-[fn:1] Memory aid: ~-o~ stands for “output” or “object file”.
+[fn:1] Memory aid: ~-o~ stands for "output" or "object file".
 
-[fn:2] The “3” in ~BSD3~ refers to the number of clauses in the
+[fn:2] The "3" in ~BSD3~ refers to the number of clauses in the
 license. An older version of the BSD license contained 4 clauses,
 but it is no longer used.

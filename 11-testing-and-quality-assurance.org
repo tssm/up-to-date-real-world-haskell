@@ -20,7 +20,7 @@ that just doesn't go wrong.
 Testing plays a key role in keeping code on the
 straight-and-narrow path. The main testing mechanisms in Haskell
 are traditional unit testing (via the HUnit library), and its more
-powerful descendant: type-based “property” testing, with
+powerful descendant: type-based "property" testing, with
 QuickCheck, an open source testing framework for Haskell.
 Property-based testing encourages a high level approach to testing
 in the form of abstract invariants functions should satisfy
@@ -101,7 +101,7 @@ tedious, and violates the moral code of the efficient functional
 programmer: let the machine do the work! To automate this the
 QuickCheck library comes with a set of data generators for all the
 basic Haskell data types. QuickCheck uses the ~Arbitrary~
-typeclass to present a uniform interface to (pseudo-)random data
+type class to present a uniform interface to (pseudo-)random data
 generation with the type system used to resolve which generator to
 use. QuickCheck normally hides the data generation plumbing,
 however we can also run the generators by hand to get a sense for
@@ -172,7 +172,7 @@ ghci> quickCheck (prop_minimum :: [Integer] -> Bool)
 #+END_SRC
 
 The property failed when sorting an empty list–for which ~head~
-and ~minimum~ are't defined, as we can see from their definition:
+and ~minimum~ aren't defined, as we can see from their definition:
 
 #+CAPTION: minimum.hs
 #+BEGIN_SRC haskell
@@ -632,7 +632,7 @@ main = do
 
     runTests "complex" options
         [ run prop_hcat
-        , run prop_puncutate
+        , run prop_punctuate
         ]
 #+END_SRC
 

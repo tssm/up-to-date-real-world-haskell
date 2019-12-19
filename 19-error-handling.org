@@ -131,7 +131,7 @@ Having said all that, ~Maybe~ is often a fine choice. In this
 particular case, we don't know whether there will be a problem
 until we get into evaluating the entire input. Sometimes we know
 of a problem up front, for instance, that ~tail []~ in ~ghci~
-produces an exception. We could easly write an infinite-capable
+produces an exception. We could easily write an infinite-capable
 ~tail~ that doesn't have this problem:
 
 #+CAPTION: safetail.hs
@@ -223,11 +223,11 @@ often justify different handling of the results.
 
 **** Usage of the ~Maybe~ Monad
 
-Back in [[file:error-handling.html#errors.maybe][the section called “Use of Maybe”]], we had an example
+Back in [[file:19-error-handling.org::*Use of Maybe][the section called "Use of Maybe"]]
 program named ~divby2.hs~. This example didn't preserve laziness,
 but returned a value of type ~Maybe [a]~. The exact same algorithm
 could be expressed using a monadic style. For more information and
-important background on monads, please refer to [[file:monads.html][Chapter 14, /Monads/]].
+important background on monads, please refer to [[file:15-monads.org][Chapter 14, /Monads/]].
 Here's our new monadic-style algorithm:
 
 #+CAPTION: divby4.hs
@@ -321,7 +321,7 @@ for returning error information.
 
 The ~Either~ type is similar to the ~Maybe~ type, with one key
 difference: it can carry attached data both for an error and a
-success (“the ~Right~ answer”).[fn:3] Although the language
+success ("the ~Right~ answer").[fn:3] Although the language
 imposes no restrictions, by convention, a function returning an
 ~Either~ uses a ~Left~ return value to indicate an error, and
 ~Right~ to indicate success. If it helps you remember, you can
@@ -402,7 +402,7 @@ with an exercise question at the end of this chapter.
 
 **** Monadic Use of ~Either~
 
-Back in [[file:error-handling.html#errors.maybe.monad][the section called “Usage of the Maybe Monad”]], we showed you
+Back in [[file:19-error-handling.org::*Usage of the Maybe Monad][the section called "Usage of the Maybe Monad"]]
 how to use ~Maybe~ in a monad. ~Either~ can be used in a monad
 too, but can be slightly more complicated. The reason is that
 ~fail~ is hard-coded to accept only a ~String~ as the failure
@@ -710,7 +710,7 @@ is /not/ the one you will get by default. #+END_WARNING
 
 Let's take a look at one approach to using exceptions in the I/O
 system to our benefit. Back in
-[[file:io.html#io.files][the section called “Working With Files and Handles”]], we presented a
+[[file:7-io.org::*Working With Files and Handles][the section called "Working With Files and Handles"]]
 program that used an imperative style to read lines from a file
 one by one. Although we subsequently demonstrated more compact,
 "Haskelly" ways to solve that problem, let's revisit that example
@@ -794,7 +794,7 @@ and ~Data.Typeable~. We will not go into a great level of detail
 on those modules here, but will give you the tools you need to
 craft and use your own dynamic exception type.
 
-In [[file:using-databases.html][Chapter 21, /Using Databases/]], you will see that the HDBC database
+In [[file:21-using-databases.org][Chapter 21, /Using Databases/]], you will see that the HDBC database
 library uses dynamic exceptions to indicate errors from SQL
 databases back to applications. Errors from database engines often
 have three components: an integer that represents an error code, a
@@ -816,7 +816,7 @@ data SqlError = SqlError {seState :: String,
                 deriving (Eq, Show, Read, Typeable)
 #+END_EXAMPLE
 
-By deriving the ~Typeable~ typeclass, we've made this type
+By deriving the ~Typeable~ type class, we've made this type
 available for dynamically typed programming. In order for GHC to
 automatically generate a ~Typeable~ instance, we had to enable the
 ~DeriveDataTypeable~ language extension[fn:5].
@@ -936,7 +936,7 @@ we'll get bounced out to the ~IO~ monad. This is almost never what
 we would actually like.
 
 We defined a ~MaybeT~ transformer in
-[[file:monad-transformers.html#monadtrans.maybet][the section called “Understanding monad transformers by building one”]],
+[[file:18-monad-transformers.org::*Understanding monad transformers by building one][the section called "Understanding monad transformers by building one"]]
 but it is more useful as an aid to understanding than a
 programming tool. Fortunately, a dedicated—and more useful—monad
 transformer already exists: ~ErrorT~, which is defined in the
@@ -964,7 +964,7 @@ bounced out to the ~IO~ monad.
 #+END_NOTE
 
 As with other ~mtl~ monads, the interface that ~ErrorT~ provides
-is defined by a typeclass.
+is defined by a type class.
 
 #+CAPTION: MonadError.hs
 #+BEGIN_EXAMPLE
@@ -979,7 +979,7 @@ class (Monad m) => MonadError e m | m -> e where
 
 The type variable ~e~ represents the error type we want to use.
 Whatever our error type is, we must make it an instance of the
-~Error~ typeclass.
+~Error~ type class.
 
 #+CAPTION: MonadError.hs
 #+BEGIN_EXAMPLE
@@ -994,7 +994,7 @@ class Error a where
 The ~strMsg~ function is used by ~ErrorT~'s implementation of
 ~fail~. It throws ~strMsg~ as an exception, passing it the string
 argument it received. As for ~noMsg~, it is used to provide an
-~mzero~ implementation for the ~MonadPlus~ typeclass.
+~mzero~ implementation for the ~MonadPlus~ type class.
 
 To support the ~strMsg~ and ~noMsg~ functions, our ~ParseError~
 type will have a ~Chatty~ constructor. This will be used as the
@@ -1125,10 +1125,10 @@ in this example because division by zero with a ~Double~ produces
 the special value ~Infinity~ rather than an error.
 
 [fn:2] For an introduction to ~Maybe~, refer to
-[[file:defining-types-streamlining-functions.html#deftypes.morecontrolled][the section called “A more controlled approach”]].
+[[file:3-defining-types-streamlining-functions.org::*A more controlled approach][the section called "A more controlled approach"]]
 
 [fn:3] For more information on ~Either~, refer to
-[[file:efficient-file-processing-regular-expressions-and-file-name-matching.html#glob.errapi][the section called “Handling errors through API design”]].
+[[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org::*Handling errors through API design][the section called "Handling errors through API design"]]
 
 [fn:4] In some other languages, throwing an exception is referred
 to as /raising/ it.

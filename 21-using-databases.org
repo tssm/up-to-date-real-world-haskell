@@ -14,7 +14,7 @@ Because databases are so important, Haskell support for them is
 important as well. In this chapter, we will introduce you to one
 of the Haskell frameworks for working with databases. We will also
 use this framework to begin building a podcast downloader, which
-we will further develop in [[file:extended-example-web-client-programming.html][Chapter 22, /Extended Example: Web Client Programming/]].
+we will further develop in [[file:22-web-client-programming.org][Chapter 22, /Extended Example: Web Client Programming/]].
 
 ** Overview of HDBC
 
@@ -88,7 +88,7 @@ you will call anything from a backend driver module directly.
 The database connection function will return a database handle.
 The precise type of this handle may vary from one driver to the
 next, but it will always be an instance of the ~IConnection~
-typeclass. All of the functions you will use to operate on
+type class. All of the functions you will use to operate on
 databases will work with any type that is an instance of
 ~IConnection~. When you're done talking to the database, call the
 ~disconnect~ function. It will disconnect you from the database.
@@ -438,7 +438,7 @@ ghci> query 2
 
 *** Reading with Statements
 
-As we discussed in [[file:using-databases.html#databases.statements][the section called “Prepared Statements”]],
+As we discussed in [[file:21-using-databases.org::*Prepared Statements][the section called "Prepared Statements"]]
 you can use statements for reading. There are a number of ways of
 reading data from statements that can be useful in certain
 situations. Like ~run~, ~quickQuery'~ is a convenience function
@@ -454,7 +454,7 @@ which converts every column's data to a ~Maybe String~ before
 returning it. Finally, there is ~fetchAllRowsAL'~, which returns
 ~(String, SqlValue)~ pairs for each column. The ~String~ is the
 column name as returned by the database; see
-[[file:using-databases.html#databases.metadata][the section called “Database Metadata”]] for other ways to obtain column names.
+[[file:21-using-databases.org::*Database Metadata][the section called "Database Metadata"]]
 
 You can also read data one row at a time by calling ~fetchRow~,
 which returns ~IO (Maybe [SqlValue])~. It will be ~Nothing~ if all
@@ -462,7 +462,7 @@ the results have already been read, or one row otherwise.
 
 *** Lazy Reading
 
-Back in [[file:io.html#io.lazy][the section called “Lazy I/O”]], we talked about lazy I/O
+Back in [[file:7-io.org::*Lazy I/O][the section called "Lazy I/O"]]
 from files. It is also possible to read data lazily from
 databases. This can be particularly useful when dealing with
 queries that return an exceptionally large amount of data. By
@@ -610,17 +610,17 @@ every un-caught ~SqlError~ will be printed in a helpful manner.
 There are also ~catchSql~ and ~handleSql~—similar to the standard
 ~catch~ and ~handle~ functions. ~catchSql~ and ~handleSql~ will
 intercept only HDBC errors. For more information on error
-handling, refer to [[file:error-handling.html][Chapter 19, /Error handling/]].
+handling, refer to [[file:19-error-handling.org][Chapter 19, /Error handling/]].
 
 ** Footnotes
 
 [fn:1] The O'Reilly books /Learning SQL/ and /SQL in a Nutshell/
-may be useful if you don't have experience wiht SQL.
+may be useful if you don't have experience with SQL.
 
 [fn:2] This assumes you restrict yourself to using standard SQL.
 
 [fn:3] For more information on installing Haskell software, please
-refer to [[file:installing-ghc-and-haskell-libraries.html#installing.haskell.software][the section called “Installing Haskell software”]].
+refer to [[file:installing-ghc-and-haskell-libraries.org::*Installing Haskell software][the section called "Installing Haskell software"]]
 
 [fn:4] HDBC emulates this behavior for databases that do not
 provide it, providing programmers a unified API for running

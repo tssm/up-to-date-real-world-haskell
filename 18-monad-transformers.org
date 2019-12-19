@@ -8,7 +8,7 @@ thing. In real code, we often need to be able to use several
 effects at once.
 
 Recall the ~Parse~ type that we developed in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]], for
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]], for
 instance. When we introduced monads, we mentioned that this type
 was a state monad in disguise. Our monad is more complex than the
 standard ~State~ monad, because it uses the ~Either~ type to allow
@@ -84,7 +84,7 @@ We will find the going easier if we look at the types involved.
 The normal ~Writer~ monad has two type parameters, so it's more
 properly written ~Writer w a~. The first parameter ~w~ is the type
 of the values to be recorded, and ~a~ is the usual type that the
-~Monad~ typeclass requires. Thus ~Writer [(FilePath, Int)] a~ is a
+~Monad~ type class requires. Thus ~Writer [(FilePath, Int)] a~ is a
 writer monad that records a list of directory names and sizes.
 
 The ~WriterT~ transformer has a similar structure, but it adds
@@ -156,12 +156,12 @@ transformers, ~IO~ will always be at the bottom of the stack.
 ** Common patterns in monads and monad transformers
 
 Most of the monads and monad transformers in the ~mtl~ library
-follow a few common patterns around naming and typeclasses.
+follow a few common patterns around naming and type classes.
 
 To illustrate these rules, we will focus on a single
 straightforward monad: the reader monad. The reader monad's API is
-detailed by the ~MonadReader~ typeclass. Most ~mtl~ monads have
-similarly named typeclasses: ~MonadWriter~ defines the API of the
+detailed by the ~MonadReader~ type class. Most ~mtl~ monads have
+similarly named type classes: ~MonadWriter~ defines the API of the
 writer monad, and so on.
 
 #+BEGIN_SRC haskell
@@ -175,7 +175,7 @@ The type variable ~r~ represents the immutable state that the
 of the ~MonadReader~ class, as is the ~ReaderT r m~ monad
 transformer. Again, this pattern is repeated by other ~mtl~
 monads: there usually exist both a concrete monad and a
-transformer, each of which are instances of the typeclass that
+transformer, each of which are instances of the type class that
 defines the monad's API.
 
 Returning to the specifics of the ~Reader~ monad, we haven't
@@ -211,7 +211,7 @@ Loading package mtl-1.1.0.0 ... linking ... done.
 
 When the underlying monad ~m~ is an instance of ~MonadIO~, the
 ~mtl~ library provides an instance for ~ReaderT r m~, and also for
-a number of other typeclasses. Here are a few.
+a number of other type classes. Here are a few.
 
 #+BEGIN_SRC haskell
 instance (Monad m) => Functor (ReaderT r m) where
@@ -399,7 +399,7 @@ magical that the compiler can derive all of these instances for
 us. How does this work?
 
 Earlier, we mentioned that the ~mtl~ library provides instances of
-a number of typeclasses for each monad transformer. For example,
+a number of type classes for each monad transformer. For example,
 the ~IO~ monad implements ~MonadIO~. If the underlying monad is an
 instance of ~MonadIO~, ~mtl~ makes ~StateT~ an instance, too, and
 likewise for ~ReaderT~.
@@ -407,7 +407,7 @@ likewise for ~ReaderT~.
 There is thus no magic going on: the top-level monad transformer
 in the stack is an instance of all of the type classes that we're
 rederiving with our ~deriving~ clause. This is a consequence of
-~mtl~ providing a carefully coordinated set of typeclasses and
+~mtl~ providing a carefully coordinated set of type classes and
 instances that fit together well. There is nothing more going on
 than the usual automatic derivation that we can perform with
 ~newtype~ declarations.
@@ -444,7 +444,7 @@ newtype CustomT m a = ...
 
 In the framework that ~mtl~ provides, each monad transformer in
 the stack makes the API of a lower level available by providing
-instances of a host of typeclasses. We could follow this pattern,
+instances of a host of type classes. We could follow this pattern,
 and write a number of boilerplate instances.
 
 #+BEGIN_SRC haskell
@@ -463,9 +463,9 @@ only care that the stack as a whole is an instance of
 ~MonadReader~, without knowing or caring about which layer
 provides the /real/ implementation.
 
-Instead of relying on all of these typeclass instances to work for
+Instead of relying on all of these type class instances to work for
 us behind the scenes, we can be explicit. The ~MonadTrans~
-typeclass defines a useful function named ~lift~.
+type class defines a useful function named ~lift~.
 
 #+BEGIN_SRC screen
 ghci> :m +Control.Monad.Trans
@@ -497,7 +497,7 @@ type App = ReaderT AppConfig (StateT AppState IO)
 #+END_SRC
 
 If we want to access the ~AppState~ carried by the ~StateT~, we
-would usually rely on ~mtl~'s typeclasses and instances to handle
+would usually rely on ~mtl~'s type classes and instances to handle
 the plumbing for us.
 
 #+CAPTION: UglyStack.hs
@@ -521,7 +521,7 @@ with cleaner code, but this is not always possible.
 *** When explicit lifting is necessary
 
 One case in which we /must/ use ~lift~ is when we create a monad
-transformer stack in which instances of the same typeclass appear
+transformer stack in which instances of the same type class appear
 at multiple levels.
 
 #+CAPTION: StackStack.hs
@@ -529,7 +529,7 @@ at multiple levels.
 type Foo = StateT Int (State String)
 #+END_SRC
 
-If we try to use the ~put~ action of the ~MonadState~ typeclass,
+If we try to use the ~put~ action of the ~MonadState~ type class,
 the instance we will get is that of ~StateT Int~, because it's at
 the top of the stack.
 
@@ -600,11 +600,11 @@ bindMT :: (Monad m) => MaybeT m a -> (a -> MaybeT m b) -> MaybeT m b
 #+END_SRC
 
 To understand this type signature, hark back to our discussion
-of multi-parameter typeclasses in
-[[file:programming-with-monads.html#monadcase.mptc][the section called “Multi-parameter typeclasses”]]. The thing that we
+of multi-parameter type classes in
+[[file:16-programming-with-monads.org::*Multi-parameter type classes][the section called "Multi-parameter type classes"]]
 intend to make a ~Monad~ instance is the /partial type/
 ~MaybeT m~: this has the usual single type parameter, ~a~, that
-satisfies the requirements of the ~Monad~ typeclass.
+satisfies the requirements of the ~Monad~ type class.
 
 The trick to understanding the body of our ~(>>=)~ implementation
 is that everything inside the ~do~ block executes in the
@@ -669,14 +669,14 @@ instance MonadTrans MaybeT where
 #+END_SRC
 
 The underlying monad starts out with a type parameter of a: we
-“inject” the ~Just~ constructor so it will acquire the type that
+"inject" the ~Just~ constructor so it will acquire the type that
 we need, ~Maybe a~. We then hide the monad with our ~MaybeT~
 constructor.
 
-*** More typeclass instances
+*** More type class instances
 
 Once we have an instance for ~MonadTrans~ defined, we can use it
-to define instances for the umpteen other ~mtl~ typeclasses.
+to define instances for the umpteen other ~mtl~ type classes.
 
 #+CAPTION: MaybeT.hs
 #+BEGIN_SRC haskell
@@ -690,7 +690,7 @@ instance (MonadState s m) => MonadState s (MaybeT m) where
 -- ... and so on for MonadReader, MonadWriter, etc ...
 #+END_SRC
 
-Because several of the ~mtl~ typeclasses use functional
+Because several of the ~mtl~ type classes use functional
 dependencies, some of our instance declarations require us to
 considerably relax GHC's usual strict type checking rules. (If we
 were to forget any of these directives, the compiler would
@@ -717,7 +717,7 @@ be a good investment.
 Now that we have developed a monad transformer that can exit
 early, we can use it to bail if, for example, a parse fails
 partway through. We could thus replace the ~Parse~ type that we
-developed in [[file:code-case-study-parsing-a-binary-data-format.html#binary.implicit][the section called “Implicit state”]] with a monad
+developed in [[file:10-parsing-a-binary-data-format.org::*Implicit state][the section called "Implicit state"]]
 customised to our needs.
 
 #+CAPTION: MaybeTParse.hs
@@ -967,7 +967,7 @@ by ~mtl~, some deficiencies start to show.
 
 For example, if we create a new monad transformer ~FooT~ and want
 to follow the same pattern as ~mtl~, we'll have it implement a
-typeclass ~MonadFoo~. If we really want to integrate it cleanly
+type class ~MonadFoo~. If we really want to integrate it cleanly
 into the ~mtl~, we'll have to provide instances for each of the
 dozen or so ~mtl~ type classes.
 
@@ -1016,4 +1016,4 @@ semicolon to give it a new meaning.
 
 ** Footnotes
 
-[fn:1] The name “mtl” stands for “monad transformer library”.
+[fn:1] The name "mtl" stands for "monad transformer library".

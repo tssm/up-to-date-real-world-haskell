@@ -3,7 +3,7 @@
 The task of parsing a file, or data of various types, is a common
 one for programmers. We already learned about Haskell's support
 for regular expressions back in
-[[file:efficient-file-processing-regular-expressions-and-file-name-matching.html#glob.regex][the section called “Regular expressions in Haskell”]]. Regular
+[[file:8-efficient-file-processing-regular-expressions-and-file-name-matching.org::*Regular expressions in Haskell][the section called "Regular expressions in Haskell"]]
 expressions are nice for many tasks, but they rapidly become
 unwieldy, or cannot be used at all, when dealing with a complex
 data format. For instance, we cannot use regular expressions to
@@ -58,7 +58,7 @@ line =
        eol                       -- end of line
        return result
 
--- Build up a list of cells.  Try to parse the first cell, then figure out 
+-- Build up a list of cells.  Try to parse the first cell, then figure out
 -- what ends the cell.
 cells :: GenParser Char st [String]
 cells =
@@ -644,8 +644,8 @@ $ runhaskell csv7.hs < test.csv
 ** Parsec and MonadPlus
 
 Parsec's ~GenParser~ monad is an instance of the ~MonadPlus~
-typeclass that we introduced in
-[[file:programming-with-monads.html#monadcase.monadplus][the section called “Looking for alternatives”]]. The value ~mzero~
+type class that we introduced in
+[[file:16-programming-with-monads.org::*Looking for alternatives][the section called "Looking for alternatives"]]
 represents a parse failure, while ~mplus~ combines two alternative
 parses into one, using ~(<|>)~.
 
@@ -658,7 +658,7 @@ instance MonadPlus (GenParser tok st) where
 ** Parsing an URL-encoded query string
 
 When we introduced ~application/x-www-form-urlencoded~ text in
-[[file:programming-with-monads.html#monadcase.urlencoded][the section called “Golfing practice: association lists”]], we
+[[file:16-programming-with-monads.org::*Golfing%20practice:%20association%20lists][the section called "Golfing practice: association lists"]], we
 mentioned that we'd write a parser for these strings. We can
 quickly and easily do this using Parsec.
 
@@ -676,7 +676,7 @@ p_query = p_pair `sepBy` char '&'
 Notice that in the type signature, we're using ~Maybe~ to
 represent a value: the HTTP specification is unclear about whether
 a key /must/ have an associated value, and we'd like to be able to
-distinguish between “no value” and “empty value”.
+distinguish between "no value" and "empty value".
 
 #+CAPTION: FormParse.hs
 #+BEGIN_SRC haskell
@@ -696,8 +696,8 @@ return a list of at least one element.
 The ~optionMaybe~ function modifies the behaviour of a parser. If
 the parser fails, ~optionMaybe~ doesn't fail: it returns
 ~Nothing~. Otherwise, it wraps the parser's successful result with
-~Just~. This gives us the ability to distinguish between “no
-value” and “empty value”, as we mentioned above.
+~Just~. This gives us the ability to distinguish between "no
+value" and "empty value", as we mentioned above.
 
 Individual characters can be encoded in one of several ways.
 
@@ -736,7 +736,7 @@ blocks.
 ** Supplanting regular expressions for casual parsing
 
 In many popular languages, people tend to put regular expressions
-to work for “casual” parsing. They're notoriously tricky for this
+to work for "casual" parsing. They're notoriously tricky for this
 purpose: hard to write, difficult to debug, nearly
 incomprehensible after a few months of neglect, and provide no
 error messages on failure.
@@ -774,7 +774,7 @@ p_pair_app1 =
 
 This parser has exactly the same type and behaviour as ~p_pair~,
 but it's one line long. Instead of writing our parser in a
-“procedural” style, we've simply switched to a programming style
+"procedural" style, we've simply switched to a programming style
 that emphasises that we're /applying/ parsers and /combining/
 their results.
 
@@ -786,7 +786,7 @@ effort of coming to grips with the idea.
 ** Applicative functors for parsing
 
 The standard Haskell libraries include a module named
-~Control.Applicative~, which defines a typeclass named
+~Control.Applicative~, which defines a type class named
 ~Applicative~, which represents an /applicative functor/. Because
 every applicative functor is also a functor they are represented
 as a hierarchy.
@@ -885,7 +885,7 @@ char '%' *> hexDigit :: (Stream s m Char) => ParsecT s u m Char
 #+END_SRC
 
 The expression ~hexify <$> (char '%' *> hexDigit)~ is a parser
-that matches a “%” character followed by hex digit, and whose
+that matches a "%" character followed by hex digit, and whose
 result is a function.
 
 #+BEGIN_SRC screen
@@ -1088,7 +1088,7 @@ p_escape = choice (zipWith decode "bnfrt\\\"/" "\b\n\f\r\t\\\"/")
 #+END_SRC
 
 Finally, JSON lets us encode a Unicode character in a string as
-“~\u~” followed by four hexadecimal digits.
+"~\u~" followed by four hexadecimal digits.
 
 #+CAPTION: JSONParsec.hs
 #+BEGIN_SRC haskell
@@ -1252,4 +1252,4 @@ resistant to even the most basic denial of service attacks.
 ** Footnotes
 
 [fn:1] For information on dealing with choices that may consume
-some input before failing, see [[file:using-parsec.html#parsec.lookahead][the section called “Lookahead”]].
+some input before failing, see [[file:14-using-parsec.org::*Lookahead][the section called "Lookahead"]]

@@ -33,8 +33,8 @@ To make this happen, we need to have several things:
 - A way to persistently store which podcast episodes we've already
   downloaded
 
-The last two items can be accomodated via a database we'll set up
-using HDBC. The first two can be accomodated via other library
+The last two items can be accommodated via a database we'll set up
+using HDBC. The first two can be accommodated via other library
 modules we'll introduce in this chapter.
 
 #+BEGIN_TIP
@@ -98,11 +98,11 @@ database on disk. Also, the first time the user runs the program,
 we'll need to create the database tables that we'll use to store
 our data.
 
-We'll use HDBC (see [[file:using-databases.html][Chapter 21, /Using Databases/]])
+We'll use HDBC (see [[file:21-using-databases.org][Chapter 21, /Using Databases/]])
 to interact with a Sqlite database. Sqlite is lightweight and
 self-contained, which makes it perfect for this project. For
 information on installing HDBC and Sqlite, consult
-[[file:using-databases.html#databases.hdbc.install][the section called “Installing HDBC and Drivers”]].
+[[file:21-using-databases.org::*Installing HDBC and Drivers][the section called "Installing HDBC and Drivers"]]
 
 #+CAPTION: PodDB.hs
 #+BEGIN_SRC haskell
@@ -642,7 +642,7 @@ ghc --make -O2 -o pod -package HTTP -package HaXml -package network \
 #+END_SRC
 
 Alternatively, you could use a Cabal file as documented in
-[[file:writing-a-library-working-with-json-data.html#library.package][the section called “Creating a package”]] to build this project:
+[[file:5-writing-a-library.org::*Creating a package][the section called "Creating a package"]]
 
 #+CAPTION: pod.cabal
 #+BEGIN_SRC

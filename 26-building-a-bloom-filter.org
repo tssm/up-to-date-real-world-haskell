@@ -59,7 +59,7 @@ bit ~1~ in the bit array. It is set, as is bit ~3~, so we say that
 positive.
 
 For a survey of some of the uses of Bloom filters in networking,
-see [[[file:bibliography.html#bib.broder02][Broder02]]].
+see [[[file:bibliography.org::Broder02][Broder02]]].
 
 ** Use cases and package layout
 
@@ -73,7 +73,7 @@ We will segregate the mutable and immutable APIs that we publish
 by placing them in different modules: ~BloomFilter~ for the
 immutable code, and ~BloomFilter.Mutable~ for the mutable code.
 
-In addition, we will create several “helper” modules that won't
+In addition, we will create several "helper" modules that won't
 provide parts of the public API, but will keep the internal code
 cleaner.
 
@@ -118,7 +118,7 @@ Unlike other Haskell arrays, a ~UArray~ contains /unboxed/ values.
 
 For a normal Haskell type, a value can be either fully evaluated,
 an unevaluated thunk, or the special value ⊥, pronounced (and
-sometimes written) “bottom”. The value ⊥ is a placeholder for a
+sometimes written) "bottom". The value ⊥ is a placeholder for a
 computation that does not succeed. Such a computation could take
 any of several forms. It could be an infinite loop; an application
 of ~error~; or the special value ~undefined~.
@@ -161,7 +161,7 @@ elements into each byte, so this type is perfect for our needs.
 
 ** The ~ST~ monad
 
-Back in [[file:barcode-recognition.html#barcode.array.mutable][the section called “Modifying array elements”]], we
+Back in [[file:12-barcode-recognition.org::*Modifying array elements][the section called "Modifying array elements"]]
 mentioned that modifying an immutable array is prohibitively
 expensive, as it requires copying the entire array. Using a
 ~UArray~ does not change this, so what can we do to reduce the
@@ -257,7 +257,7 @@ While we could export the fully qualified name
 ~BloomFilter.Mutable.length~ to eliminate the ambiguity, that
 seems uglier in this case. This decision has no consequences for
 someone using our module, just for ourselves as the authors of
-what ought to be a “black box”, so there is little chance of
+what ought to be a "black box", so there is little chance of
 confusion here.
 
 ** Creating a mutable Bloom filter
@@ -285,7 +285,7 @@ new hash numBits = MB hash `liftM` newArray (0,numBits-1) False
 #+END_SRC
 
 Most of the methods of ~STUArray~ are actually implementations of
-the ~MArray~ typeclass, which is defined in the
+the ~MArray~ type class, which is defined in the
 ~Data.Array.MArray~ module.
 
 Our ~length~ function is slightly complicated by two factors. We
@@ -407,7 +407,7 @@ execution with freezing. Given an action that returns an
 ~STUArray~, it executes the action using ~runST~; freezes the
 ~STUArray~ that it returns; and returns that as a ~UArray~.
 
-The ~MArray~ typeclass provides a ~freeze~ function that we could
+The ~MArray~ type class provides a ~freeze~ function that we could
 use instead, but ~runSTUArray~ is both more convenient and more
 efficient. The efficiency lies in the fact that ~freeze~ must copy
 the underlying data from the ~STUArray~ to the new ~UArray~, to
@@ -433,9 +433,9 @@ easyList :: (Hashable a)
          -> Either String (B.Bloom a)
 #+END_SRC
 
-Here is a possible “friendlier” way to create a Bloom filter. It
+Here is a possible "friendlier" way to create a Bloom filter. It
 leaves responsibility for hashing values in the hands of a
-typeclass, Hashable. It lets us configure the Bloom filter based
+type class, Hashable. It lets us configure the Bloom filter based
 on a parameter that is easier to understand, namely the rate of
 false positives that we are willing to tolerate. And it chooses
 the size of the filter for us, based on the desired false positive
@@ -461,7 +461,7 @@ try to use ~length~, GHC will issue an error about ambiguity,
 because the Prelude also makes the name ~length~ available.
 
 The Haskell standard requires an implementation to be able to tell
-when several names refer to the same “thing”. For instance, the
+when several names refer to the same "thing". For instance, the
 Bloom type is exported by ~BloomFilter~ and ~BloomFilter.Easy~. If
 we import both modules and try to use Bloom, GHC will be able to
 see that the Bloom re-exported from ~BloomFilter.Easy~ is the same
@@ -529,7 +529,7 @@ void hashlittle2(const void *key,   /* array of bytes */
 #endif /* _lookup3_h */
 #+END_SRC
 
-A “salt” is a value that perturbs the hash value that the function
+A "salt" is a value that perturbs the hash value that the function
 computes. If we hash the same value with two different salts, we
 will get two different hashes. Since these functions compute two
 hashes, they accept two salts.
@@ -609,7 +609,7 @@ and ~p2~, we only need to ~peek~ the pointer ~sp~ to retrieve the
 computed hash.
 
 We don't want clients of this module to be stuck fiddling with
-low-level details, so we use a typeclass to provide a clean,
+low-level details, so we use a type class to provide a clean,
 high-level interface.
 
 #+CAPTION: BloomFilter/Hash.hs
@@ -624,7 +624,7 @@ hash = hashSalt 0x106fc397cf62f64d3
 #+END_SRC
 
 We also provide a number of useful implementations of this
-typeclass. To hash basic types, we must write a little boilerplate
+type class. To hash basic types, we must write a little boilerplate
 code.
 
 #+CAPTION: BloomFilter/Hash.hs
@@ -638,7 +638,7 @@ instance Hashable Int    where hashSalt = hashStorable
 instance Hashable Double where hashSalt = hashStorable
 #+END_SRC
 
-We might prefer to use the ~Storable~ typeclass to write just one
+We might prefer to use the ~Storable~ type class to write just one
 declaration, as follows:
 
 #+CAPTION: BloomFilter/Hash.hs
@@ -887,7 +887,7 @@ Setup sdist~ to create a source tarball for redistribution.
 #+BEGIN_TIP
 Property names are case insensitive
 
-When reading a property (the text before a “~:~” character), Cabal
+When reading a property (the text before a "~:~" character), Cabal
 ignores case, so it treats ~extra-source-files~ and
 ~Extra-Source-Files~ as the same.
 #+END_TIP
@@ -1054,7 +1054,7 @@ The value of ~-fvia-C~ with the FFI
 Compiling with ~-fvia-C~ has a useful safety benefit when we write
 FFI bindings. If we mention a header file in an FFI declaration
 (e.g. ~foreign import "string.h memcpy")~, the C compiler will
-typecheck the generated Haskell code and ensure that its
+type-check the generated Haskell code and ensure that its
 invocation of the C function is consistent with the C function's
 prototype in the header file.
 
@@ -1448,7 +1448,7 @@ instance NFData (B.Bloom a) where
 #+END_SRC
 
 We borrow the ~rnf~ function that we introduced in
-[[file:concurrent-and-multicore-programming.html#concurrent.strategies][the section called “Separating algorithm from evaluation”]] to
+[[file:24-concurrent-and-multicore-programming.org::*Separating algorithm from evaluation][the section called "Separating algorithm from evaluation"]]
 develop a simple timing harness. Out ~timed~ action ensures that a
 value is evaluated to normal form in order to accurately capture
 the cost of evaluating it.
@@ -1561,7 +1561,7 @@ and memory sink.
 Always profile before—and while—you tune!
 
 Before our first profiling run, we did not expect ~doubleHash~ to
-even appear in the top ten of “hot” functions, much less to
+even appear in the top ten of "hot" functions, much less to
 dominate it. Without this knowledge, we would probably have
 started tuning something entirely irrelevant.
 #+END_TIP
@@ -1788,7 +1788,7 @@ result for such a small change.
 
 ** Footnotes
 
-[fn:1] The name ~ST~ is an acronym of “state transformer”.
+[fn:1] The name ~ST~ is an acronym of "state transformer".
 
 [fn:2] Jenkins's hash functions have /much/ better mixing
 properties than some other popular non-cryptographic hash

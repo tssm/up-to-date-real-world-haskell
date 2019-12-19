@@ -8,10 +8,10 @@ heavy shell user, it's quite possible you may not have heard of
 recursively and prints the name of every entry that matches an
 expression.
 
-Individual expressions can take such forms as “name matches this
-glob pattern”, “entry is a plain file”, “last modified before this
-date”, and many more. They can be stitched together into more
-complex expressions using “and” and “or” operators.
+Individual expressions can take such forms as "name matches this
+glob pattern", "entry is a plain file", "last modified before this
+date", and many more. They can be stitched together into more
+complex expressions using "and" and "or" operators.
 
 ** Starting simple: recursively listing a directory
 
@@ -78,7 +78,7 @@ flatten it into a single list.
 
 *** Revisiting anonymous and named functions
 
-In [[file:functional-programming.html#fp.anonymous][the section called “Anonymous (lambda) functions”]], we listed
+In [[file:4-functional-programming.org::*Anonymous (lambda) functions][the section called "Anonymous (lambda) functions"]]
 some reasons not to use anonymous functions, and yet here we are,
 using one as the body of a loop. This is one of the most common
 uses of anonymous functions in Haskell.
@@ -142,7 +142,7 @@ simpleFind p path = do
 This function takes a predicate that we use to filter the names
 returned by ~getRecursiveContents~. Each name passed to the
 predicate is a complete path, so how can we perform a common
-operation like “find all files ending in the extension ~.c~”?
+operation like "find all files ending in the extension ~.c~"?
 
 The ~System.FilePath~ module contains numerous invaluable
 functions that help us to manipulate file names. In this case, we
@@ -217,7 +217,7 @@ whatever side effects it pleases.
 
 Let's enlist the type system in our quest to write more
 predictable, less buggy code: we'll keep predicates pure by
-avoiding the taint of “IO”. This will ensure that they can't have
+avoiding the taint of "IO". This will ensure that they can't have
 any nasty side effects. We'll feed them more information, too, so
 that they can gain the expressiveness we want without also
 becoming potentially dangerous.
@@ -271,7 +271,7 @@ ghci> :m +System.Directory
   #+END_SRC
 
   (If you cannot recall the special ~ghci~ variable ~it~, take a
-  look back at [[file:getting-started.html#starting.types][the section called “First steps with types”]].)
+  look back at [[file:1-getting-started.org::*First steps with types][the section called "First steps with types"]]
   A directory will be ~searchable~ if we have permission to list
   its contents; files are never ~searchable~.
 - Finally, ~getModificationTime~ tells us when an entry was last
@@ -377,7 +377,7 @@ filterM :: Applicative m => (a -> m Bool) -> [a] -> m [a]
 #+END_SRC
 
 Our ~check~ predicate is an I/O-capable wrapper for our pure
-predicate ~p~. It does all the “dirty” work of I/O on ~p~'s
+predicate ~p~. It does all the "dirty" work of I/O on ~p~'s
 behalf, so that we can keep ~p~ incapable of unwanted side
 effects. After gathering the metadata, ~check~ calls ~p~, then
 uses ~return~ to wrap ~p~'s result with IO.
@@ -484,15 +484,15 @@ bracket :: IO a -> (a -> IO b) -> (a -> IO c) -> IO c
 The ~bracket~ function takes three actions as arguments. The first
 action acquires a resource. The second releases the resource. The
 third runs in between, while the resource is acquired; let's call
-this the “use” action. If the “acquire” action succeeds, the
-“release” action is /always/ called. This guarantees that the
-resource will always be released. The “use” and “release” actions
-are each passed the resource acquired by the “acquire” action.
+this the "use" action. If the "acquire" action succeeds, the
+"release" action is /always/ called. This guarantees that the
+resource will always be released. The "use" and "release" actions
+are each passed the resource acquired by the "acquire" action.
 
-If an exception occurs while the “use” action is executing,
-~bracket~ calls the “release” action and rethrows the exception.
-If the “use” action succeeds, ~bracket~ calls the “release”
-action, and returns the value returned by the “use” action.
+If an exception occurs while the "use" action is executing,
+~bracket~ calls the "release" action and rethrows the exception.
+If the "use" action succeeds, ~bracket~ calls the "release"
+action, and returns the value returned by the "use" action.
 
 We can now write a function that is completely safe: it will not
 throw exceptions; neither will it accumulate garbage file handles
@@ -590,7 +590,7 @@ defined near the beginning of this chapter is the same type as
 
 What use are ~pathP~ and ~sizeP~? With a little more glue, we can
 use them in a predicate (the ~P~ suffix on each name is intended
-to suggest “predicate”). This is where things start to get
+to suggest "predicate"). This is where things start to get
 interesting.
 
 #+CAPTION: BetterPredicate.hs
@@ -640,7 +640,7 @@ betterFind (sizeP `equalP` 1024) :: FilePath -> IO [FilePath]
 #+END_SRC
 
 Notice that we're not actually calling ~betterFind~, we're merely
-making sure that our expression typechecks. We now have a more
+making sure that our expression type-checks. We now have a more
 expressive way to list all files that are exactly some size. Our
 success gives us enough confidence to continue.
 
@@ -678,7 +678,7 @@ versions as /unlifted/ and /lifted/, respectively.
 By the way, our placement of ~q~ (the function to lift) as the
 first argument to ~liftP~ was quite deliberate. This made it
 possible for us to write such concise definitions of ~greaterP~
-and ~lesserP~. Partial application makes finding the “best” order
+and ~lesserP~. Partial application makes finding the "best" order
 for arguments a more important part of API design in Haskell than
 in other languages. In languages without partial application,
 argument ordering is a matter of taste and convention. Put an
@@ -880,7 +880,7 @@ data Info = Info
 getInfo :: FilePath -> IO Info
 #+END_SRC
 
-We're using record syntax to give ourselves “free” accessor
+We're using record syntax to give ourselves "free" accessor
 functions, such as ~infoPath~. The type of our ~traverseDirs~
 function is simple, as we proposed above. To obtain ~Info~ about a
 file or directory, we call the ~getInfo~ action.
@@ -971,7 +971,7 @@ that wraps its result in ~Maybe~.
    ~traverseDirs~ perform a /postorder/ traversal, in which it
    returns children before their parent.
 3. Take the predicates and combinators from
-   [[file:io-case-study-a-library-for-searching-the-filesystem.html#find.predicate.combinator][the section called “Gluing predicates together”]] and make them
+   [[file:9-a-library-for-searching-the-file-system.org::*Gluing predicates together][the section called "Gluing predicates together"]]
    work with our new ~Info~ type.
 4. Write a wrapper for ~traverseDirs~ that lets you control
    traversal using one predicate, and filter results using
@@ -1217,7 +1217,7 @@ able to understand it again after you've stepped away from it for
 a month.
 
 The conventional way of naming types and variables with compound
-names is to use “camel case”, i.e. ~myVariableName~. This style is
+names is to use "camel case", i.e. ~myVariableName~. This style is
 almost universal in Haskell code. Regardless of your opinion of
 other naming practices, if you follow a non-standard convention,
 your Haskell code will be somewhat jarring to the eyes of other
@@ -1231,12 +1231,12 @@ don't already provide exactly what you need, you might be able to
 combine a few functions to obtain the result you desire.
 
 Long pipelines of composed functions are hard to read, where
-“long” means a series of more than three or four elements. If you
+"long" means a series of more than three or four elements. If you
 have such a pipeline, use a ~let~ or ~where~ block to break it
 into smaller parts. Give each one of these pipeline elements a
 meaningful name, then glue them back together. If you can't think
 of a meaningful name for an element, ask yourself if you can even
-describe what it does. If the answer is “no”, simplify your code.
+describe what it does. If the answer is "no", simplify your code.
 
 Even though it's easy to resize a text editor window far beyond 80
 columns, this width is still very common. Wider lines are wrapped
@@ -1253,7 +1253,7 @@ long as your code follows the layout rules and can hence be parsed
 unambiguously. That said, some layout patterns are widely used.
 
 As we already mentioned in
-[[file:defining-types-streamlining-functions.html#deftypes.tabs][the section called “A note about tabs versus spaces”]], it is easier
+[[file:3-defining-types-streamlining-functions.org::*A note about tabs versus spaces][the section called "A note about tabs versus spaces"]]
 to use spaces.
 
 The ~in~ keyword is usually aligned directly under the ~let~
@@ -1267,7 +1267,7 @@ tidyLet = let foo = undefined
 #+END_SRC
 
 While it's /legal/ to indent the ~in~ differently, or to let it
-“dangle” at the end of a series of equations, the following would
+"dangle" at the end of a series of equations, the following would
 generally be considered odd.
 
 #+CAPTION: Style.hs

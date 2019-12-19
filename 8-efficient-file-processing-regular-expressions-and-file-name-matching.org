@@ -270,7 +270,7 @@ probably already know them, but we'll quickly recap here.
 - Most literal characters match themselves. For example, the text
   ~foo~ in a pattern will match ~foo~, and only ~foo~, in an input
   string.
-- The ~*~ (asterisk) character means “match anything”; it will
+- The ~*~ (asterisk) character means "match anything"; it will
   match any text, including the empty string. For instance, the
   pattern ~foo*~ will match any string that begins with ~foo~,
   such as ~foo~ itself, ~foobar~, or ~foo.c~. The pattern
@@ -280,21 +280,21 @@ probably already know them, but we'll quickly recap here.
   The pattern ~pic??.jpg~ will match names like ~picaa.jpg~ or
   ~pic01.jpg~.
 - A ~[~ (open square bracket) character begins a /character
-  class/, which is ended by a ~]~. Its meaning is “match any
-  character in this class”. A character class can be /negated/ by
-  following the opening ~[~ with a ~!~, so that it means “match
-  any character /not/ in this class”.
+  class/, which is ended by a ~]~. Its meaning is "match any
+  character in this class". A character class can be /negated/ by
+  following the opening ~[~ with a ~!~, so that it means "match
+  any character /not/ in this class".
 
   As a shorthand, a character followed by a ~-~ (dash), followed
-  by another character, denotes a /range/: “match any character
-  within this set”.
+  by another character, denotes a /range/: "match any character
+  within this set".
 
   Character classes have an added subtlety; they can't be empty.
   The first character after the opening ~[~ or ~[!~ is part of the
   class, so we can write a class containing the ~]~ character as
   ~[]aeiou]~. The pattern ~pic[0-9].[pP][nN][gG]~ will match a
   name consisting of the string ~pic~, followed by a single digit,
-  followed by any capitalization of the strig ~.png~.
+  followed by any capitalization of the string ~.png~.
 
 While Haskell doesn't provide a way to match glob patterns among
 its standard libraries, it provides a good regular expression
@@ -309,7 +309,7 @@ In this section, we will be assume that you are already familiar
 with regular expressions by way of some other language, such as
 Python, Perl, or Java[fn:1].
 
-For brevity, we will abbreviate “regular expression” as /regexp/
+For brevity, we will abbreviate "regular expression" as /regexp/
 from here on.
 
 Rather than introduce regexps as something new, we will focus on
@@ -336,7 +336,7 @@ libraries make heavy use of polymorphism. As a result, the type
 signature of the ~(=~)~ operator is difficult to understand, so we
 will not explain it here.
 
-The ~=~~ operator uses typeclasses for both of its arguments, and
+The ~=~~ operator uses type classes for both of its arguments, and
 also for its return type. The first argument (on the left of the
 ~=~~) is the text to match; the second (on the right) is the
 regular expression to match against. We can pass either a ~String~
@@ -350,7 +350,7 @@ would like. In real code, it may be able to infer the right type,
 due to the way we subsequently use the result. But such cues are
 often lacking when we're exploring with ~ghci~. If we omit a
 specific type for the result, we'll get an error from the
-interpreter, as it does not have enough information to successfuly
+interpreter, as it does not have enough information to successfully
 infer the result type.
 
 When ~ghci~ can't infer the ~target~ type, we tell it what we'd
@@ -366,10 +366,10 @@ ghci> "your right hand" =~ "(hand|foot)" :: Bool
 True
 #+END_SRC
 
-In the bowels of the regexp libraries, there's a typeclass named
+In the bowels of the regexp libraries, there's a type class named
 ~RegexContext~ that describes how a ~target~ type should behave;
-the base library defines many instances of this typeclass for us.
-The ~Bool~ type is an instance of this typeclass, so we get back a
+the base library defines many instances of this type class for us.
+The ~Bool~ type is an instance of this type class, so we get back a
 usable result. Another such instance is ~Int~, which gives us a
 count of the number of times the regexp matches.
 
@@ -403,13 +403,13 @@ ghci> getAllTextMatches ("I, B. Ionsonii, uurit a lift'd batch" =~ "(uu|ii)") ::
 Watch out for ~String~ results
 
 If you want a result that's a plain ~String~, beware. Since ~(=~)~
-returns an empty string to signify “no match”, this poses an
+returns an empty string to signify "no match", this poses an
 obvious difficulty if the empty string could also be a valid match
 for the regexp. If such a case arises, you should use a different
 return type instead, such as ~[String]~.
 #+END_NOTE
 
-That's about it for “simple” result types, but we're not by any
+That's about it for "simple" result types, but we're not by any
 means finished. Before we continue, let's use a single pattern for
 our remaining examples. We can define this pattern as a variable
 in ~ghci~, to save a little typing.
@@ -428,7 +428,7 @@ ghci> "before foodiebar after" =~ pat :: (String,String,String)
 ("before ","foodiebar"," after")
 #+END_SRC
 
-If the match fails, the entire text is returned as the “before”
+If the match fails, the entire text is returned as the "before"
 element of the tuple, with the other two elements left empty.
 
 #+BEGIN_SRC screen
@@ -470,7 +470,7 @@ ghci> getAllMatches ("mondegreen" =~ pat) :: [(Int,Int)]
 #+END_SRC
 
 This is not a comprehensive list of built-in instances of the
-~RegexContext~ typeclass. For a complete list, see the
+~RegexContext~ type class. For a complete list, see the
 documentation for the ~Text.Regex.Base.Context~ module.
 
 This ability to make a function polymorphic in its result type is
@@ -480,7 +480,7 @@ an unusual feature for a statically typed language.
 
 *** Mixing and matching string types
 
-As we noted earlier, the ~=~~ operator uses typeclasses for its
+As we noted earlier, the ~=~~ operator uses type classes for its
 argument types and its return type. We can use either ~String~ or
 strict ~ByteString~ values for both the regular expression and the
 text to match against.
@@ -629,8 +629,8 @@ grants us the flexibility to structure our code in the manner that
 makes most logical sense to us, rather than follow an order that
 makes the compiler writer's life easiest.
 
-Haskell module writers often use this flexibility to put “more
-important” code earlier in a source file, relegating “plumbing” to
+Haskell module writers often use this flexibility to put "more
+important" code earlier in a source file, relegating "plumbing" to
 later. This is exactly how we are presenting the ~globToRegex~
 function and its helpers here.
 #+END_NOTE
@@ -654,7 +654,7 @@ globToRegex' (c:cs)         = escape c ++ globToRegex' cs
 
 Our first clause stipulates that if we hit the end of our glob
 pattern (by which time we'll be looking at the empty string), we
-return ~$~, the regular expression symbol for “match end-of-line”.
+return ~$~, the regular expression symbol for "match end-of-line".
 Following this is a series of clauses that switch our pattern from
 glob syntax to regexp syntax. The last clause passes every other
 character through, possibly escaping it first.
@@ -723,12 +723,12 @@ ghci> fnmatch "d*" "myname"
 False
 #+END_SRC
 
-The name ~fnmatch~ doesn't really have the “Haskell nature”,
+The name ~fnmatch~ doesn't really have the "Haskell nature",
 though. By far the most common Haskell style is for functions to
-have descriptive, “camel cased” names. Camel casing concatenates
+have descriptive, "camel cased" names. Camel casing concatenates
 words, capitalising all but possibly the first word. For instance,
-the words “file name matches” would become the name
-~fileNameMatches~. The name “camel case” comes from the “humps”
+the words "file name matches" would become the name
+~fileNameMatches~. The name "camel case" comes from the "humps"
 introduced by the capital letters. In our library, we'll give this
 function the name ~matchesGlob~.
 
@@ -751,7 +751,7 @@ name has less value.
    that calls ~globToRegex~, and pass it a malformed pattern. What
    happens?
 2. While filesystems on Unix are usually sensitive to case (e.g.
-   “G” vs. “g”) in file names, Windows filesystems are not. Add a
+   "G" vs. "g") in file names, Windows filesystems are not. Add a
    parameter to the ~globToRegex~ and ~matchesGlob~ functions that
    allows control over case sensitive matching.
 
@@ -765,8 +765,8 @@ as a loop.
 
 If you've been exposed to functional programming through a
 language such as Scheme or ML, you've probably had drilled into
-your head the notion that “the way to emulate a loop is via tail
-recursion”.
+your head the notion that "the way to emulate a loop is via tail
+recursion".
 
 Looking at the ~globToRegex'~ function, we can see that it is
 /not/ tail recursive. To see why, examine its final clause again
@@ -878,7 +878,7 @@ run on both Unix-like and Windows systems.
 import System.FilePath (dropTrailingPathSeparator, splitFileName, (</>))
 #+END_EXAMPLE
 
-In this module, we'll be emulating a “for” loop; getting our first
+In this module, we'll be emulating a "for" loop; getting our first
 taste of exception handling in Haskell; and of course using the
 ~matchesGlob~ function we just wrote.
 
@@ -889,14 +889,14 @@ import Control.Monad (forM)
 import GlobRegex (matchesGlob)
 #+END_EXAMPLE
 
-Since directories and files live in the “real world” of activities
+Since directories and files live in the "real world" of activities
 that have effects, our globbing function will have to have ~IO~ in
 its result type.
 
 If the string we're passed contains no pattern characters, we
 simply check that the given name exists in the filesystem. (Notice
 that we use Haskell's function guard syntax here to write a nice
-tidy definition. An “if” would do, but isn't as aesthetically
+tidy definition. An "if" would do, but isn't as aesthetically
 pleasing.)
 
 #+CAPTION: Glob.hs
@@ -937,7 +937,7 @@ continues.
 #+END_EXAMPLE
 
 We use ~splitFileName~ to split the string into a pair of
-“everything but the final name” and “the final name”. If the first
+"everything but the final name" and "the final name". If the first
 element is empty, we're looking for a pattern in the current
 directory. Otherwise, we must check the directory name and see if
 it contains patterns. If it does not, we create a singleton list
@@ -972,7 +972,7 @@ You can guess what happened to us that led us to add this note!
 Finally, we collect all matches in every directory, giving us a
 list of lists, and concatenate them into a single list of names.
 
-The unfamiliar ~forM~ function above acts a little like a “for”
+The unfamiliar ~forM~ function above acts a little like a "for"
 loop: it maps its second argument (an action) over its first (a
 list), and returns the list of results.
 
@@ -1072,7 +1072,7 @@ empty list if we catch an exception.
 
 We won't have anything more to say about exception handling here.
 There's plenty more to cover, though, so we'll be returning to the
-subject of exceptions in chapter [[file:error-handling.html][Chapter 19, /Error handling/]].
+subject of exceptions in chapter [[file:19-error-handling.org][Chapter 19, /Error handling/]].
 
 *** Exercises
 
@@ -1090,8 +1090,8 @@ subject of exceptions in chapter [[file:error-handling.html][Chapter 19, /Error
 3. The ~*~ wild card only matches names within a single directory.
    Many shells have an extended wild card syntax, ~**~, that
    matches names recursively in all directories. For example,
-   ~**.c~ would mean “match a name ending in ~.c~ in this
-   directory or any subdirectory at any depth”. Implement matching
+   ~**.c~ would mean "match a name ending in ~.c~ in this
+   directory or any subdirectory at any depth". Implement matching
    on ~**~ wildcards.
 
 ** Handling errors through API design
@@ -1102,7 +1102,7 @@ case we'd like to be able to report a meaningful error message.
 
 Calling the ~error~ function when this kind of problem occurs can
 be a drastic response (exploring its consequences was the focus of
-exercise [[file:efficient-file-processing-regular-expressions-and-file-name-matching.html#ch07.q.error][Q: 1]]). The ~error~ throws an exception. Pure Haskell code
+exercise [[Exercise 8.1][Q:1]]). The ~error~ throws an exception. Pure Haskell code
 cannot deal with exceptions, so control is going to rocket out of
 our pure code into the nearest caller that lives in ~IO~ and has
 an appropriate exception handler installed. If no such handler is
@@ -1139,6 +1139,7 @@ Haskell code.)
 
 *** Exercises
 
+#+NAME: Exercise 8.1
 1. Write a version of ~globToRegex~ that uses the type signature
    above.
 2. Modify the type signature of ~namesMatching~ so that it encodes

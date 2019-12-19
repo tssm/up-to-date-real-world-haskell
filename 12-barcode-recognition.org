@@ -2,7 +2,7 @@
 
 In this chapter, we'll make use of the image parsing library we
 developed in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]] to
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]] to
 build a barcode recognition application. Given a picture of the
 back of a book taken with a camera phone, we could use this to
 extract its ISBN number.
@@ -69,7 +69,7 @@ its input list infinitely). The check digit is the difference
 between their sum, modulo ten, and the number ten.
 
 A barcode is a series of fixed-width bars, where black represents
-a binary “one” bit, and white a “zero”. A run of the same digits
+a binary "one" bit, and white a "zero". A run of the same digits
 thus looks like a thicker bar.
 
 The sequence of bits in a barcode is as follows.
@@ -259,7 +259,7 @@ ghci> a ! 4
 
 Haskell also provides strict arrays, which behave differently. We
 will discuss the tradeoffs between the two kinds of array much
-later, in [[file:advanced-library-design-building-a-bloom-filter.html#bloomfilter.uarray][the section called “Unboxing, lifting, and bottom”]].
+later, in [[file:26-building-a-bloom-filter.org::*Unboxing, lifting, and bottom][the section called "Unboxing, lifting, and bottom"]]
 
 *** Folding over arrays
 
@@ -308,7 +308,7 @@ hard to do.
 
 *** Modifying array elements
 
-While there exist “modification” functions for immutable arrays,
+While there exist "modification" functions for immutable arrays,
 they are not very practical. For example, the ~accum~ function
 takes an array and a list of ~(index, value)~ pairs, and returns a
 new array with the values at the given indices replaced.
@@ -329,7 +329,7 @@ Don't lose hope
 It /is/ in fact possible to modify an array efficiently in
 Haskell, using the ~ST~ monad. This is a subject that we will
 return to later, in
-[[file:advanced-library-design-building-a-bloom-filter.html][Chapter 26, /Advanced library design: building a Bloom filter/]].
+[[file:26-building-a-bloom-filter.org][Chapter 26, /Advanced library design: building a Bloom filter/]].
 #+END_NOTE
 
 *** Exercises
@@ -342,7 +342,7 @@ arrays.
    should return the leftmost element of the tuple. With an
    argument of one, it should return the next element. And so on.
    What restrictions do you have to put on the types of the
-   arguments in order to write a function that typechecks
+   arguments in order to write a function that type-checks
    correctly?
 2. Write a similar function that takes a six-tuple as its first
    argument.
@@ -384,7 +384,7 @@ The string to encode is twelve digits long, with ~encodeDigits~
 adding a thirteenth check digit.
 
 The barcode is encoded as two groups of six digits, with a guard
-sequence in the middle and “outside” sequences on either side. But
+sequence in the middle and "outside" sequences on either side. But
 if we have two groups of six digits, what happened to the missing
 digit?
 
@@ -405,7 +405,7 @@ Phone cameras and webcams generally output JPEG images, but
 writing a JPEG decoder would take us several chapters. We'll
 simplify our parsing problem by handling the netpbm file format.
 We will use the parsing combinators we developed earlier, in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]].
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]].
 
 We'd like to deal with real images from the kinds of cheap,
 fixed-focus cameras that come with low-end cell phones. These
@@ -422,11 +422,11 @@ will we sharpen images taken from too near to the subject, which
 causes narrow bars to fade out; or from too far, which causes
 adjacent bars to blur together.
 
-[[file:figs/ch12-bad-angled.jpg]]
+[[figs/ch12-bad-angled.jpg]]
 
-[[file:figs/ch12-bad-too-near.jpg]]
+[[figs/ch12-bad-too-near.jpg]]
 
-[[file:figs/ch12-bad-too-far.jpg]]
+[[figs/ch12-bad-too-far.jpg]]
 
 ** Divide and conquer
 
@@ -480,8 +480,8 @@ each pixel is either black or white.
 As we mentioned earlier, we'll work with netpbm images. The netpbm
 colour image format is only slightly more complicated than the
 greyscale image format that we parsed in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]]. The
-identifying string in a header is “P6”, with the rest of the
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]]. The
+identifying string in a header is "P6", with the rest of the
 header layout identical to the greyscale format. In the body of an
 image, each pixel is represented as three bytes, one each for red,
 green and blue.
@@ -511,7 +511,7 @@ them using the ~bounds~ function.
 
 The actual parser is mercifully short, thanks to the combinators
 we developed in
-[[file:code-case-study-parsing-a-binary-data-format.html][Chapter 10, /Code case study: parsing a binary data format/]].
+[[file:10-parsing-a-binary-data-format.org][Chapter 10, /Code case study: parsing a binary data format/]].
 
 #+CAPTION: Barcode.hs
 #+BEGIN_SRC haskell
@@ -559,7 +559,7 @@ luminance (r,g,b) = round (r' * 0.30 + g' * 0.59 + b' * 0.11)
           b' = fromIntegral b
 #+END_SRC
 
-Haskell arrays are members of the ~Functor~ typeclass, so we can
+Haskell arrays are members of the ~Functor~ type class, so we can
 simply use ~fmap~ to turn an entire image, or a single scanline,
 from colour into greyscale.
 
@@ -585,13 +585,13 @@ In an image processing application, where we're juggling lots of
 numbers, it would be easy to reuse the same numeric type for
 several different purposes. For example, we could use the ~Pixel~
 type to represent on/off states, using the convention that the
-digit one represents a bit that's “on”, and zero “off”.
+digit one represents a bit that's "on", and zero "off".
 
 However, reusing types for multiple purposes in this way quickly
 leads to potential confusion. To see whether a particular ~Pixel~
 is a number or an on/off value, we can no longer simply glance at
-a type signature. We could easily use a value containing “the
-wrong kind of number” in some context, and the compiler won't
+a type signature. We could easily use a value containing "the
+wrong kind of number" in some context, and the compiler won't
 catch it because the types work out.
 
 We could try to work around this by introducing a type alias. In
@@ -625,11 +625,11 @@ threshold n a = binary <$> a
 
 Our ~threshold~ function computes the minimum and maximum values
 in its input array. It takes these and a threshold valued between
-zero and one, and computes a “pivot” value. Then for each value in
+zero and one, and computes a "pivot" value. Then for each value in
 the array, if that value is less than the pivot, the result is
 ~Zero~, otherwise ~One~. Notice that we use one of the folding
 functions that we wrote in
-[[file:barcode-recognition.html#barcode.fold][the section called “Folding over arrays”]].
+[[file:12-barcode-recognition.org::*Folding over arrays][the section called "Folding over arrays"]]
 
 ** What have we done to our image?
 
@@ -738,7 +738,7 @@ The bit patterns above aren't random; they're the left outer guard
 and first encoded digit of a row from our captured image. If we
 drop the guard bars, we're left with the run lengths ~[2,6,4,4]~.
 How do we find matches for these in the encoding tables we wrote
-in [[file:barcode-recognition.html#barcode.array][the section called “Introducing arrays”]]?
+in [[file:12-barcode-recognition.org::*Introducing arrays][the section called "Introducing arrays"]]
 
 *** Scaling run lengths, and finding approximate matches
 
@@ -783,9 +783,9 @@ due to distance, as there should be a pretty close match between
 an entry in a scaled run length encoding table and a run length
 sequence pulled from an image.
 
-The next question is how we turn the intuitive idea of “pretty
-close” into a measure of “close enough”. Given two scaled run
-length sequences, we can calculate an approximate “distance”
+The next question is how we turn the intuitive idea of "pretty
+close" into a measure of "close enough". Given two scaled run
+length sequences, we can calculate an approximate "distance"
 between them as follows.
 
 #+CAPTION: Barcode.hs
@@ -983,7 +983,7 @@ times.
 
 *** Chunking a list
 
-A common aspect of working with lists is needing to “chunk” them.
+A common aspect of working with lists is needing to "chunk" them.
 For example, each digit in a barcode is encoded using a run of
 four digits. We can turn the flat list that represents a row into
 a list of four-element lists as follows.
@@ -1066,20 +1066,20 @@ ghci> mapM_ print $ candidateDigits input
 
 ** Life without arrays or hash tables
 
-In an imperative language, the array is as much a “bread and
-butter” type as a list or tuple in Haskell. We take it for granted
+In an imperative language, the array is as much a "bread and
+butter" type as a list or tuple in Haskell. We take it for granted
 that an array in an imperative language is usually mutable; we can
 change an element of an array whenever it suits us.
 
-As we mentioned in [[file:barcode-recognition.html#barcode.array.mutable][the section called “Modifying array elements”]],
-Haskell arrays are /not/ mutable. This means that to “modify” a
+As we mentioned in [[file:12-barcode-recognition.org::*Modifying array elements][the section called "Modifying array elements"]]
+Haskell arrays are /not/ mutable. This means that to "modify" a
 single array element, a copy of the entire array is made, with
 that single element set to its new value. Clearly, this approach
 is not a winner for performance.
 
 The mutable array is a building block for another ubiquitous
 imperative data structure, the hash table. In the typical
-implementation, an array acts as the “spine” of the table, with
+implementation, an array acts as the "spine" of the table, with
 each element containing a list of elements. To add an element to a
 hash table, we hash the element to find the array offset, and
 modify the list at that offset to add the element to it.
@@ -1187,7 +1187,7 @@ functions to fiddle with argument ordering.
 
 **** Getting started with the API
 
-The ~Data.Map~ module has a large “surface area”: it exports
+The ~Data.Map~ module has a large "surface area": it exports
 dozens of functions. Just a handful of these comprise the most
 frequently used core of the module.
 
@@ -1279,7 +1279,7 @@ fromList []
 
 Finally, there are several efficient functions for performing
 set-like operations on maps. Of these, we'll be using ~union~
-below. This function is “left biased”: if two maps contain the
+below. This function is "left biased": if two maps contain the
 same key, the result will contain the value from the left map.
 
 #+BEGIN_SRC screen
@@ -1291,13 +1291,13 @@ fromList [("foo",1)]
 
 We have barely covered ten percent of the ~Data.Map~ API. We
 will cover maps and similar data structures in greater detail in
-[[file:data-structures.html][Chapter 13, /Data Structures/]]. For further inspiration, we
+[[file:13-data-structures.org][Chapter 13, /Data Structures/]]. For further inspiration, we
 encourage you to browse the module documentation. The module is
 impressively thorough.
 
 *** Further reading
 
-The book [[[file:bibliography.html#bib.okasaki99][Okasaki99]]] gives a wonderful and thorough implementor's
+The book [[[file:bibliography.org::Okasaki99][Okasaki99]]] gives a wonderful and thorough implementor's
 tour of many pure functional data structures, including several
 kinds of balanced tree. It also provides valuable insight into
 reasoning about the performance of purely functional data
@@ -1305,7 +1305,7 @@ structures and lazy evaluation.
 
 We recommend Okasaki's book as essential reading for functional
 programmers. If you're not convinced, Okasaki's PhD thesis,
-[[[file:bibliography.html#bib.okasaki96][Okasaki96]]], is a less complete and polished version of the book,
+[[[file:bibliography.org::Okasaki96][Okasaki96]]], is a less complete and polished version of the book,
 and it is available for free online.
 
 ** Turning digit soup into an answer
@@ -1352,8 +1352,8 @@ type DigitMap = Map Digit
 type ParityMap = Map (Parity Digit)
 #+END_SRC
 
-We'll generically refer to these as “solution maps”, because they
-show us the digit sequence that “solves for” each check digit.
+We'll generically refer to these as "solution maps", because they
+show us the digit sequence that "solves for" each check digit.
 
 Given a single digit, here's how we can update an existing
 solution map.
@@ -1436,7 +1436,7 @@ finalDigits = foldl' incorporateDigits (M.singleton 0 [])
 #+END_SRC
 
 (From the ~checkDigit~ function that we defined in
-[[file:barcode-recognition.html#barcode.encode][the section called “EAN-13 encoding”]], we remember that the check
+[[file:12-barcode-recognition.org::*EAN-13 encoding][the section called "EAN-13 encoding"]]
 digit computation requires that we multiply every other digit by
 ~3~.)
 
@@ -1551,7 +1551,7 @@ row j a = ixmap (l,u) project a
 
 This function takes a bit of explaining. Whereas ~fmap~ transforms
 the /values/ in an array, ~ixmap~ transforms the /indices/ of an
-array. It's a very powerful function that lets us “slice” an array
+array. It's a very powerful function that lets us "slice" an array
 however we please.
 
 The first argument to ~ixmap~ is the bounds of the new array.
@@ -1643,7 +1643,7 @@ isn't the most compact representation possible; we could have
 hoisted many of those functions into ~let~ or ~where~ blocks when
 we were done with them. However, we find that the added vertical
 space, small function bodies, and type signatures make the code
-far more readable, so we generally avoided “golfing” functions
+far more readable, so we generally avoided "golfing" functions
 after we wrote them[fn:2].
 
 Working in a language with strong, static typing does not at all
@@ -1656,7 +1656,7 @@ assists us in writing good code quickly.
 
 [fn:1] The formula originates in ITU-R Recommendation 601.
 
-[fn:2] Our use of the word “golf” comes from a game originally
+[fn:2] Our use of the word "golf" comes from a game originally
 played by Perl hackers, in which programmers try to create the
 smallest piece of code for some purpose. The code with the fewest
 (key)strokes wins.

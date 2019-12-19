@@ -75,7 +75,7 @@ store it and nothing will happen. I could say ~writefoo = putStrLn
 ~writefoo~ in the middle of another I/O action, the ~writefoo~
 action will be executed when its parent action is executed –I/O
 actions can be glued together to form bigger I/O actions. The ~()~
-is an empty tuple (pronounced “unit”), indicating that there is no
+is an empty tuple (pronounced "unit"), indicating that there is no
 return value from ~putStrLn~. This is similar to ~void~ in Java or
 C.[fn:2]
 
@@ -143,7 +143,7 @@ actions properly.
 You only need to use ~do~ if you have more than one action that
 you need to perform. The value of a ~do~ block is the value of the
 last action executed. For a complete description of ~do~ syntax,
-see [[file:monads.html#monads.do][the section called “Desugaring of do blocks”]].
+see [[file:15-monads.org::*Desugaring of do blocks][the section called "Desugaring of do blocks"]]
 
 Let's consider an example of calling pure code from within an I/O
 action:
@@ -212,8 +212,8 @@ Haskell is really imperative rather than pure, lazy, and
 functional. Some of these examples look like a sequence of actions
 to be followed in order. There's more to it than that, though.
 We'll discuss that question later in this chapter in
-[[file:io.html#io.imperative][the section called “Is Haskell Really Imperative?”]] and
-[[file:io.html#io.lazy][the section called “Lazy I/O”]].
+[[file:7-io.org::*Is Haskell Really Imperative?][the section called "Is Haskell Really Imperative?"]]
+[[file:7-io.org::*Lazy I/O][the section called "Lazy I/O"]]
 
 *** Pure vs. I/O
 
@@ -258,7 +258,7 @@ instance, can provide a level of automatic parallelism for the
 pure parts of your code–something of a holy grail for computing.
 
 For more discussion on this topic, refer to
-[[file:io.html#io.sideeffects][the section called “Side Effects with Lazy I/O”]].
+[[file:7-io.org::*Side Effects with Lazy I/O][the section called "Side Effects with Lazy I/O"]]
 
 ** Working With Files and Handles
 
@@ -333,8 +333,7 @@ came from pure computation, you must use ~return~ to wrap it in
 ~IO~. As an example, if ~7~ is an ~Int~, then ~return 7~ would
 create an action stored in a value of type ~IO Int~. When
 executed, that action would produce the result ~7~. For more
-details on ~return~, see [[file:io.html#io.return][the section
-called “The True Nature of Return”]].
+details on ~return~, see [[file:7-io.org::*The True Nature of Return][the section called "The True Nature of Return"]]
 
 Let's try running the program. We've got a file named ~input.txt~
 that looks like this:
@@ -380,8 +379,9 @@ used as a filename, and not as regular data.
 
 ~IOMode~ specifies how the file is to be managed. The possible
 values for ~IOMode~ are listed in
-[[file:io.html#io.files.openFile.IOModes][Table 7.2, “Possible IOMode Values”]].
+[[Table%C2%A07.2.%C2%A0Possible IOMode Values][Table 7.2, "Possible IOMode Values"]].
 
+#+NAME: Table 7.2. Possible IOMode Values
 #+CAPTION: Table 7.2. Possible IOMode Values
 | ~IOMode~        | Can read? | Can write? | Starting position | Notes                                                                       |
 |-----------------+-----------+------------+-------------------+-----------------------------------------------------------------------------|
@@ -405,8 +405,8 @@ you will be dealing with binary data.
 You've already seen that ~hClose~ is used to close file handles.
 Let's take a moment and think about why this is important.
 
-As you'll see in [[file:io.html#io.buffering][the section called
-“Buffering”]], Haskell maintains internal buffers for files. This
+As you'll see in [[file:7-io.org::*Buffering][the section called "Buffering"]]
+Haskell maintains internal buffers for files. This
 provides an important performance boost. However, it means that
 until you call ~hClose~ on a file that is open for writing, your
 data may not be flushed out to the operating system.
@@ -425,10 +425,10 @@ be responsible and call ~hClose~ all the time.
 
 Haskell provides several tools for you to use to easily ensure
 this happens, regardless of whether errors are present. You can
-read about ~finally~ in [[file:io.html#io.example][the section
-called “Extended Example: Functional I/O and Temporary Files”]]
+read about ~finally~ in
+[[file:7-io.org::*Extended Example: Functional I/O and Temporary Files][the section called "Extended Example: Functional I/O and Temporary Files"]]
 and ~bracket~ in
-[[file:io-case-study-a-library-for-searching-the-filesystem.html#find.acquire.use.release][the section called “The acquire-use-release cycle”]].
+[[file:9-a-library-for-searching-the-file-system.org::*The acquire-use-release cycle][the section called "The acquire-use-release cycle"]]
 
 *** Seek and Tell
 
@@ -459,7 +459,7 @@ backwards. Finally, ~SeekFromEnd~ will seek to the specified
 number of bytes before the end of the file. ~hSeek handle
 SeekFromEnd 0~ will take you to the end of the file. For an
 example of ~hSeek~, refer to
-[[file:io.html#io.example][the section called “Extended Example: Functional I/O and Temporary Files”]].
+[[file:7-io.org::*Extended Example: Functional I/O and Temporary Files][the section called "Extended Example: Functional I/O and Temporary Files"]]
 
 Not all ~Handle~s are seekable. A ~Handle~ usually corresponds to
 a file, but it can also correspond to other things such as network
@@ -494,7 +494,7 @@ Tip
 
 We're using partial application here. If this isn't making sense,
 consult
-[[file:functional-programming.html#fp.partialapp][the section called “Partial function application and currying”]] for
+[[file:4-functional-programming.org::*Partial function application and currying][the section called "Partial function application and currying"]]
 a refresher.
 #+END_TIP
 
@@ -545,12 +545,12 @@ file already exists, it is removed before the rename takes place.
 Like many other functions that take a filename, if the "old" name
 doesn't exist, ~renameFile~ will raise an exception. More
 information on exception handling can be found in
-[[file:error-handling.html][Chapter 19, /Error handling/]].
+[[file:19-error-handling.org][Chapter 19, /Error handling/]].
 
 There are many other functions in ~System.Directory~ for doing
 things such as creating and removing directories, finding lists of
 files in directories, and testing for file existence. These are
-discussed in [[file:systems-programming-in-haskell.html#systems.directories][the section called “Directory and File Information”]].
+discussed in [[file:20-systems-programming-in-haskell.org::*Directory and File Information][the section called "Directory and File Information"]]
 
 *** Temporary Files
 
@@ -687,7 +687,7 @@ There is some exception handling going on to make the program more
 robust in the face of errors. You normally want the temporary
 files to be deleted after processing completes, even if something
 went wrong. So we make sure that happens. For more on exception
-handling, see [[file:error-handling.html][Chapter 19, /Error handling/]].
+handling, see [[file:19-error-handling.org][Chapter 19, /Error handling/]].
 
 Let's return to the start of the program. ~main~ is defined simply
 as ~withTempFile "mytemp.txt" myAction~. ~myAction~, then, will be
@@ -779,7 +779,7 @@ really, is–a pure ~String~, you can pass it to pure (non-I/O)
 code.
 
 Let's take a quick look at an example. Back in
-[[file:io.html#io.files][the section called “Working With Files and Handles”]], you saw an
+[[file:7-io.org::*Working With Files and Handles][the section called "Working With Files and Handles"]]
 imperative program that converted the entire content of a file to
 uppercase. Its imperative algorithm was similar to what you'd see
 in many other languages. Here now is the much simpler algorithm
@@ -997,7 +997,7 @@ of data as soon as they are received, run
 ~runghc toupper-lazy4.hs~ without any other command-line
 parameters. You should see each character echoed back out as soon
 as you type it, but in uppercase. Buffering may change this
-behavior; see [[file:io.html#io.buffering][the section called “Buffering”]] later in this chapter
+behavior; see [[file:7-io.org::*Buffering][the section called "Buffering"]]
 for more on buffering. If you see each line echoed as soon as you
 type it, or even nothing at all for awhile, buffering is causing
 this behavior.
@@ -1017,7 +1017,7 @@ main = interact (map toUpper . (++) "Your data, in uppercase, is:\n\n")
 Tip
 
 If the use of the ~.~ operator is confusing, you might wish to
-refer to [[file:functional-programming.html#fp.compose][the section called “Code reuse through composition”]].
+refer to [[file:4-functional-programming.org::*Code reuse through composition][the section called "Code reuse through composition"]]
 #+END_TIP
 
 Here we add a string at the beginning of the output. Can you spot
@@ -1062,8 +1062,8 @@ elem :: (Eq a) => a -> [a] -> Bool
 
 Can you guess what these functions do just by looking at their
 types? If not, you can find them explained in
-[[file:functional-programming.html#fp.splitlines][the section called “Warming up: portably splitting lines of text”]]
-and [[file:functional-programming.html#fp.lists.strings][the section called “Special string-handling functions”]]. You'll
+[[file:4-functional-programming.org::*Warming up: portably splitting lines of text][the section called "Warming up: portably splitting lines of text"]]
+and [[file:4-functional-programming.org::*Special string-handling functions][the section called "Special string-handling functions"]]
 frequently see ~lines~ and ~unlines~ used with I/O. Finally,
 ~elem~ takes a element and a list and returns ~True~ if that
 element occurs anywhere in the list.
@@ -1116,7 +1116,7 @@ in Haskell is called /actions/. Actions resemble functions. They
 do nothing when they are defined, but perform some task when they
 are invoked. I/O actions are defined within the IO monad. Monads
 are a powerful way of chaining functions together purely and are
-covered in [[file:monads.html][Chapter 14, /Monads/]]. It's not necessary to understand
+covered in [[file:15-monads.org][Chapter 14, /Monads/]]. It's not necessary to understand
 monads in order to understand I/O. Just understand that the result
 type of actions is "tagged" with IO. Let's take a look at some
 types:
@@ -1157,7 +1157,7 @@ printitall = runall actions
 -- Take a list of actions, and execute each of them in turn.
 runall :: [IO ()] -> IO ()
 runall [] = return ()
-runall (firstelem:remainingelems) = 
+runall (firstelem:remainingelems) =
     do firstelem
        runall remainingelems
 
@@ -1314,7 +1314,7 @@ this when you define a ~do~ block.
 Tip
 
 Forgetting how to use ~\~ (lambda expressions)? See
-[[file:functional-programming.html#fp.anonymous][the section called “Anonymous (lambda) functions”]].
+[[file:4-functional-programming.org::*Anonymous (lambda) functions][the section called "Anonymous (lambda) functions"]]
 #+END_TIP
 
 *** The True Nature of Return
@@ -1525,7 +1525,7 @@ available from ~System.Environment.getProgName~.
 The ~System.Console.GetOpt~ module provides some tools for parsing
 command-line options. If you have a program with complex options,
 you may find it useful. You can find an example of its use in
-[[file:software-transactional-memory.html#stm.urlcheck.parseArgs][the section called “Command line parsing”]].
+[[file:28-software-transactional-memory.org::*Command line parsing][the section called "Command line parsing"]]
 
 ** Environment Variables
 
@@ -1558,13 +1558,13 @@ functions.
 instance
 
 [fn:5] For more information on interoperating with other programs
-with pipes, see [[file:systems-programming-in-haskell.html#systems.piping][the section called “Extended Example: Piping”]].
+with pipes, see [[file:20-systems-programming-in-haskell.org::*Extended Example: Piping][the section called "Extended Example: Piping"]]
 
 [fn:6] POSIX programmers may be interested to know that this
 corresponds to ~unlink()~ in C.
 
 [fn:7] ~hGetContents~ will be discussed in
-[[file:io.html#io.lazy][the section called “Lazy I/O”]]
+[[file:7-io.org::*Lazy I/O][the section called "Lazy I/O"]]
 
 [fn:8] There is also a shortcut function ~getContents~ that
 operates on standard input.

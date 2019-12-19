@@ -38,7 +38,7 @@ start with a capital letter.
 After ~Book~, the ~Int~, ~String~, and ~[String]~ that follow are
 the /components/ of the type. A component serves the same purpose
 in Haskell as a field in a structure or class would in another
-language: it's a “slot” where we keep a value. (We'll often refer
+language: it's a "slot" where we keep a value. (We'll often refer
 to components as fields.)
 
 In this example, the ~Int~ represents a book's identifier (e.g. in
@@ -66,7 +66,7 @@ their type and value constructors have different names.
 Deriving what?
 
 We'll explain the full meaning of ~deriving (Show)~ later, in
-[[file:using-typeclasses.html#typeclasses.wellknown.show][the section called “Show”]]. For now, it's enough to know that we
+[[file:6-using-typeclasses.org::*Show][the section called "Show"]]
 need to tack this onto a type declaration so that ~ghci~ will
 automatically know how to print a value of this type.
 #+END_NOTE
@@ -215,7 +215,7 @@ data Bool = False | True
 
 The ~Bool~ type has two value constructors, ~True~ and ~False~.
 Each value constructor is separated in the definition by a ~|~
-character, which we can read as “or”: we can construct a ~Bool~
+character, which we can read as "or": we can construct a ~Bool~
 that has the value ~True~, or the value ~False~. When a type has
 more than one value constructor, they are usually referred to as
 /alternatives/ or /cases/. We can use any one of the alternatives
@@ -224,9 +224,9 @@ to create a value of that type.
 #+BEGIN_NOTE
 A note about naming
 
-Although the phrase “algebraic data type” is long, we're being
-careful to avoid using the acronym “ADT”. That acronym is already
-widely understood to stand for “/abstract/ data type”. Since
+Although the phrase "algebraic data type" is long, we're being
+careful to avoid using the acronym "ADT". That acronym is already
+widely understood to stand for "/abstract/ data type". Since
 Haskell supports both algebraic and abstract data types, we'll be
 explicit and avoid the acronym entirely.
 #+END_NOTE
@@ -323,7 +323,7 @@ d = Furniture "Table" "Oak"
 
 This lets us bring the type system to bear in writing programs
 with fewer bugs. With the tuples we defined above, we could
-conveivably pass a description of a whale to a function expecting
+conceivably pass a description of a whale to a function expecting
 a chair, and the type system could not help us. With the algebraic
 data types, there is no such possibility of confusion.
 
@@ -430,9 +430,9 @@ By /positional/, we mean that the section number is in the first
 field of the Haskell type, and the title is in the second. We
 refer to them by location, not by name.
 
-In [[file:defining-types-streamlining-functions.html#deftypes.pattern][the section called “Pattern matching”]], we'll see how to access
+In [[file:3-defining-types-streamlining-functions.org::*Pattern matching][the section called "Pattern matching"]]
 the fields of a ~BookStore~ value. In
-[[file:defining-types-streamlining-functions.html#deftypes.record][the section called “Record syntax”]], we'll introduce an alternate
+[[file:3-defining-types-streamlining-functions.org::*Record syntax][the section called "Record syntax"]]
 syntax for defining data types that looks a little more C-like.
 
 **** The enumeration
@@ -556,7 +556,7 @@ data Shape = Circle Vector Double
 If we create a ~Shape~ value using the ~Circle~ constructor, the
 fact that we created a ~Circle~ is stored. When we later use a
 ~Circle~, we can't accidentally treat it as a ~Square~. We will
-see why in [[file:defining-types-streamlining-functions.html#deftypes.pattern][the section called “Pattern matching”]]
+see why in [[file:3-defining-types-streamlining-functions.org::*Pattern matching][the section called "Pattern matching"]]
 
 #+BEGIN_TIP
 A few notes
@@ -620,14 +620,14 @@ sumList []     = 0
 Let us step through the evaluation of ~sumList [1,2]~. The list
 notation ~[1,2]~ is shorthand for the expression ~(1 : (2 : []))~.
 We begin by trying to match the pattern in the first equation of
-the definition of ~sumList~. In the ~(x : xs)~ pattern, the “~:~”
+the definition of ~sumList~. In the ~(x : xs)~ pattern, the "~:~"
 is the familiar list constructor, ~(:)~. We are now using it to
 match against a value, not to construct one. The value
 ~(1 : (2 : []))~ was constructed with ~(:)~, so the constructor in
 the value matches the constructor in the pattern. We say that the
 pattern /matches/, or that the match /succeeds/.
 
-The variables ~x~ and ~xs~ are now “bound to” the constructor's
+The variables ~x~ and ~xs~ are now "bound to" the constructor's
 arguments, so ~x~ is given the value ~1~, and ~xs~ the value
 ~2 : []~.
 
@@ -640,8 +640,8 @@ and ~xs~ to ~[]~.
 We are now evaluating ~1 + (2 + sumList [])~. In this recursive
 application of ~sumList~, the value we are matching against is
 ~[]~. The value's constructor does not match the constructor in
-the first pattern, so we skip this equation. Instead, we “fall
-through” to the next pattern, which matches. The right hand side
+the first pattern, so we skip this equation. Instead, we "fall
+through" to the next pattern, which matches. The right hand side
 of this equation is thus chosen as the result of this application.
 
 The result of ~sumList [1,2]~ is thus ~1 + (2 + (0))~, or ~3~.
@@ -692,7 +692,7 @@ Deconstruction doesn't destroy anything
 
 If you're steeped in object oriented programming jargon, don't
 confuse deconstruction with destruction! Matching a pattern has no
-effect on the value we're examining: it just lets us “look inside”
+effect on the value we're examining: it just lets us "look inside"
 it.
 #+END_NOTE
 
@@ -707,7 +707,7 @@ the last element of a 3-tuple.
 third (a, b, c) = c
 #+END_SRC
 
-There's no limit on how “deep” within a value a pattern can look.
+There's no limit on how "deep" within a value a pattern can look.
 This definition looks both inside a tuple and inside a list within
 that tuple.
 
@@ -737,7 +737,7 @@ ghci> complicated (False, 1, [1,2,3], 5)
 #+END_SRC
 
 For an explanation of this error message, skip forward a little,
-to [[file:defining-types-streamlining-functions.html#deftypes.patterns.nonexhaustive][the section called “Exhaustive patterns and wild cards”]].
+to [[file:3-defining-types-streamlining-functions.org::*Exhaustive patterns and wild cards][the section called "Exhaustive patterns and wild cards"]]
 
 We can pattern match on an algebraic data type using its value
 constructors. Recall the ~BookInfo~ type we defined earlier: we
@@ -786,14 +786,14 @@ list will be bound to the variable ~xs~.
 As you read functions that match on lists, you'll frequently find
 that the names of the variables inside a pattern resemble
 ~(x : xs)~ or ~(d : ds)~. This is a popular naming convention. The
-idea is that the name ~xs~ has an “~s~” on the end of its name as
-if it's the “plural” of ~x~, because ~x~ contains the head of the
+idea is that the name ~xs~ has an "~s~" on the end of its name as
+if it's the "plural" of ~x~, because ~x~ contains the head of the
 list, and ~xs~ the remaining elements.
 
 *** The wild card pattern
 
 We can indicate that we don't care what is present in part of a
-pattern. The notation for this is the underscore character “~_~”,
+pattern. The notation for this is the underscore character "~_~",
 which we call a /wild card/. We use it as follows.
 
 #+CAPTION: BookStore.hs
@@ -972,7 +972,7 @@ ghci> cities
 Book 173 "Use of Weapons" ["Iain M. Banks"]
 #+END_SRC
 
-The accessor functions that we get “for free” when we use record
+The accessor functions that we get "for free" when we use record
 syntax really are normal Haskell functions.
 
 #+BEGIN_SRC screen
@@ -1175,7 +1175,7 @@ class Tree<A>
 #+END_SRC
 
 The one significant difference is that Java lets us use the
-special value ~null~ anywhere to indicate “nothing”, so we can use
+special value ~null~ anywhere to indicate "nothing", so we can use
 ~null~ to indicate that a node is missing a left or right child.
 Here's a small function that constructs a tree with two leaves (a
 leaf, by convention, has no children).
@@ -1355,7 +1355,7 @@ bound the variable in a ~let~ block.
 
 Also, our use of white space here is important. We'll talk in more
 detail about the layout rules in
-[[file:defining-types-streamlining-functions.html#deftypes.offside][the section called “The offside rule and white space in an expression”]].
+[[file:3-defining-types-streamlining-functions.org::*The offside rule and white space in an expression][the section called "The offside rule and white space in an expression"]]
 #+END_NOTE
 
 We can use the names of a variable in a ~let~ block both within
@@ -1369,7 +1369,7 @@ throughout a source file, we say it's at the /top level/.
 
 *** Shadowing
 
-We can “nest” multiple ~let~ blocks inside each other in an
+We can "nest" multiple ~let~ blocks inside each other in an
 expression.
 
 #+CAPTION: NestedLets.hs
@@ -1446,7 +1446,7 @@ yourself missing ~where~ clauses in languages that lack them.
 
 As with ~let~ expressions, white space is significant in ~where~
 clauses. We will talk more about the layout rules shortly, in
-[[file:defining-types-streamlining-functions.html#deftypes.offside][the section called “The offside rule and white space in an expression”]].
+[[file:3-defining-types-streamlining-functions.org::*The offside rule and white space in an expression][the section called "The offside rule and white space in an expression"]]
 
 *** Local functions, global variables
 
@@ -1684,8 +1684,8 @@ of the ~case~ expression is the result of the expression
 associated with the first pattern to match. Matches are attempted
 from top to bottom.
 
-To express “here's the expression to evaluate if none of the other
-patterns match”, we just use the wild card pattern ~_~ as the last
+To express "here's the expression to evaluate if none of the other
+patterns match", we just use the wild card pattern ~_~ as the last
 in our list of patterns. If a pattern match fails, we will get the
 same kind of runtime error as we saw earlier.
 
@@ -1761,7 +1761,7 @@ bad_nodesAreSame _            _            = Nothing
 
 A name can only appear once in a set of pattern bindings. We
 cannot place a variable in multiple positions to express the
-notion “this value and that should be identical”. Instead, we'll
+notion "this value and that should be identical". Instead, we'll
 solve this problem using /guards/, another invaluable Haskell
 feature.
 
@@ -1818,7 +1818,7 @@ variable bound to the value ~True~, to aid readability.
 We can use guards anywhere that we can use patterns. Writing a
 function as a series of equations using pattern matching and
 guards can make it much clearer. Remember the ~myDrop~ function we
-defined in [[file:types-and-functions.html#funcstypes.if][the section called “Conditional evaluation”]]?
+defined in [[file:2-types-and-functions.org::*Conditional evaluation][the section called "Conditional evaluation"]]
 
 #+CAPTION: myDrop.hs
 #+BEGIN_SRC haskell

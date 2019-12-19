@@ -487,9 +487,9 @@ We've told you how powerful and expressive Haskell's type system
 is. We've shown you a lot of ways to use that power. Here's a
 chance to really see that in action.
 
-Back in [[file:using-typeclasses.html#typeclasses.wellknown.numeric][the section called “Numeric Types”]], we showed the numeric
-typeclasses that come with Haskell. Let's see what we can do by
-defining new types and utilizing the numeric typeclasses to
+Back in [[file:6-using-typeclasses.org::*Numeric Types][the section called "Numeric Types"]]
+type classes that come with Haskell. Let's see what we can do by
+defining new types and utilizing the numeric type classes to
 integrate them with basic mathematics in Haskell.
 
 Let's start by thinking through what we'd like to see out of
@@ -555,7 +555,7 @@ ghci> 5 / 2
 ghci> (units 5 "m") / (units 2 "s")
 2.5_m/s
 ghci> (units 5 "m") + (units 2 "s")
-*** Exception: Mis-matched units in add or substract
+*** Exception: Mis-matched units in add or subtract
 CallStack (from HasCallStack):
   error, called at num.hs:109:19 in main:Main
 ghci> (units 5 "m") + (units 2 "m")
@@ -701,7 +701,7 @@ as valid as a ~SymbolicManip Int~ as it as an ~Int~.
 From here, then, our task is simple: extend the ~SymbolicManip~
 type to be able to represent all the operations we will want to
 perform, implement instances of it for the other numeric
-typeclasses, and implement our own instance of ~Show~ for
+type classes, and implement our own instance of ~Show~ for
 ~SymbolicManip~ that renders this tree in a more accessible
 fashion.
 
@@ -942,7 +942,7 @@ Now it may become clear why we use a ~SymbolicManip~ instead of a
 multiplication occur, the unit of measure also changes. For
 instance, if we multiply 5 meters by 2 meters, we obtain 10 square
 meters. We force the units for addition to match, and implement
-subtraction in terms of addition. Let's look at more typeclass
+subtraction in terms of addition. Let's look at more type class
 instances for ~Units~.
 
 #+CAPTION: num.hs
@@ -1317,7 +1317,7 @@ module DList
 
 In abstract algebra, there exists a simple abstract structure
 called a /monoid/. Many mathematical objects are monoids, because
-the “bar to entry” is very low. In order to be considered a
+the "bar to entry" is very low. In order to be considered a
 monoid, an object must have two properties.
 
 - An associative binary operator. Let's call it ~(*)~: the
@@ -1334,7 +1334,7 @@ binary operator and zero as the identity value, integers form a
 monoid. With multiplication as the binary operator and one as the
 identity value, integers form a different monoid.
 
-Monoids are ubiquitous in Haskell[fn:3]. The ~Monoid~ typeclass is
+Monoids are ubiquitous in Haskell[fn:3]. The ~Monoid~ type class is
 defined in the ~Data.Monoid~ module.
 
 #+CAPTION: Monoid.hs
@@ -1386,7 +1386,7 @@ express.
 #+BEGIN_TIP
 Tip
 
-If we need compatiblity with GHC prior to version 8.4 we can
+If we need compatibility with GHC prior to version 8.4 we can
 [[https://prime.haskell.org/wiki/Libraries/Proposals/SemigroupMonoid#Writingcompatiblecode][write compatible code]].
 #+END_TIP
 
@@ -1449,7 +1449,7 @@ A {unA = 7}
 #+END_TIP
 
 We will have more to say about difference lists and their
-monoidal nature in [[file:programming-with-monads.html#monadcase.writer.dlist][the section called “The writer monad and lists”]].
+monoidal nature in [[file:16-programming-with-monads.org::*The writer monad and lists][the section called "The writer monad and lists"]]
 
 #+BEGIN_TIP
 Tip
@@ -1521,7 +1521,7 @@ fromList [1,2]
 #+END_SRC
 
 A useful way to remember the ~(<|)~ and ~(|>)~ functions is that
-the “arrow” points to the element we're adding to the ~Seq~. The
+the "arrow" points to the element we're adding to the ~Seq~. The
 element will be added on the side to which the arrow points:
 ~(<|)~ adds on the left, ~(|>)~ on the right.
 
@@ -1545,7 +1545,7 @@ If we want to create a list from a ~Seq~, we must use the
 import qualified Data.Foldable as Foldable
 #+END_SRC
 
-This module defines a typeclass, ~Foldable~, which ~Seq~
+This module defines a type class, ~Foldable~, which ~Seq~
 implements.
 
 #+BEGIN_SRC screen
@@ -1574,7 +1574,7 @@ well.
 ** Footnotes
 
 [fn:1] The type we use for the key must be a member of the ~Eq~
-typeclass.
+type class.
 
 [fn:2] Non-strict evaluation makes the cost calculation
 more subtle. We only pay for an append if we actually use the
