@@ -64,8 +64,8 @@ you are used to, say, the interactive Python interpreter.
 
 On Unix-like systems, we run ~ghci~ as a command in a shell
 window. On Windows, it's available via the Start Menu. For
-example, if you installed using the GHC installer on Windows XP,
-you should go to "All Programs", then "GHC"; you will then see
+example, if you installed using the GHC installer on Windows,
+you should go to "Programs", then "GHC"; you will then see
 ~ghci~ in the list. (See [[file:installing-ghc-and-haskell-libraries.org::*Windows][the section called "Windows"]]
 screenshot.)
 
