@@ -814,7 +814,7 @@ numerator is on the left, the denominator on the right.
 ghci> :m +Data.Ratio
 ghci> 11 % 29
 11%29
-it :: Ratio Integer
+it :: Integral a => Ratio a
 #+END_SRC
 
 For convenience, ~ghci~ lets us abbreviate many commands, so we
