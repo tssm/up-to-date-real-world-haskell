@@ -1598,7 +1598,7 @@ with the ~-Wno-tabs~ flag. The reason for this is that it is
 easier to align expressions using spaces.
 
 If you like tabs you can use them as long as you correctly align
-expressions. For the compiler a tab equals to eight espaces and
+expressions. For the compiler a tab equals to eight spaces and
 uses this amount to determine if an indented expression is
 correctly aligned. In the next example you'll see the ~b~ aligned
 with the ~a~ only if the tab width equals eight in whichever app
