@@ -226,7 +226,7 @@ will end up greater than the sum of its parts.
 
 ** Some common basic types
 
-In [[file:getting-started.html#starting.types][the section called "First steps with types"]], we introduced a
+In [[file:1-getting-started.org::*First steps with types][the section called "First steps with types"]], we introduced a
 few types. Here are several more of the most common base types.
 
 - A ~Char~ value represents a Unicode character.
@@ -253,7 +253,7 @@ few types. Here are several more of the most common base types.
   ~Float~ is much slower.)
 
 We have already briefly seen Haskell's notation for types in
-[[file:getting-started.html#starting.types][the section called "First steps with types"]]. When we write a type
+[[file:1-getting-started.org::*First steps with types][the section called "First steps with types"]]. When we write a type
 explicitly, we use the notation ~expression :: MyType~ to say that
 ~expression~ has the type ~MyType~. If we omit the ~::~ and the
 type that follows, a Haskell compiler will infer the type of the
@@ -339,7 +339,7 @@ A composite data type is constructed from other types. The most
 common composite data types in Haskell are lists and tuples.
 
 We've already seen the list type mentioned in
-[[file:getting-started.html#starting.string][the section called "Strings and characters"]], where we found that
+[[file:1-getting-started.org::*Strings and characters][the section called "Strings and characters"]], where we found that
 Haskell represents a text string as a list of ~Char~ values, and
 that the type "list of ~Char~" is written ~[Char]~.
 
@@ -1281,7 +1281,7 @@ return to the subject in [[file:6-using-typeclasses.org][Chapter 6, Using Type 
 
 *** Reasoning about polymorphic functions
 
-In [[file:types-and-functions.html#funcstypes.sigs][the section called "Function types and purity"]], we talked about
+In [[file:2-types-and-functions.org::*Function types and purity][the section called "Function types and purity"]], we talked about
 figuring out the behaviour of a function based on its type
 signature. We can apply the same kind of reasoning to polymorphic
 functions. Let's look again at ~fst~.
@@ -1339,7 +1339,7 @@ returns a list of the same type as its result.
 
 This is correct, but it's not easy to see what its consequences
 might be. We'll return to this topic in
-[[file:functional-programming.html#fp.partialapp][the section called "Partial function application and currying"]],
+[[file:4-functional-programming.org::*Partial function application and currying][the section called "Partial function application and currying"]],
 once we've spent a bit of time writing functions. For now, we can
 treat the type following the last ~->~ as being the function's
 return type, and the preceding types to be those of the function's
@@ -1435,7 +1435,7 @@ let's call it a duck."
 information to help it to make a choice in understanding our code.
 
 [fn:3] We'll talk more about polymorphism in
-[[file:types-and-functions.html#funcstypes.polymorphism][the section called "Polymorphism in Haskell"]].
+[[file:2-types-and-functions.org::*Polymorphism in Haskell][the section called "Polymorphism in Haskell"]].
 
 [fn:4] The environment in which ~ghci~ operates is called the IO
 monad. In [[file:7-io.org][Chapter 7, /I/O/]], we will cover the IO
