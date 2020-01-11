@@ -1,0 +1,4 @@
+root = true
+
+[*.org]
+max_line_length = 66

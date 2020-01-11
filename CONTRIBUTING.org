@@ -1,0 +1,47 @@
+* Contributing
+
+Thank you for your interest! A lot of help is needed to finish
+this some day.
+
+** What remains to be done
+
+The most important task is to finish fixing the text and examples
+marked as ~TODO~ in the [[file:README.org][README]]. The files
+marked ~DONE~ where tested with GHC 8.4 and should be updated at
+some point to whatever is the latest version of the compiler so
+feel free to do that. Please update the [[file:README.org][README]]
+once all the examples in a file run in the current GHC version.
+
+Please have a look at the [[https://github.com/tssm/up-to-date-real-world-haskell/tree/wip-monad-transformers][wip-monad-transformers]]
+branch if you don't know where to start.
+
+A long term goal is to extract the code from the Org files and
+test them automatically every time a new stable GHC version is
+released, which brings us to...
+
+** Why Org instead of Markdown
+
+Markdown is a pretty simple format and it doesn't have enough
+syntax to represent the book's ~Tip~s, ~Warning~s and others. Also
+Org allows us to [[https://orgmode.org/manual/Include-files.html][embed part of an external files]],
+and that's how I plan to implement the automated testing at some
+point.
+
+Org files come from Emacs' [[https://orgmode.org][Org mode]], but
+we don't need Emacs to edit them (I'm using [[https://github.com/jceb/vim-orgmode][Vim-OrgMode]]).
+
+** Formatting
+
+The source files should be readable without requiring to compile
+them to HTML or other format, that's why [[http://webtypography.net/2.1.2][the maximum line length should be 66 characters]].
+If you use [[http://editorconfig.org][Editorconfig]] you don't
+have to worry about it. Sadly links cannot be split in multiple
+lines, so they are the exception to the rule.
+
+Once the Haskell code is extracted to their own files we should
+agree on the format used there. Feel free to make suggestions.
+
+** Git
+
+For commit messages please follow [[https://chris.beams.io/posts/git-commit/#imperative][this guide]]
+Also use descriptive names for branches.
