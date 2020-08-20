@@ -141,8 +141,8 @@ desire.
 
 *** Naming types and values
 
-When we introduced the type ~BookStore~, we deliberately chose to
-give the type constructor ~BookStore~ a different name from the
+When we introduced the type ~BookInfo~, we deliberately chose to
+give the type constructor ~BookInfo~ a different name from the
 value constructor ~Book~, purely to make it obvious which was
 which.
 
