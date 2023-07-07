@@ -431,9 +431,10 @@ field of the Haskell type, and the title is in the second. We
 refer to them by location, not by name.
 
 In [[file:3-defining-types-streamlining-functions.org::*Pattern matching][the section called "Pattern matching"]]
-the fields of a ~BookStore~ value. In
+, we'll see how to access the fields of a ~BookStore~ value. In
 [[file:3-defining-types-streamlining-functions.org::*Record syntax][the section called "Record syntax"]]
-syntax for defining data types that looks a little more C-like.
+, we'll introduce an alternate syntax for defining data types
+that looks a little more C-like.
 
 **** The enumeration
 
